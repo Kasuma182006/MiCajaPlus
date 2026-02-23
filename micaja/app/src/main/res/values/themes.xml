@@ -1,0 +1,13 @@
+<resources>
+    <style name="Base.Theme.MiCaja" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Colores/tema de la APP -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorOnSecondary">@color/colorOnSecondary</item>
+        <item name="android:colorBackground">@color/colorBackground</item>
+        <item name="colorSurface">@color/color_chat</item>
+        <item name="colorOnSurface">@color/colorOnSurface</item>
+    </style>
+    <style name="Theme.MiCaja" parent="Base.Theme.MiCaja" />
+</resources>
