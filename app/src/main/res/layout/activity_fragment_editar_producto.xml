@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fillViewport="true"
+    android:id="@+id/main"
+    android:background="#FFFFFF"
+    tools:context=".fragment_editar_producto">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="24dp">
+
+            <ImageButton
+                android:id="@+id/btnRetroceso"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/ic_Retroceder"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/retroceso"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="#4B3375" />
+
+
+            <TextView
+                android:id="@+id/tvTituloEditar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="@string/Editar_Inventario"
+                android:textColor="#4B3375"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/Logo_app" />
+
+            <ImageView
+                android:id="@+id/Logo_app"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/logo_app"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/tvTituloEditar"
+                android:layout_marginBottom="5dp"/>
+
+            <TextView
+                android:id="@+id/labelNombre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/NombreProducto"
+                android:textSize="15sp"
+                android:textColor="#4B3375"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvTituloEditar" />
+
+            <EditText
+                android:id="@+id/etNombreProducto"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:minHeight="55dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_edittext_rounded"
+                android:hint="Ej. Arroz"
+                android:textSize="15sp"
+                android:inputType="textMultiLine"
+                android:paddingStart="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/labelNombre" />
+
+            <TextView
+                android:id="@+id/labelDescripcion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/Presentación"
+                android:textSize="15sp"
+                android:textColor="#4B3375"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/etNombreProducto" />
+
+            <EditText
+                android:id="@+id/etDescripcionProducto"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:minHeight="55dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_edittext_rounded"
+                android:hint="Presentacion (tamaño,sabor)"
+                android:textSize="15sp"
+                android:inputType="textMultiLine"
+                android:padding="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/labelDescripcion"
+                />
+
+            <TextView
+                android:id="@+id/labelProveedor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/Proveedor"
+                android:textSize="15sp"
+                android:textColor="#4B3375"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/etDescripcionProducto" />
+
+            <EditText
+                android:id="@+id/Proveedor"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:minHeight="55dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_edittext_rounded"
+                android:hint="Ej. Cocacola"
+                android:textSize="15sp"
+                android:inputType="textMultiLine"
+                android:gravity="top"
+                android:padding="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/labelPrecio"
+                app:layout_constraintTop_toBottomOf="@+id/labelProveedor" />
+
+
+            <TextView
+                android:id="@+id/labelPrecio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/precioVenta"
+                android:textSize="15sp"
+                android:textColor="#4B3375"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/Proveedor" />
+
+            <EditText
+                android:id="@+id/etPrecioProducto"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:minHeight="55dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_edittext_rounded"
+                android:hint="$ 0"
+                android:textSize="15sp"
+                android:inputType="numberDecimal"
+                android:paddingStart="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/labelPrecio" />
+
+            <TextView
+                android:id="@+id/labelCantidad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/Cantidad"
+                android:textSize="15sp"
+                android:textColor="#4B3375"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/etPrecioProducto" />
+
+            <EditText
+                android:id="@+id/etCantidadProducto"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:minHeight="55dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_edittext_rounded"
+                android:hint="Ej. 12"
+                android:textSize="15sp"
+                android:inputType="number"
+                android:paddingStart="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/labelCantidad" />
+
+            <Button
+                android:id="@+id/btnGuardarProducto"
+                android:layout_width="200dp"
+                android:layout_height="64dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="#4B3375"
+                android:text="GUARDAR PRODUCTO"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                app:cornerRadius="30dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/etCantidadProducto" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
