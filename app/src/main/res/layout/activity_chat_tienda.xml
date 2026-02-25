@@ -10,12 +10,22 @@
     android:padding="16dp"
     android:fitsSystemWindows="true">
 
-
+    <ImageView
+        android:id="@+id/Logo_app"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/logo_app"
+        app:layout_constraintEnd_toStartOf="@id/btn_menu"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/chatTitle"
+        app:layout_constraintStart_toEndOf="@id/btnRetroceder"
+        android:layout_marginBottom="5dp"/>
     <TextView
         android:id="@+id/chatTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Buen Día"
+        android:layout_marginTop="50dp"
         android:textStyle="bold"
         android:textSize="38sp"
         android:textColor="#222"
@@ -139,7 +149,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_height="wrap_content"
-       />
+        />
 
     <FrameLayout
         android:id="@+id/fragmento_opciones"
@@ -149,6 +159,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-         />
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

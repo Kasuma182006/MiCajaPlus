@@ -22,6 +22,16 @@
             app:layout_constraintStart_toStartOf="@id/constraint"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ImageView
+            android:id="@+id/Logo_app"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/logo_app"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/textView"
+            android:layout_marginBottom="5dp"/>
+
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
@@ -33,22 +43,20 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/btnRetroceso" />
 
         <TextView
             android:id="@+id/nroidentificacion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="1dp"
-            android:layout_marginTop="80dp"
             android:text="Número de identificación"
             android:textColor="@color/ttl_campos"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/constraint"
-            app:layout_constraintTop_toBottomOf="@+id/btnRetroceso"
-
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            />
 
         <EditText
             android:id="@+id/identificacion"

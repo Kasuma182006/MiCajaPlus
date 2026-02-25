@@ -17,6 +17,17 @@
         android:src="@drawable/ic_flecha_at"
         />
 
+    <ImageView
+        android:id="@+id/Logo_app"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="12dp"
+        android:src="@drawable/logo_app"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.947"
+        app:layout_constraintStart_toEndOf="@id/btn_atras_in"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <EditText
         android:id="@+id/input_buscar"
         android:layout_width="350dp"
@@ -51,12 +62,12 @@
         android:id="@+id/btn_agregar"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="10dp"
-        app:srcCompat="@drawable/icn_agregar"
+        android:layout_marginBottom="64dp"
         app:backgroundTint="#3241DB"
-        />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.954"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/icn_agregar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

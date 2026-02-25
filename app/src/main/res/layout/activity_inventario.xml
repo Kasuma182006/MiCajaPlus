@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8F9FE"
+    android:background="@color/colorBackground"
     tools:context=".activity_inventario">
 
     <ImageButton
         android:id="@+id/btnRetroceso"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
         android:layout_marginStart="12dp"
         android:layout_marginTop="16dp"
         android:background="?attr/selectableItemBackgroundBorderless"
@@ -21,7 +23,7 @@
         android:src="@drawable/retroceso"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="#4B3375" />
+        app:tint="@color/colorOnSecondary" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/barraBuscar"
@@ -29,6 +31,7 @@
         android:layout_height="50dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="12dp"
+        app:cardBackgroundColor="#FFFFFF"
         app:cardCornerRadius="25dp"
         app:cardElevation="4dp"
         app:layout_constraintBottom_toBottomOf="@+id/btnRetroceso"
@@ -36,64 +39,67 @@
         app:layout_constraintStart_toEndOf="@+id/btnRetroceso"
         app:layout_constraintTop_toTopOf="@+id/btnRetroceso">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="250dp"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilBuscarProducto2"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingStart="15dp"
-            android:paddingEnd="15dp">
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
+            app:boxCornerRadiusTopStart="25dp"
+            app:boxCornerRadiusTopEnd="25dp"
+            app:boxCornerRadiusBottomStart="25dp"
+            app:boxCornerRadiusBottomEnd="25dp"
+            app:endIconMode="clear_text"
+            app:endIconTint="@color/colorOnSecondary"
+            app:startIconDrawable="@drawable/ic_search"
+            app:startIconTint="@color/colorOnSecondary"
+            app:counterEnabled="true"
+            app:counterMaxLength="60"
+            app:hintEnabled="false">
 
-            <ImageView
-                android:id="@+id/Buscar_ic"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_search"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tint="#4B3375" />
-
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etBuscarProducto"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:background="@android:color/transparent"
-                android:hint="Buscar producto..."
+                android:hint="@string/hint_BuscarProducto"
+                android:textColorHint="@color/gris"
+                android:imeOptions="actionSearch"
                 android:inputType="text"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/Buscar_ic"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                android:textSize="14sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
     </androidx.cardview.widget.CardView>
 
     <ImageView
         android:id="@+id/imgAgregarProducto"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/bg_circle_purple"
         android:clickable="true"
+        android:contentDescription="@string/cd_AgregarProducto"
         android:elevation="4dp"
         android:focusable="true"
         android:padding="12dp"
         android:src="@drawable/agregar_producto"
         app:layout_constraintBottom_toBottomOf="@+id/barraBuscar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/barraBuscar"
- />
+        app:layout_constraintTop_toTopOf="@+id/barraBuscar" />
 
     <TextView
         android:id="@+id/tvTituloInventario"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
         android:layout_marginTop="20dp"
-        android:text="Mis Productos"
-        android:textColor="#4B3375"
+        android:text="@string/titulo_Inventario"
+        android:textColor="@color/colorOnSecondary"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/btnRetroceso"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnRetroceso" />
 
     <androidx.recyclerview.widget.RecyclerView

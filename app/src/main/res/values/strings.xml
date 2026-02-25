@@ -49,4 +49,39 @@
     <string name="NombreTendero">Nombre</string>
     <string name="ResumenDia">Resumen Del Día</string>
     <string name="abono">Abono</string>
+    <string name="Editar_Inventario">Editar Producto</string>
+    <string name="NombreProducto">Nombre Producto</string>
+    <string name="Presentación">Presentación</string>
+    <string name="Proveedor">Proveedor</string>
+    <string name="precioVenta">Precio Venta ($)</string>
+    <string name="Cantidad">Cantidad</string>
+    <string name="titulo_EditarCliente">Editar Cliente</string>
+    <string name="subtitulo_EditarCliente">Busca y modifica los datos del cliente</string>
+    <string name="hint_BuscarCliente">Buscar Cedula</string>
+    <string name="label_Paso1">Seleccionar cliente</string>
+    <string name="cd_btnBuscar">boton buscar cliente</string>
+    <string name="label_Paso2">Editar cliente</string>
+    <string name="hint_NombreCliente">Nombre del Cliente</string>
+    <string name="hint_CedulaCliente">Cedula del Cliente</string>
+    <string name="hint_TelefonoCliente">Telefono del Cliente</string>
+    <string name="hint_ValorCredito">Valor del Credito</string>
+    <string name="btn_ActualizarDatos">Actualizar Datos</string>
+    <string name="EjArroz">Ej. Arroz</string>
+    <string name="presentacion">Presentacion (tamaño,sabor)</string>
+    <string name="EjCocacola">Ej. Cocacola</string>
+    <string name="valor_0">$ 0</string>
+    <string name="Ej12">Ej. 12</string>
+    <string name="GUARDARPRODUCTO">Editar Producto</string>
+    <string name="hint_BuscarProducto">Buscar producto...</string>
+    <string name="cd_AgregarProducto">btn Agregar producto</string>
+    <string name="titulo_Inventario">Mis Productos</string>
+    <string name="NombredelProducto">Nombre de Producto</string>
+    <string name="Descripcion">Descripción</string>
+    <string name="Precio">Precio</string>
+    <string name="Cantidad15unidades">Cantidad :</string>
+    <string name="valor_cero">$ 0</string>
+    <string name="editarCliente">Editar Cliente</string>
+
+
 </resources>
+

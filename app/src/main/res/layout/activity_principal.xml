@@ -1,21 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F0ECFA"
+    android:background="@color/color_fondo"
     tools:context=".Principal">
 
+    <TextView
+        android:id="@+id/NombreTendero"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/NombreTendero"
+        android:textColor="@color/colorOnSecondary"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/logoApp"
-        android:layout_width="149dp"
-        android:layout_height="214dp"
+        android:layout_width="143dp"
+        android:layout_height="178dp"
         android:layout_marginTop="50dp"
         android:contentDescription="Logo MICAJA+"
-        android:scaleType="centerCrop"
         android:src="@drawable/logo_app"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,117 +35,355 @@
 
 
 
-
-    <TextView
-        android:id="@+id/NombreTendero"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="30dp"
-        android:textSize="20dp"
-        android:text="@string/NombreTendero"
-        android:textColor="@color/color_txt_app"/>
-
+    <!--
+        Nombre de la app: IDs originales conservados (appName, appPlus)
+        Textos hardcoded conservados ("MICAJA", "+") tal como estaban.
+    -->
     <TextView
         android:id="@+id/appName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="MICAJA"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        android:textColor="#46454B"
         android:layout_marginTop="12dp"
-        app:layout_constraintTop_toBottomOf="@id/logoApp"
+        android:text="MICAJA"
+        android:textColor="@color/colorOnSecondary"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.08"
+        app:layout_constraintEnd_toStartOf="@id/appPlus"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/logoApp" />
+
     <TextView
         android:id="@+id/appPlus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="+"
-        android:textSize="26sp"
+        android:textSize="32sp"
         android:textStyle="bold"
-        android:textColor="#3F8EBF"
+        android:textColor="@color/plus"
+        android:layout_marginStart="2dp"
         app:layout_constraintBaseline_toBaselineOf="@id/appName"
-        app:layout_constraintStart_toEndOf="@id/appName"
-        android:layout_marginStart="4dp"/>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/btnTienda"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/circle_bg_tienda"
-        android:padding="12dp"
-        app:layout_constraintTop_toBottomOf="@id/appPlus"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <ImageView
-            android:id="@+id/ic_tienda"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@drawable/ic_chat"
-            android:contentDescription="Tienda"
-            android:scaleType="centerInside"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
-
-        <TextView
-            android:id="@+id/txtTienda"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/txtTienda"
-            android:textColor="#000000"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginStart="30dp"
-            app:layout_constraintStart_toEndOf="@id/ic_tienda"
-            app:layout_constraintTop_toTopOf="@id/ic_tienda"
-            app:layout_constraintBottom_toBottomOf="@id/ic_tienda" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/btnBalance"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/circle_bg_purple"
-        android:padding="12dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toEndOf="@id/appName" />
+
+    <View
+        android:id="@+id/dividerApp"
+        android:layout_width="48dp"
+        android:layout_height="3dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/plus"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnTienda"
-        app:layout_constraintVertical_bias="0.176">
+        app:layout_constraintTop_toBottomOf="@id/appName" />
 
-        <ImageView
-            android:id="@+id/ic_balance"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:contentDescription="Balance"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_balance"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <androidx.cardview.widget.CardView
+        android:id="@+id/btnTienda"
+        android:layout_width="0dp"
+        android:layout_height="76dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="28dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardBackgroundColor="@color/Target_principal"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dividerApp">
 
-        <TextView
-            android:id="@+id/txtBalance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:text="Balance"
-            android:textColor="#000000"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/ic_balance"
-            app:layout_constraintStart_toEndOf="@id/ic_balance"
-            app:layout_constraintTop_toTopOf="@id/ic_balance" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
 
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cvIconTienda"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                app:cardBackgroundColor="@color/colorPrimary"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/ic_tienda"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="Tienda"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_chat"
+                    app:tint="@color/colorOnSecondary" />
+
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/txtTienda"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/txtTienda"
+                android:textColor="@color/colorOnSecondary"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/ivChevronTienda"
+                app:layout_constraintStart_toEndOf="@id/cvIconTienda"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/ivChevronTienda"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:contentDescription="Ir a Chat"
+                android:src="@drawable/retroceso"
+                android:rotation="180"
+                android:alpha="0.4"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/colorOnSecondary" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/btnBalance"
+        android:layout_width="0dp"
+        android:layout_height="76dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardBackgroundColor="@color/Target_principal"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnTienda">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cvIconBalance"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                app:cardBackgroundColor="@color/azul_claro"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/ic_balance"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="Balance"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_balance"
+                    app:tint="@color/azul_logo" />
+
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/txtBalance"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/txtBalance"
+                android:textColor="@color/colorOnSecondary"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/ivChevronBalance"
+                app:layout_constraintStart_toEndOf="@id/cvIconBalance"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/ivChevronBalance"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:contentDescription="Ir a Balance"
+                android:src="@drawable/retroceso"
+                android:rotation="180"
+                android:alpha="0.4"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/colorOnSecondary" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/btnEditarCliente"
+        android:layout_width="0dp"
+        android:layout_height="76dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardBackgroundColor="@color/Target_principal"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnBalance">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cvIconEditarCliente"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                app:cardBackgroundColor="@color/verde_utilidad_targeta"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/ic_EditarCliente"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="Editar Cliente"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_balance"
+                    app:tint="#2E7D32" />
+
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/txtEditarCliente"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/editarCliente"
+                android:textColor="@color/colorOnSecondary"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/ivChevronEditar"
+                app:layout_constraintStart_toEndOf="@id/cvIconEditarCliente"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/ivChevronEditar"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:contentDescription="Ir a Editar Cliente"
+                android:src="@drawable/retroceso"
+                android:rotation="180"
+                android:alpha="0.4"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/colorOnSecondary" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/btnEditarProducto"
+        android:layout_width="0dp"
+        android:layout_height="76dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardBackgroundColor="@color/Target_principal"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnEditarCliente">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cvIconEditarProducto"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                app:cardBackgroundColor="@color/verde_utilidad_targeta"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/ic_EditarProducto"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="Editar Producto"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_balance"
+                    app:tint="#2E7D32" />
+
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/txtEditarProducto"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/editarCliente"
+                android:textColor="@color/colorOnSecondary"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/ivChevronEditarProducto"
+                app:layout_constraintStart_toEndOf="@id/cvIconEditarProducto"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/ivChevronEditarProducto"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:contentDescription="Ir a Editar Producto"
+                android:src="@drawable/retroceso"
+                android:rotation="180"
+                android:alpha="0.4"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/colorOnSecondary" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!--
+        NOTA: si quieres el efecto ripple (feedback al tocar) en los CardView,
+        agrega dentro de cada ConstraintLayout interno un View con:
+            android:foreground="?attr/selectableItemBackground"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+        O maneja el click desde Kotlin con setOnClickListener normal.
+    -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

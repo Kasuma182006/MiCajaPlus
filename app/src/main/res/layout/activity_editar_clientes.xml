@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -24,7 +25,7 @@
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Retroceder"
+            android:contentDescription="@string/ic_Retroceder"
             android:padding="10dp"
             android:scaleType="fitCenter"
             android:src="@drawable/retroceso"
@@ -36,17 +37,17 @@
             android:id="@+id/Logo_app"
             android:layout_width="44dp"
             android:layout_height="44dp"
+            android:contentDescription="@string/logo_App"
             android:src="@drawable/logo_app"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
 
         <TextView
             android:id="@+id/tvTituloEditar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Edición de Cliente"
+            android:text="@string/titulo_EditarCliente"
             android:textColor="@color/colorOnSecondary"
             android:textSize="26sp"
             android:textStyle="bold"
@@ -59,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Busca y modifica los datos del cliente"
+            android:text="@string/subtitulo_EditarCliente"
             android:textColor="@color/gris"
             android:textSize="13sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -67,13 +68,12 @@
             app:layout_constraintTop_toBottomOf="@id/tvTituloEditar" />
 
 
-
         <TextView
             android:id="@+id/labelPaso1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
-            android:text="① Seleccionar cliente"
+            android:text="@string/label_Paso1"
             android:textColor="@color/colorOnSecondary"
             android:textSize="14sp"
             android:textStyle="bold"
@@ -81,117 +81,124 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvSubtitulo" />
 
+
         <androidx.cardview.widget.CardView
             android:id="@+id/cvBuscador"
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:layout_marginTop="10dp"
+            android:layout_marginEnd="8dp"
             app:cardBackgroundColor="#FFFFFF"
             app:cardCornerRadius="16dp"
             app:cardElevation="3dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btnBuscar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/labelPaso1">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/BuscarCliente"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp">
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                app:boxCornerRadiusTopStart="16dp"
+                app:boxCornerRadiusTopEnd="16dp"
+                app:boxCornerRadiusBottomStart="16dp"
+                app:boxCornerRadiusBottomEnd="16dp"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/colorOnSecondary"
+                app:startIconDrawable="@drawable/ic_search"
+                app:startIconTint="@color/colorOnSecondary"
+                app:counterEnabled="true"
+                app:hintEnabled="false">
 
-                <ImageView
-                    android:id="@+id/Buscar_ic"
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:src="@drawable/ic_search"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tint="@color/colorOnSecondary" />
-
-                <EditText
-                    android:id="@+id/etBuscarProducto"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etBuscarCliente"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:background="@android:color/transparent"
-                    android:hint="Buscar cliente por nombre..."
+                    android:hint="@string/hint_BuscarCliente"
                     android:textColorHint="@color/gris"
-                    android:inputType="text"
-                    android:textSize="14sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/btnLimpiar"
-                    app:layout_constraintStart_toEndOf="@+id/Buscar_ic"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:imeOptions="actionSearch"
+                    android:inputType="number"
+                    app:counterMaxLength="@integer/Cedula"
+                    android:textSize="14sp" />
 
+            </com.google.android.material.textfield.TextInputLayout>
 
-                <ImageButton
-                    android:id="@+id/btnLimpiar"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Limpiar búsqueda"
-                    android:src="@drawable/ic_cerrar"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tint="@color/gris"
-                    tools:visibility="visible" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cvClienteSeleccionado"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnBuscar"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
             android:layout_marginTop="10dp"
-            android:visibility="gone"
-            app:cardBackgroundColor="@color/colorPrimary"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="0dp"
+            android:contentDescription="@string/cd_btnBuscar"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:backgroundTint="@color/btn_registrarse"
+            app:cornerRadius="16dp"
+            app:icon="@drawable/ic_search"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconSize="24dp"
+            app:iconTint="#FFFFFF"
+            app:rippleColor="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cvBuscador"
-            tools:visibility="visible">
+            app:layout_constraintTop_toBottomOf="@id/labelPaso1"
+            app:layout_constraintBottom_toBottomOf="@id/cvBuscador" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="12dp"
-                android:gravity="center_vertical">
+        <!--        <androidx.cardview.widget.CardView-->
+        <!--            android:id="@+id/cvClienteSeleccionado"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginTop="10dp"-->
+        <!--            android:visibility="gone"-->
+        <!--            app:cardBackgroundColor="@color/colorPrimary"-->
+        <!--            app:cardCornerRadius="12dp"-->
+        <!--            app:cardElevation="0dp"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@id/cvBuscador"-->
+        <!--            tools:visibility="visible">-->
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_person"
-                    app:tint="@color/colorOnSecondary" />
+        <!--            <LinearLayout-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:orientation="horizontal"-->
+        <!--                android:padding="12dp"-->
+        <!--                android:gravity="center_vertical">-->
 
-                <TextView
-                    android:id="@+id/tvClienteSeleccionado"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    android:text="Cliente seleccionado"
-                    android:textColor="@color/colorOnSecondary"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    tools:text="Juan Pérez" />
+        <!--                <ImageView-->
+        <!--                    android:layout_width="20dp"-->
+        <!--                    android:layout_height="20dp"-->
+        <!--                    android:src="@drawable/ic_person"-->
+        <!--                    app:tint="@color/colorOnSecondary" />-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="✓"
-                    android:textColor="@color/colorOnSecondary"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+        <!--                <TextView-->
+        <!--                    android:id="@+id/tvClienteSeleccionado"-->
+        <!--                    android:layout_width="0dp"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    android:layout_weight="1"-->
+        <!--                    android:layout_marginStart="8dp"-->
+        <!--                    android:text="Cliente seleccionado"-->
+        <!--                    android:textColor="@color/colorOnSecondary"-->
+        <!--                    android:textSize="14sp"-->
+        <!--                    android:textStyle="bold"-->
+        <!--                    tools:text="Juan Pérez - 10062258789" />-->
 
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
+        <!--                <TextView-->
+        <!--                    android:layout_width="wrap_content"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    android:text="✓"-->
+        <!--                    android:textColor="@color/colorOnSecondary"-->
+        <!--                    android:textSize="16sp"-->
+        <!--                    android:textStyle="bold" />-->
 
+        <!--            </LinearLayout>-->
+        <!--        </androidx.cardview.widget.CardView>-->
 
 
         <TextView
@@ -199,13 +206,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
-            android:text="② Editar datos"
+            android:text="@string/label_Paso2"
             android:textColor="@color/colorOnSecondary"
             android:textSize="14sp"
             android:textStyle="bold"
             android:letterSpacing="0.02"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cvClienteSeleccionado" />
+            app:layout_constraintTop_toBottomOf="@id/cvBuscador" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cvFormulario"
@@ -222,10 +229,9 @@
             tools:alpha="1.0">
 
             <!--
-                NOTA PARA EL DESARROLLADOR:
                 Controla android:alpha del CardView (0.5 = deshabilitado, 1.0 = habilitado)
                 y android:enabled de cada TextInputEditText desde el código Java/Kotlin
-                según si el usuario ha seleccionado un cliente o no.
+                segun si el usuario ha seleccionado un cliente o no.
             -->
 
             <LinearLayout
@@ -239,7 +245,7 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Nombre del Cliente"
+                    android:hint="@string/hint_NombreCliente"
                     app:boxCornerRadiusBottomEnd="12dp"
                     app:boxCornerRadiusBottomStart="12dp"
                     app:boxCornerRadiusTopEnd="12dp"
@@ -247,13 +253,18 @@
                     app:boxStrokeColor="@color/colorPrimary"
                     app:boxStrokeWidth="1.5dp"
                     app:hintTextColor="@color/colorOnSecondary"
-                    app:startIconTint="@color/colorOnSecondary">
+                    app:startIconTint="@color/colorOnSecondary"
+                    app:endIconMode="clear_text"
+                    app:endIconTint="@color/colorOnSecondary"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="60">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etNombreCliente"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textPersonName"
+                        app:counterMaxLength="@integer/NombreCliente"
                         android:textSize="15sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -264,7 +275,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:hint="Cédula / Identificación"
+                    android:hint="@string/hint_CedulaCliente"
                     app:boxCornerRadiusBottomEnd="12dp"
                     app:boxCornerRadiusBottomStart="12dp"
                     app:boxCornerRadiusTopEnd="12dp"
@@ -273,14 +284,48 @@
                     app:boxStrokeWidth="1.5dp"
                     app:hintTextColor="@color/colorOnSecondary"
                     app:startIconTint="@color/colorOnSecondary"
+                    app:endIconMode="clear_text"
+                    app:endIconTint="@color/colorOnSecondary"
                     app:counterEnabled="true"
-                    app:counterMaxLength="15">
+                    app:counterMaxLength="10">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etCedulaCliente"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="number"
+                        app:counterMaxLength="@integer/Cedula"
+                        android:textSize="15sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilTelefonoCliente"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="@string/hint_TelefonoCliente"
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:boxStrokeColor="@color/colorPrimary"
+                    app:boxStrokeWidth="1.5dp"
+                    app:hintTextColor="@color/colorOnSecondary"
+                    app:startIconTint="@color/colorOnSecondary"
+                    app:endIconMode="clear_text"
+                    app:endIconTint="@color/colorOnSecondary"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="10">
+                    <!--                    app:helperText="@string/helper_Telefono">-->
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etTelefonoCliente"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="phone"
+                        app:counterMaxLength="@integer/Telefono"
                         android:textSize="15sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -291,7 +336,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:hint="$ Valor del Crédito"
+                    android:hint="@string/hint_ValorCredito"
                     app:boxCornerRadiusBottomEnd="12dp"
                     app:boxCornerRadiusBottomStart="12dp"
                     app:boxCornerRadiusTopEnd="12dp"
@@ -302,13 +347,18 @@
                     app:prefixText="$ "
                     app:prefixTextColor="@color/colorOnSecondary"
                     app:startIconTint="@color/colorOnSecondary"
-                    app:helperText="Ingrese el monto máximo de crédito autorizado">
+                    app:endIconMode="clear_text"
+                    app:endIconTint="@color/colorOnSecondary"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="12">
+                    <!--                    app:helperText="@string/helper_ValorCredito">-->
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etValorCredito"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="numberDecimal"
+                        app:counterMaxLength="@integer/valorCredito"
                         android:textSize="15sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -326,7 +376,7 @@
             android:layout_marginTop="28dp"
             android:layout_marginBottom="16dp"
             android:enabled="false"
-            android:text="Actualizar Datos"
+            android:text="@string/btn_ActualizarDatos"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:textStyle="bold"

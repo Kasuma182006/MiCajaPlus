@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="Cedula">10</integer>
+    <integer name="NombreCliente">60</integer>
+    <integer name="Telefono">10</integer>
+    <integer name="valorCredito">12</integer>
+</resources>
