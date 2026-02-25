@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Login"
+    android:fitsSystemWindows="true">
+
+    <ImageView
+        android:id="@+id/logoApp"
+        android:layout_width="220dp"
+        android:layout_height="174dp"
+        android:src="@drawable/logo_app"
+        android:layout_marginTop="34dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="@string/logo_App"
+        />
+
+    <TextView
+        android:id="@+id/appName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/logoApp"
+        android:text="@string/mi_Caja"
+        android:textColor="@color/color_txt_app"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:layout_marginTop="12dp"
+        />
+
+    <TextView
+        android:id="@+id/plus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        app:layout_constraintStart_toEndOf="@id/appName"
+        app:layout_constraintBaseline_toBaselineOf="@id/appName"
+        android:text="@string/plus"
+        android:textColor="@color/plus"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        />
+
+    <TextView
+        android:id="@+id/cedulaText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        app:layout_constraintStart_toStartOf="@id/cedulaInput"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appName"
+        app:layout_constraintHorizontal_bias="0.0"
+        android:text="@string/cedula"
+        android:textColor="@color/ttl_campos"
+        android:textSize="17sp"
+        />
+
+    <EditText
+        android:id="@+id/cedulaInput"
+        android:layout_width="300dp"
+        android:layout_height="53dp"
+        android:background="@drawable/bg_input_rounded"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cedulaText"
+        android:textColor="@color/color_campos"
+        android:inputType="phone"
+        android:autofillHints="phone"
+        android:textAlignment="center"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        />
+
+    <ImageView
+        android:id="@+id/iconCedula"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_cedula"
+        android:layout_marginStart="16dp"
+        app:layout_constraintTop_toTopOf="@id/cedulaInput"
+        app:layout_constraintStart_toStartOf="@id/cedulaInput"
+        app:layout_constraintBottom_toBottomOf="@id/cedulaInput"
+        android:contentDescription="@string/ic_Cedula"
+        />
+
+    <TextView
+        android:id="@+id/telefonoText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="@id/cedulaInput"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cedulaInput"
+        android:text="@string/telefono"
+        android:textColor="@color/ttl_campos"
+        android:textSize="16sp"
+        />
+
+    <EditText
+        android:id="@+id/telefonoInput"
+        android:layout_width="300dp"
+        android:layout_height="58dp"
+        android:background="@drawable/bg_input_rounded"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/telefonoText"
+        android:textColor="@color/color_campos"
+        android:inputType="numberPassword"
+        android:autofillHints="phone"
+        android:textAlignment="center"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        />
+
+    <ImageView
+        android:id="@+id/iconTelefono"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_candado"
+        android:layout_marginStart="16dp"
+        app:layout_constraintTop_toTopOf="@id/telefonoInput"
+        app:layout_constraintStart_toStartOf="@id/telefonoInput"
+        app:layout_constraintBottom_toBottomOf="@id/telefonoInput"
+        android:contentDescription="@string/ic_Candado"
+        />
+
+    <TextView
+        android:id="@+id/tvNoCuenta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
+        android:text="@string/pregunta"
+        android:textColor="@color/gris"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="@+id/BtnRegistrar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.28"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/telefonoInput" />
+
+    <TextView
+        android:id="@+id/tvRegistrate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="@string/click_Registro"
+        android:textColor="@color/plus"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintBaseline_toBaselineOf="@id/tvNoCuenta"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.086"
+        app:layout_constraintStart_toEndOf="@id/tvNoCuenta" />
+
+    <Button
+        android:id="@+id/BtnRegistrar"
+        android:layout_width="205dp"
+        android:layout_height="64dp"
+        android:backgroundTint="@color/btn_registrarse"
+        android:padding="8dp"
+        android:layout_margin="62dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvNoCuenta"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="#FFFFFF"
+        android:text="@string/loguearse"
+        android:textSize="19sp"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
