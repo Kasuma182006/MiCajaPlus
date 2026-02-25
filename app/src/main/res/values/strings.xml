@@ -81,6 +81,7 @@
     <string name="Cantidad15unidades">Cantidad :</string>
     <string name="valor_cero">$ 0</string>
     <string name="editarCliente">Editar Cliente</string>
+    <string name="editarProducto">Editar Producto</string>
 
 
 </resources>

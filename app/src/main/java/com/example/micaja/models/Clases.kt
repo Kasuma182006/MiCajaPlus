@@ -64,9 +64,9 @@ data class ModeloBase(
 )
 
 data class modeloOperaciones (
-    val idTendero:String,
-    val tipo: String,
-    val monto: Int,
+    val idTendero: String,
+    val tipo: Int,
+    val monto: String,
     val mensaje: String
 )
 
