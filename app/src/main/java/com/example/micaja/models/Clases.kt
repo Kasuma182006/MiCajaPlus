@@ -44,7 +44,8 @@ data class Datos_Abono(
 data class ConsultarOperaXFecha(
     val idTendero: String,
     val fechaInicial: String? = null,
-    val fechaFin: String? = null
+    val fechaFin: String? = null,
+    val precio: Int? = null
 )
 
 data class TipoOperacionXFecha(
@@ -63,8 +64,25 @@ data class ModeloBase(
 )
 
 data class modeloOperaciones (
+    val idTendero:String,
     val tipo: String,
     val monto: Int,
-    val idTendero:String,
     val mensaje: String
+)
+
+data class inventario (
+    val idTendero: String,
+    val nombreProducto: String,
+    val cantidad: Int,
+    val precioCompra: Int,
+    val precioVenta: Int
+)
+
+data class listaProductos (
+    val idTendero: String,
+    val nombreProducto: String,
+    val cantidad: Int,
+    val precioCompra: Int,
+    val precioVenta: Int,
+    val proveedor: String
 )

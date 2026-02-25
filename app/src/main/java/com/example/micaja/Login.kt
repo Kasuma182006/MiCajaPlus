@@ -19,7 +19,6 @@ import kotlinx.coroutines.withContext
 
 class Login : AppCompatActivity() {
     private lateinit var binding: LoginBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -35,12 +34,10 @@ class Login : AppCompatActivity() {
         }
 
         enableEdgeToEdge()
-
         // Forzar que la ventana deje que el sistema gestione insets (necesario para adjustResize)
         WindowCompat.setDecorFitsSystemWindows(window, true)
         // Forzar ajuste del layout cuando aparece el teclado
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-
         binding = LoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

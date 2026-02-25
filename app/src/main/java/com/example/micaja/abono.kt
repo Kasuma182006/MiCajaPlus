@@ -27,7 +27,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-
 class Abono: Fragment() {
     lateinit var binding: AbonoBinding
     private var buscar = false
@@ -37,7 +36,6 @@ class Abono: Fragment() {
     private val estadoNormal = ConstraintSet() //Reinicia las márgenes
 
     val api = ConexionServiceTienda.create()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -57,14 +55,10 @@ class Abono: Fragment() {
         abono = arguments?.getBoolean("abono")?:false
         estadoNormal.clone(binding.constraint as ConstraintLayout)
 
-        binding.btnRetroceso.setOnClickListener {
-            parentFragmentManager.popBackStack()
-        }
-
+        binding.btnRetroceso.setOnClickListener { parentFragmentManager.popBackStack() }
 
         if (abono == true) {
             binding.textView.setText("Abono")
-
 
         } else {
             binding.textView.setText("Crédito")

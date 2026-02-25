@@ -20,7 +20,6 @@ import kotlinx.coroutines.withContext
 class Registro : AppCompatActivity() {
 
     private lateinit var binding: RegistroBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -77,9 +76,7 @@ class Registro : AppCompatActivity() {
                 }
 
                 val apiService = ConexionServiceTienda.create()
-                val nuevoTendero = Tendero(cedula = cedula, telefono = telefono, nombre=nombre)
-
-
+                val nuevoTendero = Tendero(cedula = cedula, telefono = telefono, nombre = nombre)
                 val response = apiService.addTendero(nuevoTendero)
 
                 withContext(Dispatchers.Main) {

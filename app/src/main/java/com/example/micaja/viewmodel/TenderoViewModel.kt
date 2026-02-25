@@ -22,6 +22,4 @@ class TenderoViewModel: ViewModel() {
         list.add(mensaje)
         mensajesSistema.value = list
     }
-
-
 }

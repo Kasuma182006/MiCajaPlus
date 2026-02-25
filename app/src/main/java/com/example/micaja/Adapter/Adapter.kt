@@ -11,14 +11,12 @@ import com.example.micaja.viewmodel.TenderoViewModel
 
 class Adapter ( var dataset: MutableList<modelo>, var sistemaData: MutableList<modelo>):
     RecyclerView.Adapter<Adapter.ViewHolder>() {
-
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val binding = ActivityItemMensajesBinding.bind(view)
 
         fun inicializar(modelo:modelo,sistema: modelo){
             binding.mensaje.text = modelo.mensaje
             binding.mensajeSistema.text = sistema.mensaje
-
         }
     }
 
@@ -34,17 +32,13 @@ class Adapter ( var dataset: MutableList<modelo>, var sistemaData: MutableList<m
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
         val usuario = dataset.getOrNull(position)
         val sistema = sistemaData.getOrNull(position)
 
         if (usuario != null && sistema != null) {
             holder.inicializar(usuario, sistema)
         }
-
     }
 
     override fun getItemCount(): Int = minOf(dataset.size, sistemaData.size)
-
-
 }
