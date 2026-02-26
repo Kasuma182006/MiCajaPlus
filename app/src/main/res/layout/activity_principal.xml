@@ -32,13 +32,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-
-
-    <!--
-        Nombre de la app: IDs originales conservados (appName, appPlus)
-        Textos hardcoded conservados ("MICAJA", "+") tal como estaban.
-    -->
     <TextView
         android:id="@+id/appName"
         android:layout_width="wrap_content"
@@ -103,7 +96,7 @@
                 android:id="@+id/cvIconTienda"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                app:cardBackgroundColor="@color/colorPrimary"
+                app:cardBackgroundColor="@color/ic_principal"
                 app:cardCornerRadius="24dp"
                 app:cardElevation="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -117,8 +110,9 @@
                     android:layout_gravity="center"
                     android:contentDescription="Tienda"
                     android:scaleType="centerInside"
-                    android:src="@drawable/ic_chat"
-                    app:tint="@color/colorOnSecondary" />
+                    android:src="@drawable/ic_chat_vz"
+                    android:tint="@color/colorSecondary"
+                     />
 
             </androidx.cardview.widget.CardView>
 
@@ -143,7 +137,7 @@
                 android:contentDescription="Ir a Chat"
                 android:src="@drawable/retroceso"
                 android:rotation="180"
-                android:alpha="0.4"
+                android:alpha="0.8"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -178,7 +172,7 @@
                 android:id="@+id/cvIconBalance"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                app:cardBackgroundColor="@color/azul_claro"
+                app:cardBackgroundColor="@color/ic_principal"
                 app:cardCornerRadius="24dp"
                 app:cardElevation="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -193,7 +187,7 @@
                     android:contentDescription="Balance"
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_balance"
-                    app:tint="@color/azul_logo" />
+                    app:tint="@color/colorSecondary" />
 
             </androidx.cardview.widget.CardView>
 
@@ -218,7 +212,7 @@
                 android:contentDescription="Ir a Balance"
                 android:src="@drawable/retroceso"
                 android:rotation="180"
-                android:alpha="0.4"
+                android:alpha="0.8"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -253,7 +247,7 @@
                 android:id="@+id/cvIconEditarCliente"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                app:cardBackgroundColor="@color/verde_utilidad_targeta"
+                app:cardBackgroundColor="@color/ic_principal"
                 app:cardCornerRadius="24dp"
                 app:cardElevation="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -267,8 +261,8 @@
                     android:layout_gravity="center"
                     android:contentDescription="Editar Cliente"
                     android:scaleType="centerInside"
-                    android:src="@drawable/ic_balance"
-                    app:tint="#2E7D32" />
+                    android:src="@drawable/ic_edit_user"
+                    app:tint="@color/colorSecondary" />
 
             </androidx.cardview.widget.CardView>
 
@@ -293,7 +287,7 @@
                 android:contentDescription="Ir a Editar Cliente"
                 android:src="@drawable/retroceso"
                 android:rotation="180"
-                android:alpha="0.4"
+                android:alpha="0.8"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -328,7 +322,7 @@
                 android:id="@+id/cvIconEditarProducto"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                app:cardBackgroundColor="@color/verde_utilidad_targeta"
+                app:cardBackgroundColor="@color/ic_principal"
                 app:cardCornerRadius="24dp"
                 app:cardElevation="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -342,8 +336,8 @@
                     android:layout_gravity="center"
                     android:contentDescription="Editar Producto"
                     android:scaleType="centerInside"
-                    android:src="@drawable/ic_balance"
-                    app:tint="#2E7D32" />
+                    android:src="@drawable/ic_productos"
+                    app:tint="@color/colorSecondary" />
 
             </androidx.cardview.widget.CardView>
 
@@ -352,7 +346,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:text="@string/editarCliente"
+                android:text="@string/editarProducto"
                 android:textColor="@color/colorOnSecondary"
                 android:textSize="17sp"
                 android:textStyle="bold"
@@ -368,7 +362,7 @@
                 android:contentDescription="Ir a Editar Producto"
                 android:src="@drawable/retroceso"
                 android:rotation="180"
-                android:alpha="0.4"
+                android:alpha="0.8"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -377,13 +371,5 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
-    <!--
-        NOTA: si quieres el efecto ripple (feedback al tocar) en los CardView,
-        agrega dentro de cada ConstraintLayout interno un View con:
-            android:foreground="?attr/selectableItemBackground"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-        O maneja el click desde Kotlin con setOnClickListener normal.
-    -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,20 +1,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"> <!-- ✅ Add this line -->
-
-
-    <item
-        android:id="@+id/action_Comandos"
-        android:title="Comandos"
-        app:showAsAction="never"/>
-
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_CerrarSeccion"
-        android:title="Cerrar sesión"
-        android:icon="@android:drawable/ic_lock_power_off"
-        app:showAsAction="never" />
-
-
-
+        android:id="@+id/action_menu"
+        android:title="Menú"
+        android:icon="@drawable/ic_menu_hamburges"
+        android:contentDescription="Abrir menú"
+        android:iconTint="@color/color_txt_app"
+        app:showAsAction="always" />
 
 </menu>

@@ -67,22 +67,22 @@ class Principal : AppCompatActivity() {
         }
     }
 
-    // Infla el menú
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_principal, menu)
-        return true
-    }
-
-    // Maneja la opción de cerrar sesión
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_CerrarSeccion -> {
-                cerrarSesion()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
+//    // Infla el menú
+//    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+//        menuInflater.inflate(R.menu.menu_principal, menu)
+//        return true
+//    }
+//
+//    // Maneja la opción de cerrar sesión
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        return when (item.itemId) {
+//            R.id.action_CerrarSeccion -> {
+//                cerrarSesion()
+//                true
+//            }
+//            else -> super.onOptionsItemSelected(item)
+//        }
+//    }
 
     // Función para cerrar sesión
     private fun cerrarSesion() {

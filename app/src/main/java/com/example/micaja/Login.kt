@@ -53,6 +53,7 @@ class Login : AppCompatActivity() {
     private fun configurarBotones() {
         binding.tvRegistrate.setOnClickListener { irARegistro() }
         binding.BtnRegistrar.setOnClickListener { iniciarSesion() }
+        binding.plus.setOnClickListener { irAPrincipalActivity() }
     }
 
     private fun iniciarSesion() {
