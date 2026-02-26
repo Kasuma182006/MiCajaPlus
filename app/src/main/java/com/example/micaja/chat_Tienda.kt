@@ -9,7 +9,7 @@ import android.speech.SpeechRecognizer
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
-import android.widget.PopupMenu
+// PopupMenu reemplazado por MenuBottomSheet — ver configuracionMenu()
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -109,31 +109,20 @@ class chat_Tienda : AppCompatActivity() {
     }
 
     private fun configuracionMenu() {
-        binding.btnMenu.setOnClickListener { mostrarMenuDesplegable(it) }
-    }
-
-    private fun mostrarMenuDesplegable(view: View) {
-        val popup = PopupMenu(this, view)
-        popup.menuInflater.inflate(R.menu.menu_principal, popup.menu)
-
-        popup.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                R.id.action_CerrarSeccion -> {
+        // PopupMenu reemplazado por MenuBottomSheet
+        // Comandos y Cerrar sesión (mas Balance, Editar Cliente, Editar Producto)
+        binding.btnMenu.setOnClickListener {
+            val sheet = MenuBottomSheet(
+                onComandos = {
+                    dialogo_comandos().show(supportFragmentManager, "DialogoComandos")
+                },
+                onCerrarSesion = {
                     Toast.makeText(this, "Cerrando sesión...", Toast.LENGTH_SHORT).show()
                     SesionManager.cerrarSesion(this)
-                    true
                 }
-
-                R.id.action_Comandos -> {
-                    val dialogo = dialogo_comandos()
-                    dialogo.show(supportFragmentManager, "DialogoComandos")
-                    true
-                }
-                else -> false
-            }
+            )
+            sheet.show(supportFragmentManager, "MenuBottomSheet")
         }
-        popup.show()
-
     }
 
     private fun ConfTrans() {
@@ -273,7 +262,7 @@ class chat_Tienda : AppCompatActivity() {
 //                            .addToBackStack(null)
 //                            .commit()
 //                    }
-                }
+            }
             val precio = calcularMonto(palabra)
 
             if (precio !=  null && precio>=100){
