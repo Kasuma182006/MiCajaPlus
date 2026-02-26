@@ -87,6 +87,7 @@
     <string name="label_Paso1_Producto">① Seleccionar producto</string>
     <string name="label_Paso2_Producto">② Editar datos</string>
     <string name="cd_btnBuscarProducto">buscar_producto</string>
+    <string name="hint_BuscarPresentacion">Buscar Presentación...</string>
 
 
 </resources>

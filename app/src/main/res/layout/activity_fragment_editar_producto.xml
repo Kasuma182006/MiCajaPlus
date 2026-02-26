@@ -122,9 +122,59 @@
                     android:inputType="text"
                     android:textSize="14sp" />
 
+
             </com.google.android.material.textfield.TextInputLayout>
 
         </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvBuscadorPresentacion"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="8dp"
+            app:cardBackgroundColor="#FFFFFF"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="3dp"
+            app:layout_constraintEnd_toStartOf="@id/btnBuscarProducto"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cvBuscador">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textBuscarPresentacion"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                app:boxCornerRadiusTopStart="16dp"
+                app:boxCornerRadiusTopEnd="16dp"
+                app:boxCornerRadiusBottomStart="16dp"
+                app:boxCornerRadiusBottomEnd="16dp"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/colorOnSecondary"
+                app:startIconDrawable="@drawable/ic_search"
+                app:startIconTint="@color/colorOnSecondary"
+                app:counterEnabled="true"
+                app:counterMaxLength="60"
+                app:hintEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etBuscarPresentacion"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/hint_BuscarPresentacion"
+                    android:textColorHint="@color/gris"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:textSize="14sp" />
+
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </androidx.cardview.widget.CardView>
+
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnBuscarProducto"
@@ -143,7 +193,7 @@
             app:iconTint="#FFFFFF"
             app:rippleColor="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/labelPaso1"
+            app:layout_constraintTop_toBottomOf="@id/cvBuscador"
             app:layout_constraintBottom_toBottomOf="@id/cvBuscador" />
 
 
@@ -159,7 +209,7 @@
             android:textStyle="bold"
             android:letterSpacing="0.02"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cvBuscador" />
+            app:layout_constraintTop_toBottomOf="@id/cvBuscadorPresentacion" />
 
         <!--
                Controla android:alpha del CardView (0.5 = deshabilitado, 1.0 = habilitado)
