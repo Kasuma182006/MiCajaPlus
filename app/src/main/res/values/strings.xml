@@ -50,7 +50,7 @@
     <string name="ResumenDia">Resumen Del Día</string>
     <string name="abono">Abono</string>
     <string name="Editar_Inventario">Editar Producto</string>
-    <string name="NombreProducto">Nombre Producto</string>
+    <string name="NombreProducto">Nombre del Producto</string>
     <string name="Presentación">Presentación</string>
     <string name="Proveedor">Proveedor</string>
     <string name="precioVenta">Precio Venta ($)</string>

@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="16dp"
-                android:text="Comandos"
+                android:text="Como usar el chat"
                 android:textColor="@color/colorOnSecondary"
                 android:textSize="15sp" />
 

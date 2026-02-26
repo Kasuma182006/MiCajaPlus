@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    bg_chip_comando.xml
+    Guardar en: res/drawable/bg_chip_comando.xml
+    Fondo redondeado del chip de ejemplo en item_comando.xml
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/colorPrimary" />
+    <corners android:radius="20dp" />
+</shape>
