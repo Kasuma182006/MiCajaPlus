@@ -58,9 +58,9 @@
     <string name="titulo_EditarCliente">Editar Cliente</string>
     <string name="subtitulo_EditarCliente">Busca y modifica los datos del cliente</string>
     <string name="hint_BuscarCliente">Buscar Cedula</string>
-    <string name="label_Paso1">Seleccionar cliente</string>
+    <string name="label_Paso1">① Seleccionar cliente</string>
     <string name="cd_btnBuscar">boton buscar cliente</string>
-    <string name="label_Paso2">Editar cliente</string>
+    <string name="label_Paso2">② Editar cliente</string>
     <string name="hint_NombreCliente">Nombre del Cliente</string>
     <string name="hint_CedulaCliente">Cedula del Cliente</string>
     <string name="hint_TelefonoCliente">Telefono del Cliente</string>
@@ -82,6 +82,11 @@
     <string name="valor_cero">$ 0</string>
     <string name="editarCliente">Editar Cliente</string>
     <string name="editarProducto">Editar Producto</string>
+    <string name="subtitulo_EditarProducto">Busca y modifica los datos de producto</string>
+
+    <string name="label_Paso1_Producto">① Seleccionar producto</string>
+    <string name="label_Paso2_Producto">② Editar datos</string>
+    <string name="cd_btnBuscarProducto">buscar_producto</string>
 
 
 </resources>

@@ -58,6 +58,16 @@
             android:name=".chat_Tienda"
             android:exported="false"
             android:windowSoftInputMode="adjustResize|stateHidden" />
+
+        <activity
+            android:name=".editar_clientes"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
+        <activity
+            android:name=".fragment_editar_producto"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
+
     </application>
 
 </manifest>

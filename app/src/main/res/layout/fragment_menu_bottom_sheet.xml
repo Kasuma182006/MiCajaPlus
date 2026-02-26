@@ -324,9 +324,9 @@
 
             <ImageView
                 android:id="@+id/ic_Cerrar_Seccion"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:src="@android:drawable/ic_lock_power_off"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_close_session"
                 android:contentDescription="Cerrar sesión"
                 android:alpha="1"
                 app:tint="@color/utilidad_negative" />
