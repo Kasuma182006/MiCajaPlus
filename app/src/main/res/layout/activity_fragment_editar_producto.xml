@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:fillViewport="true"
-    android:id="@+id/main"
-    android:background="#FFFFFF"
+    android:background="@color/colorBackground"
     tools:context=".fragment_editar_producto">
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="24dp">
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="24dp">
+
 
         <ImageButton
             android:id="@+id/btnRetroceso"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/ic_Retroceder"
             android:padding="10dp"
@@ -26,188 +29,342 @@
             android:src="@drawable/retroceso"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="#4B3375" />
+            app:tint="@color/colorOnSecondary" />
 
+        <ImageView
+            android:id="@+id/Logo_app"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:contentDescription="@string/logo_App"
+            android:src="@drawable/logo_app"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvTituloEditar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="20dp"
             android:text="@string/Editar_Inventario"
-            android:textColor="#4B3375"
+            android:textColor="@color/colorOnSecondary"
             android:textSize="26sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/Logo_app" />
-
-        <ImageView
-            android:id="@+id/Logo_app"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/logo_app"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/tvTituloEditar"
-            android:layout_marginBottom="5dp"/>
+            app:layout_constraintTop_toBottomOf="@id/btnRetroceso" />
 
         <TextView
-            android:id="@+id/labelNombre"
+            android:id="@+id/tvSubtitulo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="@string/NombreProducto"
-            android:textSize="15sp"
-            android:textColor="#4B3375"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvTituloEditar" />
-
-        <EditText
-            android:id="@+id/etNombreProducto"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:minHeight="55dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/bg_edittext_rounded"
-            android:hint="@string/EjArroz"
-            android:textSize="15sp"
-            android:inputType="textMultiLine"
-            android:paddingStart="16dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/subtitulo_EditarProducto"
+            android:textColor="@color/gris"
+            android:textSize="13sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/labelNombre" />
-
-        <TextView
-            android:id="@+id/labelDescripcion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/Presentación"
-            android:textSize="15sp"
-            android:textColor="#4B3375"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etNombreProducto" />
-
-        <EditText
-            android:id="@+id/etDescripcionProducto"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:minHeight="55dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/bg_edittext_rounded"
-            android:hint="@string/presentacion"
-            android:textSize="15sp"
-            android:inputType="textMultiLine"
-
-            android:padding="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/labelDescripcion"
-            />
-
-        <TextView
-            android:id="@+id/labelProveedor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/Proveedor"
-            android:textSize="15sp"
-            android:textColor="#4B3375"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etDescripcionProducto" />
-
-        <EditText
-            android:id="@+id/Proveedor"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:minHeight="55dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/bg_edittext_rounded"
-            android:hint="@string/EjCocacola"
-            android:textSize="15sp"
-            android:inputType="textMultiLine"
-            android:gravity="top"
-            android:padding="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/labelPrecio"
-            app:layout_constraintTop_toBottomOf="@+id/labelProveedor" />
+            app:layout_constraintTop_toBottomOf="@id/tvTituloEditar" />
 
 
         <TextView
-            android:id="@+id/labelPrecio"
+            android:id="@+id/labelPaso1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/precioVenta"
-            android:textSize="15sp"
-            android:textColor="#4B3375"
+            android:layout_marginTop="28dp"
+            android:text="@string/label_Paso1_Producto"
+            android:textColor="@color/colorOnSecondary"
+            android:textSize="14sp"
             android:textStyle="bold"
+            android:letterSpacing="0.02"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/Proveedor" />
+            app:layout_constraintTop_toBottomOf="@id/tvSubtitulo" />
 
-        <EditText
-            android:id="@+id/etPrecioProducto"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvBuscador"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:minHeight="55dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/bg_edittext_rounded"
-            android:hint="@string/valor_cero"
-            android:textSize="15sp"
-            android:inputType="numberDecimal"
-            android:paddingStart="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="8dp"
+            app:cardBackgroundColor="#FFFFFF"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="3dp"
+            app:layout_constraintEnd_toStartOf="@id/btnBuscarProducto"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/labelPrecio" />
+            app:layout_constraintTop_toBottomOf="@id/labelPaso1">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textBuscarProducto"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                app:boxCornerRadiusTopStart="16dp"
+                app:boxCornerRadiusTopEnd="16dp"
+                app:boxCornerRadiusBottomStart="16dp"
+                app:boxCornerRadiusBottomEnd="16dp"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/colorOnSecondary"
+                app:startIconDrawable="@drawable/ic_search"
+                app:startIconTint="@color/colorOnSecondary"
+                app:counterEnabled="true"
+                app:counterMaxLength="60"
+                app:hintEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etBuscarProducto"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/hint_BuscarProducto"
+                    android:textColorHint="@color/gris"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:textSize="14sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnBuscarProducto"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="10dp"
+            android:contentDescription="@string/cd_btnBuscarProducto"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:backgroundTint="@color/btn_registrarse"
+            app:cornerRadius="16dp"
+            app:icon="@drawable/ic_search"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconSize="24dp"
+            app:iconTint="#FFFFFF"
+            app:rippleColor="@color/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/labelPaso1"
+            app:layout_constraintBottom_toBottomOf="@id/cvBuscador" />
+
+
 
         <TextView
-            android:id="@+id/labelCantidad"
+            android:id="@+id/labelPaso2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/Cantidad"
-            android:textSize="15sp"
-            android:textColor="#4B3375"
+            android:layout_marginTop="28dp"
+            android:text="@string/label_Paso2_Producto"
+            android:textColor="@color/colorOnSecondary"
+            android:textSize="14sp"
             android:textStyle="bold"
+            android:letterSpacing="0.02"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etPrecioProducto" />
+            app:layout_constraintTop_toBottomOf="@id/cvBuscador" />
 
-        <EditText
-            android:id="@+id/etCantidadProducto"
+        <!--
+               Controla android:alpha del CardView (0.5 = deshabilitado, 1.0 = habilitado)
+               y android:enabled de cada TextInputEditText desde el código Java/Kotlin
+               segun si el usuario ha seleccionado un producto o no.
+        -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvFormulario"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:minHeight="55dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/bg_edittext_rounded"
-            android:hint="@string/Ej12"
-            android:textSize="15sp"
-            android:inputType="number"
-            android:paddingStart="16dp"
+            android:layout_marginTop="12dp"
+            android:alpha="0.5"
+            app:cardBackgroundColor="#FFFFFF"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/labelCantidad" />
+            app:layout_constraintTop_toBottomOf="@id/labelPaso2"
+            tools:alpha="1.0">
 
-        <Button
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilNombreProducto"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/NombreProducto"
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:boxStrokeColor="@color/colorPrimary"
+                    app:boxStrokeWidth="1.5dp"
+                    app:hintTextColor="@color/colorOnSecondary"
+                    app:startIconTint="@color/colorOnSecondary"
+                    app:endIconMode="clear_text"
+                    app:endIconTint="@color/colorOnSecondary"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="60">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etNombreProducto"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textCapWords"
+                        app:counterMaxLength="@integer/NombreProducto"
+                        android:textSize="15sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilDescripcionProducto"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="@string/Presentación"
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:boxStrokeColor="@color/colorPrimary"
+                    app:boxStrokeWidth="1.5dp"
+                    app:hintTextColor="@color/colorOnSecondary"
+                    app:startIconTint="@color/colorOnSecondary"
+                    app:endIconMode="clear_text"
+                    app:endIconTint="@color/colorOnSecondary"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="80">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etDescripcionProducto"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textMultiLine"
+                        app:counterMaxLength="@integer/Presentacion"
+                        android:textSize="15sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilProveedor"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="@string/Proveedor"
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:boxStrokeColor="@color/colorPrimary"
+                    app:boxStrokeWidth="1.5dp"
+                    app:hintTextColor="@color/colorOnSecondary"
+                    app:startIconTint="@color/colorOnSecondary"
+                    app:endIconMode="clear_text"
+                    app:endIconTint="@color/colorOnSecondary"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="60">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/Proveedor"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textCapWords"
+                        app:counterMaxLength="@integer/Proveedor"
+                        android:textSize="15sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilPrecioProducto"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="@string/precioVenta"
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:boxStrokeColor="@color/colorPrimary"
+                    app:boxStrokeWidth="1.5dp"
+                    app:hintTextColor="@color/colorOnSecondary"
+                    app:prefixText="$ "
+                    app:prefixTextColor="@color/colorOnSecondary"
+                    app:startIconTint="@color/colorOnSecondary"
+                    app:endIconMode="clear_text"
+                    app:endIconTint="@color/colorOnSecondary"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="10">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etPrecioProducto"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal"
+                        app:counterMaxLength="@integer/PrecioProducto"
+                        android:textSize="15sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilCantidadProducto"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="@string/Cantidad"
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:boxStrokeColor="@color/colorPrimary"
+                    app:boxStrokeWidth="1.5dp"
+                    app:hintTextColor="@color/colorOnSecondary"
+                    app:startIconTint="@color/colorOnSecondary"
+                    app:endIconMode="clear_text"
+                    app:endIconTint="@color/colorOnSecondary"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="10">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etCantidadProducto"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        app:counterMaxLength="@integer/CantidadProducto"
+                        android:textSize="15sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnGuardarProducto"
-            android:layout_width="200dp"
-            android:layout_height="64dp"
-            android:layout_marginTop="32dp"
+            android:layout_width="250dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="28dp"
             android:layout_marginBottom="16dp"
-            android:backgroundTint="#4B3375"
             android:text="@string/GUARDARPRODUCTO"
             android:textColor="#FFFFFF"
+            android:textSize="16sp"
             android:textStyle="bold"
+            android:letterSpacing="0.04"
+            app:backgroundTint="@color/btn_registrarse"
             app:cornerRadius="30dp"
+            app:iconGravity="textStart"
+            app:iconPadding="8dp"
+            app:iconTint="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etCantidadProducto" />
+            app:layout_constraintTop_toBottomOf="@id/cvFormulario"
+            app:rippleColor="@color/colorPrimary" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

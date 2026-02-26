@@ -4,4 +4,11 @@
     <integer name="NombreCliente">60</integer>
     <integer name="Telefono">10</integer>
     <integer name="valorCredito">12</integer>
+
+
+    <integer name="NombreProducto">60</integer>
+    <integer name="Presentacion">80</integer>
+    <integer name="Proveedor">60</integer>
+    <integer name="PrecioProducto">10</integer>
+    <integer name="CantidadProducto">10</integer>
 </resources>
