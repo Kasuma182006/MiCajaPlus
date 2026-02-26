@@ -63,7 +63,7 @@ interface ConexionServiceTienda {
     suspend fun addOperacion(@Body operacion : modeloOperaciones): Response<Map<String,Any>>
 
     companion object messi {
-        private const val BASE_URL = "http://10.6.125.198:4000"
+        private const val BASE_URL = "http://10.6.125.84:4000"
 
         fun create(): ConexionServiceTienda {
             val retrofit = Retrofit.Builder()
