@@ -85,6 +85,7 @@
             android:layout_height="56dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="8dp"
+            android:layout_marginStart="5dp"
             app:cardBackgroundColor="#FFFFFF"
             app:cardCornerRadius="16dp"
             app:cardElevation="3dp"
@@ -105,7 +106,6 @@
                 app:boxCornerRadiusBottomEnd="16dp"
                 app:endIconMode="clear_text"
                 app:endIconTint="@color/colorOnSecondary"
-                app:startIconDrawable="@drawable/ic_search"
                 app:startIconTint="@color/colorOnSecondary"
                 app:counterEnabled="true"
                 app:counterMaxLength="60"
@@ -131,6 +131,7 @@
             android:id="@+id/cvBuscadorPresentacion"
             android:layout_width="0dp"
             android:layout_height="56dp"
+            android:layout_marginStart="5dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="8dp"
             app:cardBackgroundColor="#FFFFFF"
@@ -153,7 +154,6 @@
                 app:boxCornerRadiusBottomEnd="16dp"
                 app:endIconMode="clear_text"
                 app:endIconTint="@color/colorOnSecondary"
-                app:startIconDrawable="@drawable/ic_search"
                 app:startIconTint="@color/colorOnSecondary"
                 app:counterEnabled="true"
                 app:counterMaxLength="60"
@@ -178,10 +178,10 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnBuscarProducto"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_marginTop="10dp"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
             android:contentDescription="@string/cd_btnBuscarProducto"
+            android:layout_marginStart="6.5dp"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             app:backgroundTint="@color/btn_registrarse"
@@ -189,14 +189,13 @@
             app:icon="@drawable/ic_search"
             app:iconGravity="textStart"
             app:iconPadding="0dp"
-            app:iconSize="24dp"
+            app:iconSize="44dp"
             app:iconTint="#FFFFFF"
-            app:rippleColor="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="@id/cvBuscadorPresentacion"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cvBuscador"
-            app:layout_constraintBottom_toBottomOf="@id/cvBuscador" />
-
-
+            app:layout_constraintTop_toTopOf="@id/cvBuscador"
+            app:layout_constraintVertical_bias="0.507"
+            app:rippleColor="@color/colorPrimary" />
 
         <TextView
             android:id="@+id/labelPaso2"

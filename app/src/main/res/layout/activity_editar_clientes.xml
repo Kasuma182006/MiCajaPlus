@@ -108,7 +108,6 @@
                 app:boxCornerRadiusBottomEnd="16dp"
                 app:endIconMode="clear_text"
                 app:endIconTint="@color/colorOnSecondary"
-                app:startIconDrawable="@drawable/ic_search"
                 app:startIconTint="@color/colorOnSecondary"
                 app:counterEnabled="true"
                 app:hintEnabled="false">

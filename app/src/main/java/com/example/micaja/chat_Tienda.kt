@@ -95,8 +95,21 @@ class chat_Tienda : AppCompatActivity() {
         val preferencia = getSharedPreferences("SesionTendero", MODE_PRIVATE)
 
         val cedula = preferencia.getString("cedula", null)
-        CoroutineScope(Dispatchers.IO).launch { ConexionServiceTienda.llamarInventario(cedula.toString()) }
-
+//        CoroutineScope(Dispatchers.IO).launch { ConexionServiceTienda.llamarInventario(cedula.toString()) }
+        //Esto ↓ lo agrego julio(yo) para evitar el crasheo al ejecutar la app sin el backend, habiliten ↑ esta linea y comenten
+     // esta ↓
+        // Protege la llamada inicial para que no cierre la app si falla el servidor
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                ConexionServiceTienda.llamarInventario(cedula.toString())
+            } catch (e: Exception) {
+                Log.e("ErrorRed", "No se pudo conectar al inventario: ${e.message}")
+                // Opcional: Avisar al usuario en el hilo principal
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@chat_Tienda, "Error de conexión con el servidor", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
 
         estadoTienda =  getSharedPreferences("EstadoTienda",MODE_PRIVATE)
         estadoBase = getSharedPreferences("EstadoBase",MODE_PRIVATE)
