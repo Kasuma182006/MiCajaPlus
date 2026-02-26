@@ -70,14 +70,6 @@ data class modeloOperaciones (
     val mensaje: String
 )
 
-data class inventario (
-    val idTendero: String,
-    val nombreProducto: String,
-    val cantidad: Int,
-    val precioCompra: Int,
-    val precioVenta: Int
-)
-
 data class listaProductos (
     val idTendero: String,
     val nombreProducto: String,
@@ -85,4 +77,17 @@ data class listaProductos (
     val precioCompra: Int,
     val precioVenta: Int,
     val proveedor: String
+)
+
+
+data class Inventario (
+
+    val idInventario: Int,
+    val idProductos: Int,
+    val cantidad: Int,
+    val valorVenta: Int,
+    val valorCompra: Int,
+    val idCategorias: Int,
+    val nombre: String,
+    val presentacion: String
 )

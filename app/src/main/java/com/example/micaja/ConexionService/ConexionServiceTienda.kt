@@ -1,18 +1,24 @@
 package com.example.micaja.ConexionService
 
+import android.util.Log
 import com.example.micaja.chat_Tienda
 import com.example.micaja.models.ConsultarOperaXFecha
 import com.example.micaja.models.Credito
 import com.example.micaja.models.Datos_Abono
 import com.example.micaja.models.Identificacion
+import com.example.micaja.models.Inventario
 import com.example.micaja.models.ModeloBase
 import com.example.micaja.models.NumeroCreditosResponse
 import com.example.micaja.models.Tendero
 import com.example.micaja.models.TipoOperacionXFecha
 import com.example.micaja.models.cliente
 import com.example.micaja.models.clienteNuevo
-import com.example.micaja.models.inventario
+
 import com.example.micaja.models.modeloOperaciones
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.withContext
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -46,9 +52,6 @@ interface ConexionServiceTienda {
     @PUT("/abono")
     suspend fun abono(@Body abono: Datos_Abono): Response<Void>
 
-    @POST("/consultarProductoInventario")
-    @Headers("Content-Type: application/json")
-    suspend fun ProductoEnInventario(@Body inventario: inventario): Response<Map<String,Any>>
 
     @POST("ConsultarEstadisticas")
     suspend fun consultarXFecha(@Body request: ConsultarOperaXFecha): Response<List<TipoOperacionXFecha>>
@@ -62,8 +65,12 @@ interface ConexionServiceTienda {
     @POST("agregarOperacion")
     suspend fun addOperacion(@Body operacion : modeloOperaciones): Response<Map<String,Any>>
 
+    @GET("/cargar_inventario")
+    suspend fun traerInventario(@Query("idTendero") idTendero: String): Response<List<Inventario>>
+
     companion object messi {
-        private const val BASE_URL = "http://10.6.125.84:4000"
+        private const val BASE_URL = "http://10.6.124.193:4000"
+        var inventario = MutableStateFlow<List<Inventario>>(emptyList())
 
         fun create(): ConexionServiceTienda {
             val retrofit = Retrofit.Builder()
@@ -71,6 +78,22 @@ interface ConexionServiceTienda {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
             return retrofit.create(ConexionServiceTienda::class.java)
+        }
+
+
+        suspend fun llamarInventario(idTendero:String){
+
+            val response = withContext(Dispatchers.IO)  {create().traerInventario(idTendero)}
+
+            if (response.isSuccessful){
+                inventario.value = response.body() ?: emptyList()
+                Log.d("Retrofit","tamaño de lista: ${inventario.value}")
+            }
+
+        }
+
+        fun obtenerInventario(): MutableStateFlow<List<Inventario>>{
+            return inventario
         }
     }
 }

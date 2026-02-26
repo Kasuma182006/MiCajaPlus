@@ -17,7 +17,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.micaja.Adapter.Adapter
 import com.example.micaja.ConexionService.ConexionServiceTienda
@@ -66,6 +69,8 @@ class chat_Tienda : AppCompatActivity() {
     lateinit var estadoTienda: SharedPreferences
     lateinit var estadoBase: SharedPreferences
 
+
+
     private val model: TenderoViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -86,6 +91,12 @@ class chat_Tienda : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        val preferencia = getSharedPreferences("SesionTendero", MODE_PRIVATE)
+
+        val cedula = preferencia.getString("cedula", null)
+        CoroutineScope(Dispatchers.IO).launch { ConexionServiceTienda.llamarInventario(cedula.toString()) }
+
 
         estadoTienda =  getSharedPreferences("EstadoTienda",MODE_PRIVATE)
         estadoBase = getSharedPreferences("EstadoBase",MODE_PRIVATE)
