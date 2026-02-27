@@ -26,8 +26,8 @@ import com.example.micaja.Adapter.Adapter
 import com.example.micaja.ConexionService.ConexionServiceTienda
 import com.example.micaja.databinding.ActivityChatTiendaBinding
 import com.example.micaja.models.ModeloBase
+import com.example.micaja.models.crear_venta
 import com.example.micaja.models.modelo
-import com.example.micaja.models.modeloOperaciones
 import com.example.micaja.utils.SesionManager
 import com.example.micaja.viewmodel.TenderoViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -110,6 +110,8 @@ class chat_Tienda : AppCompatActivity() {
                 }
             }
         }
+
+
 
         estadoTienda =  getSharedPreferences("EstadoTienda",MODE_PRIVATE)
         estadoBase = getSharedPreferences("EstadoBase",MODE_PRIVATE)
@@ -245,119 +247,128 @@ class chat_Tienda : AppCompatActivity() {
 
         return  false
     }
+    val unidades = listOf("libra", "kilo", "unidad", "paquete", "bolsa", "paca", "litro", "pequeña", "grande", "mediana" )
+
 
     /* Aquí se encuentran las funciones para el reconocimiento de valores y palabras*/
 
-
     fun procesarCompra(texto: String) {
         val prefs = getSharedPreferences("SesionTendero", MODE_PRIVATE)
-        val cedula = prefs.getString("cedula", null)
-        var cerrada = 0
-        var monto = 0
-        var tipoVenta = ""
-        var respuestaSistema = ""
+        val cedula = prefs.getString("cedula", null) ?: return
 
-        val palabras = texto.lowercase().split(Regex("""[\s:]+""") )
+        // limpieza elimina  puntos y comas
+        val textoLimpio = texto.replace(Regex("""(\d)[.,](\d{3})\b"""), "$1$2")
+        val textoMinuscula = textoLimpio.lowercase()
 
-        for (palabra in palabras){
+        // Detecta (Venta, Cierre, Crédito)
+        val palabras = textoMinuscula.split(Regex("""[\s:]+"""))
+        val esVenta = palabras.any { diccionario["venta"]?.contains(it) == true }
 
-            if (diccionario["venta"]?.contains(palabra)==true){
-                Log.i("entrando", "Entro al primer if")
-                val mensaje = modelo("¿Que productos vendío?.")
-                for (p in palabras) {
-                    Log.i("ciclo", p)
-                    if(diccionario["credito"]?.contains(p)==true){
-                        credito = true
-                        model.addMensajeSistema(mensaje)
-                        Log.i("entrando", "Entro a credito")
-                    }else if (diccionario["efectivo"]?.contains(p)==true){
-                        model.addMensajeSistema(mensaje)
-                        Log.i("entrando", "Entro a efectivo")
-                    }
+        if (esVenta) {
+            // Separamos por conectores para manejar múltiples productos
+            val segmentos = textoMinuscula.split(Regex(",|\\by\\b|;|\\."))
+                .map { it.trim() }
+                .filter { it.length > 3 }
 
-                }
+            val listaResumen = mutableListOf<String>()
+            var sumaTotalVenta = 0
 
-//                    if ((diccionario["credito"]?.contains(palabra)?:false)){
-//                        tipoVenta = "credito"
-//                        binding.messageInput.clearFocus()
-//                        supportFragmentManager
-//                            .beginTransaction()
-//                            .replace(R.id.fragmento_opciones, Opciones())
-//                            .addToBackStack(null)
-//                            .commit()
+            for (segmento in segmentos) {
+                val datos = extraerDatosProducto(segmento)
+
+                if (datos != null) {
+                    val (nombre, pres, precio) = datos
+
+                    // Acumulamos para el mensaje final y el total
+                    listaResumen.add("• $nombre ($pres) por $$precio")
+                    sumaTotalVenta += precio
+
+                    Log.d("DETECCION_VENTA", "REGISTRADO -> PROD: $nombre | PRES: $pres | PRECIO: $precio")
+
+
+//                    CoroutineScope(Dispatchers.IO).launch {
+//                        try {
+//                            val service = ConexionServiceTienda.create()
+//                            val op = crear_venta(cedula, "Venta", sumaTotalVenta, mensaje)
+//                            service.addOperacion(op)
+//                            withContext(Dispatchers.Main) {
+//                                montoVentas += precio
+//                            }
+//                        } catch (e: Exception) {
+//                            Log.e("API", "Error al guardar: ${e.message}")
+//                        }
 //                    }
-            }
-            val precio = calcularMonto(palabra)
-
-            if (precio !=  null && precio>=100){
-                monto += precio
-            }
-
-            if ((diccionario["cerrar"]?.contains(palabra)?:false)){
-                Log.i("cerrar", "La tienda cerro.")
-                cerrarTienda()
-                cerrada = 1
-
-            }
-
-        }
-        //
-        if (tipoVenta != "credito" && monto != 0) {
-            tipoVenta = tipoVenta(palabras)
-
-            when (tipoVenta) {
-//                "venta" -> {montoVentas += monto
-//                    CoroutineScope(Dispatchers.IO).launch{
-//
-//                        val service = ConexionServiceTienda.create()
-//                        val venta = modeloOperaciones(tipoVenta, monto, cedula!!,mensaje)
-//                        val respuesta = service.addOperacion(venta)
-//                    }
-//                }
-                "gasto" -> {montoGastos += monto
-                    CoroutineScope(Dispatchers.IO).launch{
-
-                        val service = ConexionServiceTienda.create()
-                        val gasto = modeloOperaciones(tipoVenta,monto, cedula!!, mensaje)
-                        val respuesta = service.addOperacion(gasto)
-                    }
                 }
-                "compra" -> {montoCostos += monto
-                    CoroutineScope(Dispatchers.IO).launch{
+            }
 
-                        val service = ConexionServiceTienda.create()
-                        val costo = modeloOperaciones(tipoVenta,monto, cedula!!, mensaje)
-                        val respuesta = service.addOperacion(costo)
-                    }
-                }
-                "sin coincidencias"-> {Log.d(TAG, "No se han encontrado coincidencias")}
+            // respuesta sistema
+            if (listaResumen.isNotEmpty()) {
+                val saludo = "¡Entendido! He registrado lo siguiente:\n"
+                val cuerpo = listaResumen.joinToString("\n")
+                val total = "\n\nTotal esta operación: $$sumaTotalVenta"
+
+                model.addMensajeSistema(modelo(saludo + cuerpo + total))
+            } else {
+                model.addMensajeSistema(modelo("Detecté una venta, pero no logré identificar el producto o el precio. Intenta algo como: Arroz libra 3500"))
             }
         }
 
-//        respuestaSistema = when (tipoVenta) {
-//            "venta" -> "Se ha registrado una venta por $monto"
-//            "gasto" -> "Se ha registrado un gasto por $monto"
-//            "compra" -> "Se ha registrado un costo por $monto"
-//            "credito"-> "Abriendo la interfaz de credito..."
-//            else -> "No hay coincidencias, por favor revisa tu mensaje"
-//        }
-//
-//        if (cerrada == 0){
-//            val sistema = modelo(respuestaSistema)
-//            model.addMensajeSistema(sistema)
-//        }
-//        else {
-//            respuestaSistema = when (tipoVenta) {
-//                "venta" -> "La última venta se ha hecho por $monto y ahora la tienda está cerrada"
-//                "gasto" -> "El ultimo gasto se ha hecho por $monto y ahora la tienda está cerrada"
-//                "compra" -> "La ultima compra se ha hecho por $monto y ahora la tienda está cerrada"
-//
-//                else -> "la tienda se ha cerrado correctamente"
-//            }
-//            val sistema = modelo(respuestaSistema)
-//
-//            cerrarTienda()
-//        }
+
+        if (palabras.any { diccionario["cerrar"]?.contains(it) == true }) {
+            cerrarTienda()
+        }
+
+        if (palabras.any { diccionario["credito"]?.contains(it) == true }) {
+            credito = true
+            model.addMensajeSistema(modelo("Iniciando registro de crédito..."))
+        }
+    }
+
+
+    private fun extraerDatosProducto(segmento: String): Triple<String, String, Int>? {
+        var s = segmento.trim()
+
+        //Extraer Monto
+        var precioFinal: Int? = null
+        var textoPrecioEncontrado = ""
+
+        val fragmentos = s.split(" ")
+        for (f in fragmentos) {
+            val resultadoMonto = calcularMonto(f) // 20k, 20.000, etc.
+            if (resultadoMonto != null && resultadoMonto >= 100) {
+                precioFinal = resultadoMonto
+                textoPrecioEncontrado = f
+                break
+            }
+        }
+
+        if (precioFinal == null) return null
+
+        // LIMPIEZA DE PRECIO Y SÍMBOLOS
+        s = s.replace(textoPrecioEncontrado, "").replace("$", "").trim()
+
+        // identifica presentacion Usando tu lista de 'unidades'
+        var unidadDetectada = "unidad"
+        for (u in unidades) {
+            if (s.contains(u)) {
+                unidadDetectada = u
+                s = s.replace(u, "").trim()
+                break
+            }
+        }
+
+        // limpieza de piskini
+        val ruido = listOf("vendi", "vendí", "vende", "venta", "un", "una", "de", "a", "por", "el", "la", "total", "precio", "también")
+        var nombreLimpio = s
+        for (r in ruido) {
+            nombreLimpio = nombreLimpio.replace(Regex("\\b$r\\b", RegexOption.IGNORE_CASE), "")
+        }
+
+        nombreLimpio = nombreLimpio.trim().replace(Regex("\\s+"), " ")
+
+        return if (nombreLimpio.isNotEmpty()) {
+            Triple(nombreLimpio.replaceFirstChar { it.uppercase() }, unidadDetectada, precioFinal)
+        } else null
     }
 
     private fun cerrarTienda() {

@@ -14,7 +14,7 @@ import com.example.micaja.models.TipoOperacionXFecha
 import com.example.micaja.models.cliente
 import com.example.micaja.models.clienteNuevo
 
-import com.example.micaja.models.modeloOperaciones
+
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -62,8 +62,6 @@ interface ConexionServiceTienda {
     @POST("agregarBase")
     suspend fun addBase(@Body base: ModeloBase): Response<Map <String,Any>>
 
-    @POST("agregarOperacion")
-    suspend fun addOperacion(@Body operacion : modeloOperaciones): Response<Map<String,Any>>
 
     @GET("/cargar_inventario")
     suspend fun traerInventario(@Query("idTendero") idTendero: String): Response<List<Inventario>>
