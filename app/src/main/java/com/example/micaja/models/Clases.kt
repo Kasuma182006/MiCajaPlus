@@ -63,11 +63,19 @@ data class ModeloBase(
     val baseInicial: Int
 )
 
-data class modeloOperaciones (
+data class crear_venta(
     val idTendero: String,
-    val tipo: Int,
-    val monto: String,
+    val tipo: String,
+    val monto: Int,
     val mensaje: String
+)
+
+data class inventario (
+    val idTendero: String,
+    val nombreProducto: String,
+    val cantidad: Int,
+    val precioCompra: Int,
+    val precioVenta: Int
 )
 
 data class listaProductos (
