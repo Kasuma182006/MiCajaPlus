@@ -32,7 +32,7 @@
             app:tint="@color/colorOnSecondary" />
 
         <ImageView
-            android:id="@+id/Logo_app"
+            android:id="@+id/etBuscarPresentacion"
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:contentDescription="@string/logo_App"
@@ -85,7 +85,7 @@
             android:layout_height="56dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="2dp"
             app:cardBackgroundColor="#FFFFFF"
             app:cardCornerRadius="16dp"
             app:cardElevation="3dp"
@@ -127,59 +127,11 @@
 
         </androidx.cardview.widget.CardView>
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cvBuscadorPresentacion"
-            android:layout_width="0dp"
-            android:layout_height="56dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="8dp"
-            app:cardBackgroundColor="#FFFFFF"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="3dp"
-            app:layout_constraintEnd_toStartOf="@id/btnBuscarProducto"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cvBuscador">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textBuscarPresentacion"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp"
-                app:boxCornerRadiusTopStart="16dp"
-                app:boxCornerRadiusTopEnd="16dp"
-                app:boxCornerRadiusBottomStart="16dp"
-                app:boxCornerRadiusBottomEnd="16dp"
-                app:endIconMode="clear_text"
-                app:endIconTint="@color/colorOnSecondary"
-                app:startIconTint="@color/colorOnSecondary"
-                app:counterEnabled="true"
-                app:counterMaxLength="60"
-                app:hintEnabled="false">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etBuscarPresentacion"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:hint="@string/hint_BuscarPresentacion"
-                    android:textColorHint="@color/gris"
-                    android:imeOptions="actionSearch"
-                    android:inputType="textMultiLine"
-                    android:textSize="14sp" />
-
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-        </androidx.cardview.widget.CardView>
-
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnBuscarProducto"
-            android:layout_width="65dp"
-            android:layout_height="65dp"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
             android:contentDescription="@string/cd_btnBuscarProducto"
             android:layout_marginStart="6.5dp"
             android:insetTop="0dp"
@@ -191,7 +143,7 @@
             app:iconPadding="0dp"
             app:iconSize="44dp"
             app:iconTint="#FFFFFF"
-            app:layout_constraintBottom_toBottomOf="@id/cvBuscadorPresentacion"
+            app:layout_constraintBottom_toBottomOf="@id/cvBuscador"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/cvBuscador"
             app:layout_constraintVertical_bias="0.507"
@@ -208,7 +160,7 @@
             android:textStyle="bold"
             android:letterSpacing="0.02"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cvBuscadorPresentacion" />
+            app:layout_constraintTop_toBottomOf="@id/cvBuscador" />
 
         <!--
                Controla android:alpha del CardView (0.5 = deshabilitado, 1.0 = habilitado)

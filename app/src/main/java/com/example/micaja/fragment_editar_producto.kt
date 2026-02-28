@@ -39,8 +39,8 @@ class fragment_editar_producto : AppCompatActivity() {
         // boton Buscar Producto
         binding.btnBuscarProducto.setOnClickListener {
             val nombreProducto: String = binding.etBuscarProducto.text.toString().lowercase()
-            val presentacion:String = binding.etBuscarPresentacion.text.toString().lowercase()
-
+            val presentacion:String = binding.labelPaso1.text.toString().lowercase()
+        //cambie(julio) el etBuscarPresentacion por ↑ esto ,para liberar el input y acomodar el frontend
             if (nombreProducto != "" && presentacion != ""){
                 buscarProducto(binding, nombreProducto,presentacion)
             }

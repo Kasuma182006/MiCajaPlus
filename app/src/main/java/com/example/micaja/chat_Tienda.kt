@@ -9,7 +9,6 @@ import android.speech.SpeechRecognizer
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
-// PopupMenu reemplazado por MenuBottomSheet — ver configuracionMenu()
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -37,6 +36,9 @@ import kotlinx.coroutines.withContext
 import java.util.Locale
 import kotlin.apply
 import kotlin.getValue
+import androidx.core.view.WindowInsetsControllerCompat
+import com.example.micaja.utils.TimeUtils
+
 
 var montoVentas = 0
 var montoGastos = 0
@@ -44,6 +46,9 @@ var montoCostos = 0
 var baseInicial = 0
 var credito: Boolean = false
 var montoCredito = 0
+
+var hora = TimeUtils.horaActual()
+
 
 val diccionario = mapOf(
     "abrir" to listOf("abierto","iniciar","inicio","open","abrir","abriendo","comenzar","comienzo","arrancar","empezar","empezemos","dia","día"),
@@ -191,11 +196,19 @@ class chat_Tienda : AppCompatActivity() {
     fun evento() {
         binding.sendBtn.setOnClickListener {
             mensaje = binding.messageInput.text.toString()
-            val texto = modelo(mensaje)
             val tienda = estadoTienda.getBoolean("abierta",false)
             val base = estadoBase.getBoolean("base",false)
             binding.messageInput.setText("")
+
+            // Ocultar el teclado al presionar enviar
+            WindowInsetsControllerCompat(window, binding.messageInput)
+                .hide(WindowInsetsCompat.Type.ime())
+
+            //Llama a TimeUtils para obtener la hora — la lógica vive en TimeUtils.kt
+
+            val texto = modelo(mensaje, hora)   //agrega hora al mensaje del usuario
             model.addMensaje(texto)
+
 
             if (tienda){
                 if (base) {

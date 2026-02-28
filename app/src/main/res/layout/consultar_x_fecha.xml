@@ -8,7 +8,9 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:background="@color/colorBackground"
-    tools:context=".Calendario.ConsultarXFecha">
+    tools:context=".Calendario.ConsultarXFecha"
+    android:clipToPadding="false"
+    android:paddingBottom="20dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/contenedor_estado"
@@ -17,7 +19,7 @@
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
         android:paddingTop="16dp"
-        android:paddingBottom="32dp">
+        android:paddingBottom="24dp">
 
         <ImageButton
             android:id="@+id/btnCerrar"
@@ -117,7 +119,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:hint="Inicio"
+                    android:hint="Desde"
+                    android:gravity="center"
                     android:textColorHint="@color/gris"
                     android:textColor="@color/colorOnSecondary"
                     android:textSize="13sp"
@@ -181,7 +184,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:hint="Fin"
+                    android:hint="Hasta"
+                    android:gravity="center"
                     android:textColorHint="@color/gris"
                     android:textColor="@color/colorOnSecondary"
                     android:textSize="13sp"
@@ -212,6 +216,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
+            android:gravity="center"
             android:hint="DD/MM/AAAA  →  DD/MM/AAAA"
             android:textColorHint="@color/gris"
             android:textColor="@color/colorOnSecondary"
@@ -517,7 +522,9 @@
             app:cardElevation="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cardFiados">
+            app:layout_constraintTop_toBottomOf="@id/cardFiados"
+            app:layout_constraintBottom_toBottomOf="parent"
+            >
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -532,7 +539,8 @@
                     app:cardCornerRadius="22dp"
                     app:cardElevation="0dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toTopOf="parent"
+                    >
 
                     <ImageView
                         android:layout_width="24dp"
