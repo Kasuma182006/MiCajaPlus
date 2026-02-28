@@ -61,7 +61,7 @@ class MenuBottomSheet(
         }
 
         //Cerrar sesion
-        binding.menuBtnCerrarSesion.setOnClickListener {
+        binding.icCerrarSeccion.setOnClickListener {
             dismiss()
             onCerrarSesion?.invoke()
         }

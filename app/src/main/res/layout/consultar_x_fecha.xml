@@ -1,319 +1,580 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="10dp"
-    tools:context=".Calendario.ConsultarXFecha"
-    android:background="@color/color_fondo"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:background="@color/colorBackground"
+    tools:context=".Calendario.ConsultarXFecha">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/contenedor_estado"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp">
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="32dp">
 
         <ImageButton
             android:id="@+id/btnCerrar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="20dp"
-            android:background="@drawable/flecha_retroceso"
-            app:layout_constraintEnd_toStartOf="@id/txtTitulo"
-            app:layout_constraintStart_toStartOf="@id/contenedor_estado"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/ic_Retroceder"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/retroceso"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/colorOnSecondary" />
 
         <ImageView
             android:id="@+id/Logo_app"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:contentDescription="@string/logo_App"
             android:src="@drawable/logo_app"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/txtTitulo"
-            app:layout_constraintStart_toEndOf="@id/txtTitulo"
-            android:layout_marginBottom="5dp"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/txtTitulo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="60dp"
-            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
             android:text="Estado de la tienda"
-            android:textColor="@color/ttl_campos"
-            android:textSize="25sp"
+            android:textColor="@color/colorOnSecondary"
+            android:textSize="26sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/btnCerrar"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/btnCerrar" />
+
+        <TextView
+            android:id="@+id/tvSubtitulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Consulta tus registros por fecha"
+            android:textColor="@color/gris"
+            android:textSize="13sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txtTitulo" />
 
         <TextView
             android:id="@+id/txt_colendario"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Rango"
-            android:textColor="@color/ttl_campos"
-            android:textSize="22sp"
+            android:layout_marginTop="28dp"
+            android:text="① Rango de fechas"
+            android:textColor="@color/colorOnSecondary"
+            android:textSize="14sp"
             android:textStyle="bold"
-            android:layout_marginTop="30dp"
-            app:layout_constraintTop_toBottomOf="@id/txtTitulo"
-            app:layout_constraintBottom_toTopOf="@id/btn_calendarioStar"
+            android:letterSpacing="0.02"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/tvSubtitulo" />
 
-        <TextView
-            android:id="@+id/btn_calendarioStar"
-            android:layout_width="120dp"
-            android:layout_height="42dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/bg_input_calendario"
-            android:text="Inicio"
-            android:textColor="@color/color_campos"
-            android:textColorHint="@color/color_campos"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:textAlignment="center"
-            app:layout_constraintTop_toBottomOf="@id/txt_colendario"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvBtnInicio"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginStart="2dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardBackgroundColor="#FFFFFF"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="3dp"
+            app:layout_constraintEnd_toStartOf="@id/cvBtnFin"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btn_calendarioEnd"
-            app:layout_constraintBottom_toTopOf="@id/tvRangoFecha"
-            app:layout_constraintHorizontal_bias="0.262" />
+            app:layout_constraintTop_toBottomOf="@id/txt_colendario">
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingStart="14dp"
+                android:paddingEnd="10dp">
 
+                <ImageView
+                    android:id="@+id/icCalendarioStart"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:contentDescription="Fecha inicio"
+                    android:src="@drawable/ic_calendario"
+                    app:tint="@color/btn_registrarse"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
 
-        <TextView
-            android:id="@+id/btn_calendarioEnd"
-            android:layout_width="120dp"
-            android:layout_height="42dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/bg_input_calendario"
-            android:text="Fin"
-            android:textAlignment="center"
-            android:textColor="@color/color_campos"
-            android:textColorHint="@color/color_campos"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/tvRangoFecha"
+                <TextView
+                    android:id="@+id/btn_calendarioStar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:hint="Inicio"
+                    android:textColorHint="@color/gris"
+                    android:textColor="@color/colorOnSecondary"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@id/icCalendarioStart"
+                    app:layout_constraintEnd_toStartOf="@id/icChevronStart"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+                <ImageView
+                    android:id="@+id/icChevronStart"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:contentDescription="Seleccionar fecha inicio"
+                    android:src="@drawable/retroceso"
+                    android:rotation="270"
+                    android:alpha="0.5"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:tint="@color/colorOnSecondary" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvBtnFin"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="2dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardBackgroundColor="#FFFFFF"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="3dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.601"
-            app:layout_constraintStart_toEndOf="@id/btn_calendarioStar"
-            app:layout_constraintTop_toBottomOf="@id/txt_colendario"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintStart_toEndOf="@id/cvBtnInicio"
+            app:layout_constraintTop_toBottomOf="@id/txt_colendario">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingStart="14dp"
+                android:paddingEnd="10dp">
+
+                <ImageView
+                    android:id="@+id/icCalendarioEnd"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:contentDescription="Fecha fin"
+                    android:src="@drawable/ic_calendario"
+                    app:tint="@color/btn_registrarse"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+                <TextView
+                    android:id="@+id/btn_calendarioEnd"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:hint="Fin"
+                    android:textColorHint="@color/gris"
+                    android:textColor="@color/colorOnSecondary"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@id/icCalendarioEnd"
+                    app:layout_constraintEnd_toStartOf="@id/icChevronEnd"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+                <ImageView
+                    android:id="@+id/icChevronEnd"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:contentDescription="Seleccionar fecha fin"
+                    android:src="@drawable/retroceso"
+                    android:rotation="270"
+                    android:alpha="0.5"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:tint="@color/colorOnSecondary" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
 
         <TextView
             android:id="@+id/tvRangoFecha"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="DD/MM/AAAA - DD/MM/AAAA"
+            android:layout_marginTop="12dp"
+            android:hint="DD/MM/AAAA  →  DD/MM/AAAA"
             android:textColorHint="@color/gris"
-            android:textSize="16sp"
-            android:layout_marginTop="20dp"
-            app:layout_constraintTop_toBottomOf="@id/btn_calendarioStar"
+            android:textColor="@color/colorOnSecondary"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:background="@drawable/bg_chip_comando"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/cvBtnInicio" />
 
-        <com.google.android.material.card.MaterialCardView
+        <TextView
+            android:id="@+id/labelMetricas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="② Resumen del período"
+            android:textColor="@color/colorOnSecondary"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.02"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvRangoFecha" />
+
+
+        <androidx.cardview.widget.CardView
             android:id="@+id/cardVentas"
             android:layout_width="0dp"
-            android:layout_height="120dp"
-            android:layout_marginTop="40dp"
-            android:layout_marginEnd="10dp"
-            app:cardBackgroundColor="#6DD0CCDB"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="6dp"
+            app:cardBackgroundColor="#DDDBDB"
             app:cardCornerRadius="18dp"
+            app:cardElevation="2dp"
             app:layout_constraintEnd_toStartOf="@id/cardCostos"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvRangoFecha"
-            app:strokeColor="#6DD0CCDB"
-            app:strokeWidth="3dp">
+            app:layout_constraintTop_toBottomOf="@id/labelMetricas">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="14dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Ventas"
-                    android:textColor="#000000"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        app:cardBackgroundColor="#FFFFFF"
+                        app:cardCornerRadius="19dp"
+                        app:cardElevation="0dp">
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center"
+                            android:contentDescription="Ventas"
+                            android:src="@drawable/ic_balance"
+                            app:tint="@color/colorOnSecondary" />
+                    </androidx.cardview.widget.CardView>
+
+                    <TextView
+                        android:id="@+id/txt_ventas"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="Ventas"
+                        android:textColor="#000000"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/tvVentas"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="8dp"
                     android:hint="$ 0"
                     android:textColorHint="#000000"
-                    android:textSize="18sp"
+                    android:textColor="#000000"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
 
-        <com.google.android.material.card.MaterialCardView
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
             android:id="@+id/cardCostos"
             android:layout_width="0dp"
-            android:layout_height="120dp"
-            android:layout_marginTop="42dp"
-            android:layout_marginStart="10dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="2dp"
+            android:defaultFocusHighlightEnabled="false"
+            app:cardBackgroundColor="@color/azul_costos_targeta"
             app:cardCornerRadius="18dp"
-            app:cardBackgroundColor="#DBDCFF"
-            app:strokeColor="#DBDCFF"
-            app:strokeWidth="3dp"
-            app:layout_constraintTop_toBottomOf="@id/tvRangoFecha"
+            app:cardElevation="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/cardVentas"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/labelMetricas">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="14dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Costos"
-                    android:textColor="#000000"
-                    android:textSize="18sp"
-                    android:textStyle="bold"/>
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        app:cardBackgroundColor="#FFFFFF"
+                        app:cardCornerRadius="19dp"
+                        app:cardElevation="0dp">
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center"
+                            android:contentDescription="Costos"
+                            android:src="@drawable/ic_productos"
+                            app:tint="@color/azul_logo" />
+                    </androidx.cardview.widget.CardView>
+
+                    <TextView
+                        android:id="@+id/txt_costos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="Costos"
+                        android:textColor="#000000"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/tvCostos"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:hint="$ 0"
                     android:textColorHint="#000000"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="10dp"/>
+                    android:textColor="#000000"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+        </androidx.cardview.widget.CardView>
 
-        <com.google.android.material.card.MaterialCardView
+        <androidx.cardview.widget.CardView
             android:id="@+id/cardGastos"
             android:layout_width="0dp"
-            android:layout_height="120dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="10dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginStart="2dp"
+            android:defaultFocusHighlightEnabled="false"
+            app:cardBackgroundColor="@color/rojo_gastos_targeta"
             app:cardCornerRadius="18dp"
-            app:cardBackgroundColor="#F4DBFA"
-            app:strokeColor="#F4DBFA"
-            app:strokeWidth="3dp"
-            app:layout_constraintTop_toBottomOf="@id/cardVentas"
+            app:cardElevation="2dp"
+            app:layout_constraintEnd_toStartOf="@id/cardFiados"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/cardFiados">
+            app:layout_constraintTop_toBottomOf="@id/cardVentas">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="14dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Gastos"
-                    android:textColor="#000000"                    android:textSize="18sp"
-                    android:textStyle="bold"/>
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        app:cardBackgroundColor="#FFFFFF"
+                        app:cardCornerRadius="19dp"
+                        app:cardElevation="0dp">
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center"
+                            android:contentDescription="Gastos"
+                            android:src="@drawable/ic_balance"
+                            app:tint="#9C27B0" />
+                    </androidx.cardview.widget.CardView>
+
+                    <TextView
+                        android:id="@+id/txt_gastos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="Gastos"
+                        android:textColor="#000000"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/tvGastos"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:hint="$ 0"
                     android:textColorHint="#000000"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="10dp"/>
+                    android:textColor="#000000"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+        </androidx.cardview.widget.CardView>
 
-        <com.google.android.material.card.MaterialCardView
+        <androidx.cardview.widget.CardView
             android:id="@+id/cardFiados"
             android:layout_width="0dp"
-            android:layout_height="120dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="10dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="2dp"
+            android:defaultFocusHighlightEnabled="false"
+            app:cardBackgroundColor="@color/amarillo_fiados_targeta"
             app:cardCornerRadius="18dp"
-            app:cardBackgroundColor="#EBECCF"
-            app:strokeColor="#EBECCF"
-            app:strokeWidth="3dp"
-            app:layout_constraintTop_toBottomOf="@id/cardVentas"
+            app:cardElevation="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/cardGastos"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/cardCostos">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="14dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Fiados"
-                    android:textColor="#000000"
-                    android:textSize="18sp"
-                    android:textStyle="bold"/>
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        app:cardBackgroundColor="#FFFFFF"
+                        app:cardCornerRadius="19dp"
+                        app:cardElevation="0dp">
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center"
+                            android:contentDescription="Fiados"
+                            android:src="@drawable/ic_edit_user"
+                            app:tint="#E65100" />
+                    </androidx.cardview.widget.CardView>
+
+                    <TextView
+                        android:id="@+id/txt_fiados"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="Fiados"
+                        android:textColor="#000000"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/tvFiados"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="0 "
+                    android:layout_marginTop="8dp"
+                    android:hint="0"
                     android:textColorHint="#000000"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="10dp"/>
+                    android:textColor="#000000"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+        </androidx.cardview.widget.CardView>
 
-        <com.google.android.material.card.MaterialCardView
+        <androidx.cardview.widget.CardView
             android:id="@+id/cardUtilidad"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="2dp"
-            app:cardBackgroundColor="@color/color_fondo"
-            app:strokeColor="@color/verde_utilidad_targeta"
-            app:strokeWidth="3dp"
-            app:layout_constraintTop_toBottomOf="@id/cardFiados"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="2dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginBottom="2dp"
+            app:cardBackgroundColor="@color/verde_utilidad_targeta"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/cardFiados">
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/verde_utilidad_targeta"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cvIcUtilidad"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    app:cardBackgroundColor="#FFFFFF"
+                    app:cardCornerRadius="22dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="Utilidad"
+                        android:src="@drawable/ic_balance"
+                        app:tint="#2E7D32" />
+
+                </androidx.cardview.widget.CardView>
 
                 <TextView
+                    android:id="@+id/txt_utilidad"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
                     android:text="Utilidad"
-                    android:textColor="#000000"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textColor="#2E7D32"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.04"
+                    app:layout_constraintStart_toEndOf="@id/cvIcUtilidad"
+                    app:layout_constraintTop_toTopOf="@id/cvIcUtilidad"
+                    app:layout_constraintBottom_toBottomOf="@id/cvIcUtilidad" />
 
                 <TextView
                     android:id="@+id/tvUtilidad"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="16dp"
                     android:hint="$ 0"
-                    android:textColorHint="#000000"
-                    android:textSize="34sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+                    android:textColorHint="#2E7D32"
+                    android:textColor="#1B5E20"
+                    android:textSize="40sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="-0.02"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/cvIcUtilidad" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

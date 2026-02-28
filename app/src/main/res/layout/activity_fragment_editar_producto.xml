@@ -114,12 +114,12 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etBuscarProducto"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:hint="@string/hint_BuscarProducto"
                     android:textColorHint="@color/gris"
                     android:imeOptions="actionSearch"
-                    android:inputType="text"
+                    android:inputType="textMultiLine"
                     android:textSize="14sp" />
 
 
@@ -162,12 +162,12 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etBuscarPresentacion"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:hint="@string/hint_BuscarPresentacion"
                     android:textColorHint="@color/gris"
                     android:imeOptions="actionSearch"
-                    android:inputType="text"
+                    android:inputType="textMultiLine"
                     android:textSize="14sp" />
 
 
