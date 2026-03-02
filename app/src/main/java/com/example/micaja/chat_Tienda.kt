@@ -87,24 +87,8 @@ class chat_Tienda : AppCompatActivity() {
             insets
         }
 
-        val preferencia = getSharedPreferences("SesionTendero", MODE_PRIVATE)
+        
 
-        val cedula = preferencia.getString("cedula", null)
-
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                ConexionServiceTienda.llamarInventario(cedula.toString())
-            } catch (e: Exception) {
-                Log.e("ErrorRed", "No se pudo conectar al inventario: ${e.message}")
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(
-                        this@chat_Tienda,
-                        "Error de conexión con el servidor",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-        }
 
         estadoTienda = getSharedPreferences("EstadoTienda", MODE_PRIVATE)
         estadoBase = getSharedPreferences("EstadoBase", MODE_PRIVATE)

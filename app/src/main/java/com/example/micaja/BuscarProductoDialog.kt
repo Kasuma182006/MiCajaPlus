@@ -14,9 +14,8 @@ import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.micaja.ConexionService.ConexionServiceTienda
-import com.example.micaja.models.inventario
 
-class BuscarProductoDialog(
+/*class BuscarProductoDialog(
     private val query: String,
     private val onProductoSeleccionado: (inventario) -> Unit
 ) : DialogFragment() {
@@ -163,4 +162,4 @@ class BuscarProductoDialog(
 
         override fun getItemCount() = items.size
     }
-}
+}*/
