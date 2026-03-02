@@ -17,9 +17,6 @@
             android:name=".fragment_agregar_producto"
             android:exported="false" />
         <activity
-            android:name=".activity_inventario"
-            android:exported="false" />
-        <activity
             android:name=".item_mensajes"
             android:exported="false" />
         <activity
