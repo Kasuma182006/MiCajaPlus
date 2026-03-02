@@ -21,6 +21,8 @@ import com.example.micaja.Adapter.Adapter
 import com.example.micaja.ConexionService.ConexionServiceTienda
 import com.example.micaja.databinding.ActivityChatTiendaBinding
 import com.example.micaja.models.ModeloBase
+import com.example.micaja.models.compra_Mercancia
+import com.example.micaja.models.gastoDetectado
 import com.example.micaja.models.modelo
 import com.example.micaja.utils.SesionManager
 import com.example.micaja.viewmodel.TenderoViewModel
@@ -59,10 +61,9 @@ class chat_Tienda : AppCompatActivity() {
 
     var dataset = mutableListOf<modelo>()
     var sistemaData = mutableListOf<modelo>()
-    lateinit var Adapter : Adapter
+    lateinit var Adapter: Adapter
     lateinit var estadoTienda: SharedPreferences
     lateinit var estadoBase: SharedPreferences
-
 
 
     private val model: TenderoViewModel by viewModels()
@@ -89,26 +90,24 @@ class chat_Tienda : AppCompatActivity() {
         val preferencia = getSharedPreferences("SesionTendero", MODE_PRIVATE)
 
         val cedula = preferencia.getString("cedula", null)
-//        CoroutineScope(Dispatchers.IO).launch { ConexionServiceTienda.llamarInventario(cedula.toString()) }
-        //Esto ↓ lo agrego julio(yo) para evitar el crasheo al ejecutar la app sin el backend, habiliten ↑ esta linea y comenten
-     // esta ↓
-        // Protege la llamada inicial para que no cierre la app si falla el servidor
+
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 ConexionServiceTienda.llamarInventario(cedula.toString())
             } catch (e: Exception) {
                 Log.e("ErrorRed", "No se pudo conectar al inventario: ${e.message}")
-                // Opcional: Avisar al usuario en el hilo principal
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@chat_Tienda, "Error de conexión con el servidor", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@chat_Tienda,
+                        "Error de conexión con el servidor",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
 
-
-
-        estadoTienda =  getSharedPreferences("EstadoTienda",MODE_PRIVATE)
-        estadoBase = getSharedPreferences("EstadoBase",MODE_PRIVATE)
+        estadoTienda = getSharedPreferences("EstadoTienda", MODE_PRIVATE)
+        estadoBase = getSharedPreferences("EstadoBase", MODE_PRIVATE)
 
         Adapter = Adapter(dataset, sistemaData)
         binding.recyclerMensajes.layoutManager = LinearLayoutManager(this)
@@ -129,8 +128,6 @@ class chat_Tienda : AppCompatActivity() {
     }
 
     private fun configuracionMenu() {
-        // PopupMenu reemplazado por MenuBottomSheet
-        // Comandos y Cerrar sesión (mas Balance, Editar Cliente, Editar Producto)
         binding.btnMenu.setOnClickListener {
             val sheet = MenuBottomSheet(
                 onComandos = {
@@ -147,13 +144,19 @@ class chat_Tienda : AppCompatActivity() {
 
     private fun ConfTrans() {
         if (!SpeechRecognizer.isRecognitionAvailable(this)) {
-            Toast.makeText(this, "Ha ocurrido un error durante el dictado", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Ha ocurrido un error durante el dictado", Toast.LENGTH_SHORT)
+                .show()
         } else {
             val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-                putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+                putExtra(
+                    RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                    RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+                )
                 putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
-                putExtra(RecognizerIntent.EXTRA_PROMPT, "" +
-                        "No se escuchó. Intentalo nuevamente")
+                putExtra(
+                    RecognizerIntent.EXTRA_PROMPT, "" +
+                            "No se escuchó. Intentalo nuevamente"
+                )
             }
             startActivityForResult(intent, RQ_SPEECH_REC)
         }
@@ -175,7 +178,7 @@ class chat_Tienda : AppCompatActivity() {
             Adapter.notifyDataSetChanged()
         })
 
-        model.mensajesSistema.observe(this,Observer {newName ->
+        model.mensajesSistema.observe(this, Observer { newName ->
             Adapter.sistemaData = newName
             Adapter.notifyDataSetChanged()
             binding.recyclerMensajes.scrollToPosition(Adapter.itemCount - 1)
@@ -186,35 +189,33 @@ class chat_Tienda : AppCompatActivity() {
         binding.sendBtn.setOnClickListener {
             mensaje = binding.messageInput.text.toString()
             val texto = modelo(mensaje)
-            val tienda = estadoTienda.getBoolean("abierta",false)
-            val base = estadoBase.getBoolean("base",false)
+            val tienda = estadoTienda.getBoolean("abierta", false)
+            val base = estadoBase.getBoolean("base", false)
             binding.messageInput.setText("")
             model.addMensaje(texto)
 
-            if (tienda){
+            if (tienda) {
                 if (base) {
                     procesarCompra(mensaje)
+                    procesarGasto(mensaje)
                     Log.d(TAG, "El valor de la venta es ${montoVentas}")
                     Log.d(TAG, "El valor de los gastos es ${montoGastos}")
                     Log.d(TAG, "El valor de los costos es ${montoCostos}")
-                }
-                else {
+                } else {
                     CoroutineScope(Dispatchers.IO).launch {
                         baseInicial(mensaje)
                         Log.d(TAG, "El valor de la base inicial es de ${baseInicial}")
                     }
                 }
-            }
-            else {
+            } else {
                 val estado = tienda(mensaje)
-                if (estado){
+                if (estado) {
                     Log.d(TAG, "La tienda está Abierta")
-                    val mensaje = modelo ("Tienda Abierta ¿Cúal es la base del día de hoy?")
+                    val mensaje = modelo("Tienda Abierta ¿Cúal es la base del día de hoy?")
                     model.addMensajeSistema(mensaje)
-                }
-                else {
+                } else {
                     Log.d(TAG, "La tienda está Cerrada")
-                    val mensajeSistema = modelo ("Tienda Cerrada. Reintente nuevamente.")
+                    val mensajeSistema = modelo("Tienda Cerrada. Reintente nuevamente.")
                     model.addMensajeSistema(mensajeSistema)
                 }
             }
@@ -222,12 +223,12 @@ class chat_Tienda : AppCompatActivity() {
     }
 
 
-    private fun tienda(mensaje: String):Boolean {
-        val palabras = mensaje.lowercase().split(Regex("""[\s,.:]+""") )
+    private fun tienda(mensaje: String): Boolean {
+        val palabras = mensaje.lowercase().split(Regex("""[\s,.:]+"""))
         var estado = ""
-        for (palabra in palabras){
+        for (palabra in palabras) {
 
-            if ((diccionario["abrir"]?.contains(palabra)?:false)){
+            if ((diccionario["abrir"]?.contains(palabra) ?: false)) {
                 val editor = estadoTienda.edit()
                 editor.putBoolean("abierta", true)
                 editor.apply()
@@ -239,12 +240,26 @@ class chat_Tienda : AppCompatActivity() {
             return true
         }
 
-        return  false
+        return false
     }
-    val unidades = listOf("libra", "kilo", "unidad", "paquete", "bolsa", "paca", "litro", "pequeña", "grande", "mediana" )
 
+    val unidades = listOf(
+        "caja",
+        "libra",
+        "kilo",
+        "bolsita",
+        "unidad",
+        "paquete",
+        "bolsa",
+        "paca",
+        "litro",
+        "pequeña",
+        "grande",
+        "sobre",
+        "mediana",
+        "vidrio"
+    )
 
-    /* Aquí se encuentran las funciones para el reconocimiento de valores y palabras*/
 
     fun procesarCompra(texto: String) {
         val prefs = getSharedPreferences("SesionTendero", MODE_PRIVATE)
@@ -277,21 +292,11 @@ class chat_Tienda : AppCompatActivity() {
                     listaResumen.add("• $nombre ($pres) por $$precio")
                     sumaTotalVenta += precio
 
-                    Log.d("DETECCION_VENTA", "REGISTRADO -> PROD: $nombre | PRES: $pres | PRECIO: $precio")
+                    Log.d(
+                        "DETECCION_VENTA",
+                        "REGISTRADO -> PROD: $nombre | PRES: $pres | PRECIO: $precio"
+                    )
 
-
-//                    CoroutineScope(Dispatchers.IO).launch {
-//                        try {
-//                            val service = ConexionServiceTienda.create()
-//                            val op = crear_venta(cedula, "Venta", sumaTotalVenta, mensaje)
-//                            service.addOperacion(op)
-//                            withContext(Dispatchers.Main) {
-//                                montoVentas += precio
-//                            }
-//                        } catch (e: Exception) {
-//                            Log.e("API", "Error al guardar: ${e.message}")
-//                        }
-//                    }
                 }
             }
 
@@ -307,7 +312,6 @@ class chat_Tienda : AppCompatActivity() {
             }
         }
 
-
         if (palabras.any { diccionario["cerrar"]?.contains(it) == true }) {
             cerrarTienda()
         }
@@ -317,7 +321,6 @@ class chat_Tienda : AppCompatActivity() {
             model.addMensajeSistema(modelo("Iniciando registro de crédito..."))
         }
     }
-
 
     private fun extraerDatosProducto(segmento: String): Triple<String, String, Int>? {
         var s = segmento.trim()
@@ -352,7 +355,22 @@ class chat_Tienda : AppCompatActivity() {
         }
 
         // limpieza de piskini
-        val ruido = listOf("vendi", "vendí", "vende", "venta", "un", "una", "de", "a", "por", "el", "la", "total", "precio", "también")
+        val ruido = listOf(
+            "vendi",
+            "vendí",
+            "vende",
+            "venta",
+            "un",
+            "una",
+            "de",
+            "a",
+            "por",
+            "el",
+            "la",
+            "total",
+            "precio",
+            "también"
+        )
         var nombreLimpio = s
         for (r in ruido) {
             nombreLimpio = nombreLimpio.replace(Regex("\\b$r\\b", RegexOption.IGNORE_CASE), "")
@@ -365,16 +383,198 @@ class chat_Tienda : AppCompatActivity() {
         } else null
     }
 
-    private fun cerrarTienda() {
+    fun procesarGasto(texto: String) {
+        val textoLimpio = texto.replace(Regex("""(\d)[.,](\d{3})\b"""), "$1$2")
+        val textoMinuscula = textoLimpio.lowercase()
+        val palabras = textoMinuscula.split(Regex("""[\s:]+"""))
+
+        val esGasto = palabras.any { diccionario["gasto"]?.contains(it) == true }
+
+        if (esGasto) {
+            // 2. Separar por conectores (por si el usuario dice: "Gasto bolsas 5000 y gaseosa 2000")
+            val segmentos = textoMinuscula.split(Regex(",|\\by\\b|;|\\."))
+                .map { it.trim() }
+                .filter { it.length > 3 }
+
+            val resumenGasto = mutableListOf<String>()
+            var sumaTotalGasto = 0
+
+            for (segmento in segmentos) {
+                // REUTILIZAMOS la función extraerDatosProducto que ya funciona bien
+                val datos = extraerDatosProducto(segmento)
+
+                if (datos != null) {
+                    val (nombre, pres, precio) = datos
+                    resumenGasto.add("• $nombre ($pres) por $$precio")
+                    sumaTotalGasto += precio
+
+                    // Actualizamos la variable global de gastos
+                    montoGastos += precio
+                }
+            }
+
+            // 3. Respuesta al usuario
+            if (resumenGasto.isNotEmpty()) {
+                val saludo = "¡Gasto registrado con éxito!\n"
+                val cuerpo = resumenGasto.joinToString("\n")
+                val total = "\n\nTotal de este egreso: $$sumaTotalGasto"
+
+                model.addMensajeSistema(modelo(saludo + cuerpo + total))
+            } else {
+                model.addMensajeSistema(modelo("Detecté un gasto, pero no entendí el producto o el valor. Intenta: 'Gasto en bolsas 5000'"))
+
+                Log.d("DETECCION_GASTO", "REGISTRADO -> PROD: $palabras")
+
+                if (resumenGasto.isNotEmpty()) {
+                    val saludo = "¡Entendido! He registrado lo siguiente:\n"
+                    val cuerpo = resumenGasto.joinToString("\n")
+                    val total = "\n\nTotal esta operación: $$sumaTotalGasto"
+
+                    model.addMensajeSistema(modelo(saludo + cuerpo + total))
+                } else {
+                    model.addMensajeSistema(modelo("Detecté un gasto pero no pude identificar el precio. ¿Cuál es el precio?"))
+                }
+            }
+        }
+    }
+
+    fun registrarGasto(sgmnt: String): gastoDetectado? {
+        var s = sgmnt.trim()
+        var precioFinal: Int? = null
+        var textoPrecioEncontrado = ""
+
+        val fragmentos = s.split(" ")
+        for (f in fragmentos) {
+            val resultadoMonto = calcularMonto(f)
+            if (resultadoMonto != null && resultadoMonto >= 50) {
+                precioFinal = resultadoMonto
+                textoPrecioEncontrado = f
+                break
+            }
+        }
+
+        if (precioFinal == null) return null
+
+        s = s.replace(textoPrecioEncontrado, "").replace("$", "").trim()
+
+        // Limpieza de ruido específica para gastos
+        val ruido = listOf("gasté", "gasto", "gastar", "gastando", "pagué", "pago", "un", "una", "de", "por", "total")
+        var nombreLimpio = s
+        for (r in ruido) {
+            nombreLimpio = nombreLimpio.replace(Regex("\\b$r\\b", RegexOption.IGNORE_CASE), "")
+        }
+
+        nombreLimpio = nombreLimpio.trim().replace(Regex("\\s+"), " ")
+
+        return if (nombreLimpio.isNotEmpty()) {
+
+            gastoDetectado(
+                mensaje = nombreLimpio.replaceFirstChar { it.uppercase() },
+                precio = precioFinal
+            )
+        } else null
+    }
+
+    fun procesarCosto(texto: String) {
+
+        val textoLimpio = texto.replace(Regex("""(\d)[.,](\d{3})\b"""), "$1$2")
+        val textoMinuscula = textoLimpio.lowercase()
+        val palabras = textoMinuscula.split(Regex("""[\s:]+"""))
+
+        val esUnCosto = palabras.any { diccionario["compra"]?.contains(it) == true }
+
+        if (!esUnCosto) return
+
+        val sgmnts = textoMinuscula
+            .split(Regex(",|\\by\\b|;|\\."))
+            .map { it.trim() }
+            .filter { it.length > 3 }
+
+        val resumenCostos = mutableListOf<String>()
+        var sumaTotalCostos = 0
+
+        for (segmento in sgmnts) {
+            val costoDetectado = registrarCosto(segmento)
+
+            if (costoDetectado != null) {
+
+                resumenCostos.add("• ${costoDetectado.mensaje} por $${costoDetectado.monto}")
+                sumaTotalCostos += costoDetectado.monto
+                montoCostos += costoDetectado.monto
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        val service = ConexionServiceTienda.create()
+                        service.compra_Mercancia(costoDetectado)
+                    } catch (e: Exception) {
+                        Log.e("ERROR_COSTO", e.message ?: "Error desconocido")
+                    }
+                }
+            }
+        }
+
+        if (resumenCostos.isNotEmpty()) {
+            val mensajeSistema = "¡Entendido! Registré esta compra de mercancía:\n" +
+                    resumenCostos.joinToString("\n") +
+                    "\n\nTotal facturado: $$sumaTotalCostos"
+            model.addMensajeSistema(modelo(mensajeSistema))
+        } else {
+            model.addMensajeSistema(modelo("Detecté una compra, pero no identifiqué el valor. Ejemplo: 'Compré 2 pacas de arroz por 60000'"))
+        }
+    }
+
+    fun registrarCosto(segmento: String): compra_Mercancia? {
+        var s = segmento.trim()
+        var precioFinal: Int? = null
+        var textoPrecioEncontrado = ""
+
+        val fragmentos = s.split(" ")
+        for (f in fragmentos) {
+            val resultadoMonto = calcularMonto(f)
+            if (resultadoMonto != null && resultadoMonto >= 100) {
+                precioFinal = resultadoMonto
+                textoPrecioEncontrado = f
+                break
+            }
+        }
+
+        if (precioFinal == null) return null
+
+        s = s.replace(textoPrecioEncontrado, "").replace("$", "").trim()
+
+        val ruido = listOf(
+            "compré", "compra", "pagué", "pago", "pagaron", "mercancía",
+            "de", "por", "total", "precio", "también", "además", "pedido"
+        )
+
+        var nombreLimpio = s
+        for (r in ruido) {
+            nombreLimpio = nombreLimpio.replace(Regex("\\b$r\\b", RegexOption.IGNORE_CASE), "")
+        }
+        nombreLimpio = nombreLimpio.trim().replace(Regex("\\s+"), " ")
+
+        return if (nombreLimpio.isNotEmpty()) {
+            compra_Mercancia(
+                idTendero = "",
+                mensaje = nombreLimpio.replaceFirstChar { it.uppercase() },
+                monto = precioFinal,
+                categoria = "General",
+                proveedor = "Desconocido"
+            )
+        } else null
+    }
+
+    fun cerrarTienda() {
         val editor = estadoTienda.edit()
         editor.putBoolean("abierta", false)
         editor.apply()
         Log.d(TAG, "La tienda se acaba de cerrar")
-        estadoBase.edit().putBoolean("base",false).apply()
+        estadoBase.edit().putBoolean("base", false).apply()
         baseInicial = 0
         model.addMensajeSistema(modelo("la tienda se ha cerrado correctamente"))
 
     }
+
     suspend fun baseInicial(mensaje: String) {
         val prefs = getSharedPreferences("SesionTendero", MODE_PRIVATE)
         val cedula = prefs.getString("cedula", null)
@@ -420,7 +620,8 @@ class chat_Tienda : AppCompatActivity() {
         }
 
         if (baseInicial == 0 && error == 0) {
-            val mensajeSistema = modelo("La base no se ha podido identificar, por favor vuelve a intentarlo")
+            val mensajeSistema =
+                modelo("La base no se ha podido identificar, por favor vuelve a intentarlo")
             withContext(Dispatchers.Main) {
                 model.addMensajeSistema(mensajeSistema)
             }
@@ -431,17 +632,13 @@ class chat_Tienda : AppCompatActivity() {
 }
 
 
-
-fun tipoVenta(palabras: List<String>):String {
-    for (palabra in palabras){
-        if (diccionario["venta"]?.contains(palabra)?:false){
+fun tipoVenta(palabras: List<String>): String {
+    for (palabra in palabras) {
+        if (diccionario["venta"]?.contains(palabra) ?: false) {
             return "venta"
-        }
-        else if (diccionario["gasto"]?.contains(palabra)?:false){
+        } else if (diccionario["gasto"]?.contains(palabra) ?: false) {
             return "gasto"
-        }
-
-        else if (diccionario["costo"]?.contains(palabra)?:false){
+        } else if (diccionario["costo"]?.contains(palabra) ?: false) {
             return "costo"
         }
     }

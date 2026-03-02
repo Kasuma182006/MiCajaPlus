@@ -40,7 +40,6 @@ data class Datos_Abono(
     val cedulaTendero:String,
     val monto: Int
 )
-
 data class ConsultarOperaXFecha(
     val idTendero: String,
     val fechaInicial: String? = null,

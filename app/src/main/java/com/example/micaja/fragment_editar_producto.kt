@@ -8,7 +8,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.micaja.ConexionService.ConexionServiceTienda
 import com.example.micaja.databinding.ActivityFragmentEditarProductoBinding
-import com.example.micaja.models.Inventario
+import com.example.micaja.models.inventario
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class fragment_editar_producto : AppCompatActivity() {
@@ -57,7 +57,7 @@ class fragment_editar_producto : AppCompatActivity() {
 
     fun buscarProducto(binding: ActivityFragmentEditarProductoBinding,nombreProducto : String, presentacion: String){
 
-        val inventario: MutableStateFlow<List<Inventario>> = ConexionServiceTienda.obtenerInventario()
+        val inventario: MutableStateFlow<List<inventario>> = ConexionServiceTienda.obtenerInventario()
 
         for (I in inventario.value ){
 

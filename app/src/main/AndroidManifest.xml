@@ -14,9 +14,6 @@
         android:theme="@style/Theme.MiCaja"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".fragment_agregar_producto"
-            android:exported="false" />
-        <activity
             android:name=".item_mensajes"
             android:exported="false" />
         <activity
@@ -35,9 +32,7 @@
         <activity
             android:name=".fragments.FragmentAnadirProductos"
             android:exported="false" />
-        <activity
-            android:name=".categorias.ItemCategorias"
-            android:exported="false" />
+
         <activity
             android:name=".categorias.Categorias"
             android:exported="false" />
