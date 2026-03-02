@@ -17,8 +17,27 @@ class Adapter ( var dataset: MutableList<modelo>, var sistemaData: MutableList<m
         fun inicializar(modelo:modelo,sistema: modelo){
             binding.mensaje.text = modelo.mensaje
             binding.mensajeSistema.text = sistema.mensaje
+
+
+            // Timestamps: si viene vacío se oculta el TextView
+            if (modelo.timestamp.isNotEmpty()) {
+                binding.timestampMensaje.visibility = View.VISIBLE
+                binding.timestampMensaje.text = modelo.timestamp
+            } else {
+                binding.timestampMensaje.visibility = View.GONE
+            }
+
+            if (sistema.timestamp.isNotEmpty()) {
+                binding.timestampSistema.visibility = View.VISIBLE
+                binding.timestampSistema.text = sistema.timestamp
+            } else {
+                binding.timestampSistema.visibility = View.GONE
+            }
+
         }
     }
+
+
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -29,6 +48,7 @@ class Adapter ( var dataset: MutableList<modelo>, var sistemaData: MutableList<m
             .inflate(R.layout.activity_item_mensajes, parent, false)
 
         return ViewHolder(view)
+
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

@@ -1,57 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".item_mensajes"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingStart="8dp"
+    android:paddingEnd="8dp"
+    tools:context=".item_mensajes">
 
-
-
-
-    <!-- Mensaje del usuario alineado a la derecha -->
+    <!-- ══════════════════════════════════
+         MENSAJE DEL USUARIO (derecha)
+         ══════════════════════════════════ -->
     <LinearLayout
         android:id="@+id/contenedorMensaje"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="2dp"
         android:background="@drawable/bg_input_chat"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="6dp">
 
         <TextView
             android:id="@+id/mensaje"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:text="hola"
-            android:textColor="@color/color_txt_app" />
+            android:lineSpacingExtra="2dp"
+            android:text="Mensaje del usuario"
+            android:textColor="@color/color_txt_app"
+            android:textSize="14sp" />
+
+        <!-- Timestamp usuario -->
+        <TextView
+            android:id="@+id/timestampMensaje"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="2dp"
+            android:text="10:30"
+            android:textColor="@color/Flechas"
+            android:textSize="10sp" />
     </LinearLayout>
 
-    <!-- Mensaje del sistema alineado a la izquierda -->
+
     <LinearLayout
         android:id="@+id/contenedorSistema"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
-        android:layout_marginEnd="40dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="56dp"
+        android:layout_marginBottom="2dp"
         android:background="@drawable/bg_sistema_mensaje"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="6dp">
 
         <TextView
             android:id="@+id/mensajeSistema"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:text="hola"
-            android:textColor="@color/color_txt_app" />
+            android:lineSpacingExtra="2dp"
+            android:text="Respuesta del sistema"
+            android:textColor="@color/color_txt_app"
+            android:textSize="14sp" />
+
+        <!-- Timestamp sistema -->
+        <TextView
+            android:id="@+id/timestampSistema"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="2dp"
+            android:text="10:30"
+            android:textColor="@color/Flechas"
+            android:textSize="10sp" />
     </LinearLayout>
 
 </LinearLayout>
