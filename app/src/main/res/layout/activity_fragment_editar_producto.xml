@@ -257,35 +257,6 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilProveedor"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:hint="@string/Proveedor"
-                    app:boxCornerRadiusBottomEnd="12dp"
-                    app:boxCornerRadiusBottomStart="12dp"
-                    app:boxCornerRadiusTopEnd="12dp"
-                    app:boxCornerRadiusTopStart="12dp"
-                    app:boxStrokeColor="@color/colorPrimary"
-                    app:boxStrokeWidth="1.5dp"
-                    app:hintTextColor="@color/colorOnSecondary"
-                    app:startIconTint="@color/colorOnSecondary"
-                    app:endIconMode="clear_text"
-                    app:endIconTint="@color/colorOnSecondary"
-                    app:counterEnabled="true"
-                    app:counterMaxLength="60">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/Proveedor"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textCapWords"
-                        app:counterMaxLength="@integer/Proveedor"
-                        android:textSize="15sp" />
-
-                </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilPrecioProducto"

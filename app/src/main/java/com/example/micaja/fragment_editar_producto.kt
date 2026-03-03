@@ -46,7 +46,6 @@ class fragment_editar_producto : AppCompatActivity() {
                         // Al seleccionar un producto, rellena el formulario
                         binding.etNombreProducto.setText(producto.nombre)
                         binding.etDescripcionProducto.setText(producto.presentacion)
-                        binding.Proveedor.setText("No hay")
                         binding.etPrecioProducto.setText(producto.valorCompra.toString())
                         binding.etCantidadProducto.setText(producto.cantidad.toString())
 
@@ -78,23 +77,7 @@ class fragment_editar_producto : AppCompatActivity() {
     }
 
 
-    fun buscarProducto(binding: ActivityFragmentEditarProductoBinding,nombreProducto : String, presentacion: String){
 
-        val inventario: MutableStateFlow<List<inventario>> = ConexionServiceTienda.obtenerInventario()
-
-        for (I in inventario.value ){
-
-            if(I.nombre == nombreProducto && I.presentacion == presentacion){
-                binding.etNombreProducto.setText(I.nombre)
-                binding.etDescripcionProducto.setText(I.presentacion)
-                binding.Proveedor.setText("No hay")
-                binding.etPrecioProducto.setText(I.valorCompra.toString())
-                binding.etCantidadProducto.setText(I.cantidad.toString())
-                break
-            }
-        }
-
-    }
 
 
 
