@@ -1,11 +1,12 @@
 package com.example.micaja.ConexionService
 
-import android.util.Log
-import com.example.micaja.models.BuscarProducto
+import com.example.micaja.models.BuscarProductos
 import com.example.micaja.models.ConsultarOperaXFecha
+import com.example.micaja.models.Costo
 import com.example.micaja.models.Credito
 import com.example.micaja.models.Datos_Abono
 import com.example.micaja.models.EditarProducto
+import com.example.micaja.models.Gasto
 import com.example.micaja.models.Identificacion
 import com.example.micaja.models.ModeloBase
 import com.example.micaja.models.NumeroCreditosResponse
@@ -15,18 +16,14 @@ import com.example.micaja.models.TipoOperacionXFecha
 import com.example.micaja.models.cliente
 import com.example.micaja.models.clienteNuevo
 import com.example.micaja.models.compra_Mercancia
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.withContext
+import com.example.micaja.models.venta
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
-import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.PUT
-import retrofit2.http.Query
 
 interface ConexionServiceTienda {
 
@@ -54,11 +51,17 @@ interface ConexionServiceTienda {
     @POST("/ConsultarEstadisticas")
     suspend fun consultarXFecha(@Body request: ConsultarOperaXFecha): Response<List<TipoOperacionXFecha>>
 
+    @POST("/venta")
+    suspend fun venta(@Body venta: venta): Response<venta>
+
+    @POST("/Gasto")
+    suspend fun Gasto(@Body gasto: Gasto): Response<Gasto>
+
+    @POST ("/Costo")
+    suspend fun compra_Mercancia(@Body request: compra_Mercancia): Response<Costo>
+
     @POST ("/numerocredito")
     suspend fun numeroCredito(@Body request: ConsultarOperaXFecha): Response<NumeroCreditosResponse>
-
-    @POST ("/compra_Mercancia")
-    suspend fun compra_Mercancia(@Body request: compra_Mercancia): Response<compra_Mercancia>
 
     @POST("/agregarBase")
     suspend fun addBase(@Body base: ModeloBase): Response<Map <String,Any>>
@@ -68,7 +71,7 @@ interface ConexionServiceTienda {
     suspend fun descargaProductos(@Body producto: OperacionesProductos): Response<Any>
 
     @POST("/buscarProducto")
-    suspend fun buscarProducto(@Body producto: BuscarProducto): Response<List<EditarProducto>>
+    suspend fun buscarProducto(@Body producto: BuscarProductos): Response<List<EditarProducto>>
 
     @POST("editarProducto")
     suspend fun editarProducto(@Body producto: EditarProducto): Response <Any>

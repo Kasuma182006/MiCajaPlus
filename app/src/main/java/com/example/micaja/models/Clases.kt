@@ -89,11 +89,12 @@ data class gastoDetectado(
 data class Costo(
     val idTendero: String,
     val mensaje: String,
+    val categoria: String,
+    val proveedor: String,
     var precioCompra: Int
 )
 
 data class compra_Mercancia(
-    val idTendero: String,
     var mensaje: String,
     var monto: Int,
     val categoria: String,
@@ -101,7 +102,6 @@ data class compra_Mercancia(
 )
 
 data class EditarProducto (
-
     val idInventario: String,
     val cantidad: Int,
     val valorVenta: Int,
