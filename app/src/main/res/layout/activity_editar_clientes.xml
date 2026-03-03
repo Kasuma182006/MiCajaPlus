@@ -83,7 +83,7 @@
 
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/cvBuscador"
+            android:id="@+id/cvBuscadorCliente"
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:layout_marginTop="10dp"
@@ -92,114 +92,76 @@
             app:cardBackgroundColor="#FFFFFF"
             app:cardCornerRadius="16dp"
             app:cardElevation="3dp"
-            app:layout_constraintEnd_toStartOf="@id/btnBuscar"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/labelPaso1">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/BuscarCliente"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp"
-                app:boxCornerRadiusTopStart="16dp"
-                app:boxCornerRadiusTopEnd="16dp"
-                app:boxCornerRadiusBottomStart="16dp"
-                app:boxCornerRadiusBottomEnd="16dp"
-                app:endIconMode="clear_text"
-                app:endIconTint="@color/colorOnSecondary"
-                app:startIconTint="@color/colorOnSecondary"
-                app:counterEnabled="true"
-                app:hintEnabled="false">
+                android:layout_height="match_parent">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etBuscarCliente"
-                    android:layout_width="match_parent"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textBuscarProducto"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:background="@android:color/transparent"
-                    android:hint="@string/hint_BuscarCliente"
-                    android:textColorHint="@color/gris"
-                    android:imeOptions="actionSearch"
-                    android:inputType="number"
-                    app:counterMaxLength="@integer/Cedula"
-                    android:textSize="14sp" />
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    app:boxCornerRadiusTopStart="16dp"
+                    app:boxCornerRadiusTopEnd="16dp"
+                    app:boxCornerRadiusBottomStart="16dp"
+                    app:boxCornerRadiusBottomEnd="16dp"
+                    app:endIconMode="clear_text"
+                    app:endIconTint="@color/colorOnSecondary"
+                    app:startIconTint="@color/colorOnSecondary"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="60"
+                    app:hintEnabled="false"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/btnBuscarCliente"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent">
 
-            </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etBuscarCliente"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:hint="@string/hint_BuscarCliente"
+                        android:textColorHint="@color/gris"
+                        android:imeOptions="actionSearch"
+                        android:inputType="text"
+                        android:textSize="14sp"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="8dp"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnBuscarCliente"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="4dp"
+                    android:padding="0dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:insetLeft="0dp"
+                    android:insetRight="0dp"
+                    android:background="@android:color/transparent"
+                    app:cornerRadius="12dp"
+                    app:icon="@drawable/ic_search"
+                    app:iconGravity="textStart"
+                    app:iconPadding="0dp"
+                    app:iconSize="24dp"
+                    app:iconTint="@color/ic_principal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
 
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnBuscar"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_marginStart="6.5dp"
-            android:layout_marginTop="10dp"
-            android:contentDescription="@string/cd_btnBuscar"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            app:backgroundTint="@color/btn_registrarse"
-            app:cornerRadius="16dp"
-            app:icon="@drawable/ic_search"
-            app:iconGravity="textStart"
-            app:iconPadding="0dp"
-            app:iconSize="44dp"
-            app:iconTint="#FFFFFF"
-            app:rippleColor="@color/colorPrimary"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/labelPaso1"
-            app:layout_constraintBottom_toBottomOf="@id/cvBuscador" />
-
-        <!--        <androidx.cardview.widget.CardView-->
-        <!--            android:id="@+id/cvClienteSeleccionado"-->
-        <!--            android:layout_width="0dp"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_marginTop="10dp"-->
-        <!--            android:visibility="gone"-->
-        <!--            app:cardBackgroundColor="@color/colorPrimary"-->
-        <!--            app:cardCornerRadius="12dp"-->
-        <!--            app:cardElevation="0dp"-->
-        <!--            app:layout_constraintEnd_toEndOf="parent"-->
-        <!--            app:layout_constraintStart_toStartOf="parent"-->
-        <!--            app:layout_constraintTop_toBottomOf="@id/cvBuscador"-->
-        <!--            tools:visibility="visible">-->
-
-        <!--            <LinearLayout-->
-        <!--                android:layout_width="match_parent"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:orientation="horizontal"-->
-        <!--                android:padding="12dp"-->
-        <!--                android:gravity="center_vertical">-->
-
-        <!--                <ImageView-->
-        <!--                    android:layout_width="20dp"-->
-        <!--                    android:layout_height="20dp"-->
-        <!--                    android:src="@drawable/ic_person"-->
-        <!--                    app:tint="@color/colorOnSecondary" />-->
-
-        <!--                <TextView-->
-        <!--                    android:id="@+id/tvClienteSeleccionado"-->
-        <!--                    android:layout_width="0dp"-->
-        <!--                    android:layout_height="wrap_content"-->
-        <!--                    android:layout_weight="1"-->
-        <!--                    android:layout_marginStart="8dp"-->
-        <!--                    android:text="Cliente seleccionado"-->
-        <!--                    android:textColor="@color/colorOnSecondary"-->
-        <!--                    android:textSize="14sp"-->
-        <!--                    android:textStyle="bold"-->
-        <!--                    tools:text="Juan Pérez - 10062258789" />-->
-
-        <!--                <TextView-->
-        <!--                    android:layout_width="wrap_content"-->
-        <!--                    android:layout_height="wrap_content"-->
-        <!--                    android:text="✓"-->
-        <!--                    android:textColor="@color/colorOnSecondary"-->
-        <!--                    android:textSize="16sp"-->
-        <!--                    android:textStyle="bold" />-->
-
-        <!--            </LinearLayout>-->
-        <!--        </androidx.cardview.widget.CardView>-->
 
 
         <TextView
@@ -213,7 +175,7 @@
             android:textStyle="bold"
             android:letterSpacing="0.02"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cvBuscador" />
+            app:layout_constraintTop_toBottomOf="@id/cvBuscadorCliente" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cvFormulario"

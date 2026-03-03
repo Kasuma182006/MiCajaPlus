@@ -89,34 +89,34 @@ data class gastoDetectado(
 data class Costo(
     val idTendero: String,
     val mensaje: String,
+    val categoria: String,
+    val proveedor: String,
     var precioCompra: Int
 )
 
 data class compra_Mercancia(
-    val idTendero: String,
     var mensaje: String,
     var monto: Int,
     val categoria: String,
     val proveedor: String
 )
 
-data class listaProductos (
-    val idTendero: String,
-    val nombreProducto: String,
-    val cantidad: Int,
-    val precioCompra: Int,
-    val precioVenta: Int,
-    val proveedor: String
-)
-
-data class inventario (
-
-    val idInventario: Int,
-    val idProductos: Int,
+data class EditarProducto (
+    val idInventario: String,
     val cantidad: Int,
     val valorVenta: Int,
-    val valorCompra: Int,
-    val idCategorias: Int,
     val nombre: String,
     val presentacion: String
+)
+
+data class OperacionesProductos(
+    val idTendero:String,
+    val nombre:String,
+    val presentacion                                                                                                                                                                                                                :String,
+    val cantidad:Int
+)
+
+data class BuscarProductos(
+    val idTendero:String,
+    val nombreProducto:String
 )
