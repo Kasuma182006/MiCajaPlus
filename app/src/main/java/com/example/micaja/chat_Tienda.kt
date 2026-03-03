@@ -280,21 +280,19 @@ class chat_Tienda : AppCompatActivity() {
                 .filter { it.length > 3 }
 
             val listaResumen = mutableListOf<String>()
-            var sumaTotalVenta = 0
 
             for (segmento in segmentos) {
                 val datos = extraerDatosProducto(segmento)
 
                 if (datos != null) {
-                    val (nombre, pres, precio) = datos
+                    val (nombre, pres, cantidad) = datos
 
                     // Acumulamos para el mensaje final y el total
-                    listaResumen.add("• $nombre ($pres) por $$precio")
-                    sumaTotalVenta += precio
+                    listaResumen.add("• $cantidad  de  $nombre ($pres) ")
 
                     Log.d(
                         "DETECCION_VENTA",
-                        "REGISTRADO -> PROD: $nombre | PRES: $pres | PRECIO: $precio"
+                        "REGISTRADO -> CANT: $cantidad PROD: $nombre y  PRES: $pres "
                     )
 
                 }
@@ -304,9 +302,9 @@ class chat_Tienda : AppCompatActivity() {
             if (listaResumen.isNotEmpty()) {
                 val saludo = "¡Entendido! He registrado lo siguiente:\n"
                 val cuerpo = listaResumen.joinToString("\n")
-                val total = "\n\nTotal esta operación: $$sumaTotalVenta"
 
-                model.addMensajeSistema(modelo(saludo + cuerpo + total))
+
+                model.addMensajeSistema(modelo(saludo  + cuerpo ))
             } else {
                 model.addMensajeSistema(modelo("Detecté una venta, pero no logré identificar el producto o el precio. Intenta algo como: Arroz libra 3500"))
             }
@@ -325,26 +323,16 @@ class chat_Tienda : AppCompatActivity() {
     private fun extraerDatosProducto(segmento: String): Triple<String, String, Int>? {
         var s = segmento.trim()
 
-        //Extraer Monto
-        var precioFinal: Int? = null
-        var textoPrecioEncontrado = ""
+        // identifica presentacion Usando tu lista de 'unidades'
+        val cifra = Regex("\\b\\d+\\b")
+        val match = cifra.find(s)
+        val cantidad = match?.value?.toIntOrNull() ?: 1
 
-        val fragmentos = s.split(" ")
-        for (f in fragmentos) {
-            val resultadoMonto = calcularMonto(f) // 20k, 20.000, etc.
-            if (resultadoMonto != null && resultadoMonto >= 100) {
-                precioFinal = resultadoMonto
-                textoPrecioEncontrado = f
-                break
-            }
+
+        if (match != null) {
+            s = s.replaceFirst(match.value, "").trim()
         }
 
-        if (precioFinal == null) return null
-
-        // LIMPIEZA DE PRECIO Y SÍMBOLOS
-        s = s.replace(textoPrecioEncontrado, "").replace("$", "").trim()
-
-        // identifica presentacion Usando tu lista de 'unidades'
         var unidadDetectada = "unidad"
         for (u in unidades) {
             if (s.contains(u)) {
@@ -362,6 +350,7 @@ class chat_Tienda : AppCompatActivity() {
             "venta",
             "un",
             "una",
+            "S",
             "de",
             "a",
             "por",
@@ -371,6 +360,7 @@ class chat_Tienda : AppCompatActivity() {
             "precio",
             "también"
         )
+
         var nombreLimpio = s
         for (r in ruido) {
             nombreLimpio = nombreLimpio.replace(Regex("\\b$r\\b", RegexOption.IGNORE_CASE), "")
@@ -378,8 +368,9 @@ class chat_Tienda : AppCompatActivity() {
 
         nombreLimpio = nombreLimpio.trim().replace(Regex("\\s+"), " ")
 
+
         return if (nombreLimpio.isNotEmpty()) {
-            Triple(nombreLimpio.replaceFirstChar { it.uppercase() }, unidadDetectada, precioFinal)
+            Triple(nombreLimpio.replaceFirstChar { it.uppercase() }, unidadDetectada, cantidad)
         } else null
     }
 

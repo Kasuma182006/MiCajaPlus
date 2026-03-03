@@ -65,7 +65,7 @@ interface ConexionServiceTienda {
     suspend fun traerInventario(@Query("idTendero") idTendero: String): Response<List<inventario>>
 
     companion object messi {
-        private const val BASE_URL = "http://10.6.124.193:4000"
+        private const val BASE_URL = "http://10.6.124.62:4000"
         var inventario = MutableStateFlow<List<inventario>>(emptyList())
 
         fun create(): ConexionServiceTienda {
