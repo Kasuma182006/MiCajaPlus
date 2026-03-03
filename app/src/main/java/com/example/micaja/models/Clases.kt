@@ -102,7 +102,7 @@ data class compra_Mercancia(
 
 data class EditarProducto (
 
-    val idInventario: Int,
+    val idInventario: String,
     val cantidad: Int,
     val valorVenta: Int,
     val nombre: String,
@@ -110,14 +110,13 @@ data class EditarProducto (
 )
 
 data class OperacionesProductos(
-    val idTendero:Int,
-    val nombreProducto:String,
-    val presentacionProducto:String,
-    val cantidad:Int,
-    val tipoOperacion: String //Si es una venta, es para descargar producto y si es compra es para añadir producto, le pido a Miguel que no toque inventario, gracias
+    val idTendero:String,
+    val nombre:String,
+    val presentacion                                                                                                                                                                                                                :String,
+    val cantidad:Int
 )
 
-data class BuscarProducto(
-    val idTendero:Int,
+data class BuscarProductos(
+    val idTendero:String,
     val nombreProducto:String
 )

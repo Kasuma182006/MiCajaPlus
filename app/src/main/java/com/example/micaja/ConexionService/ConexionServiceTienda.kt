@@ -64,8 +64,8 @@ interface ConexionServiceTienda {
     suspend fun addBase(@Body base: ModeloBase): Response<Map <String,Any>>
 
 
-    @POST("/operacionesProductos")
-    suspend fun operacionesProductos(@Body producto: OperacionesProductos): Response<Any>
+    @POST("/descargaProductos")
+    suspend fun descargaProductos(@Body producto: OperacionesProductos): Response<Any>
 
     @POST("/buscarProducto")
     suspend fun buscarProducto(@Body producto: BuscarProducto): Response<List<EditarProducto>>
