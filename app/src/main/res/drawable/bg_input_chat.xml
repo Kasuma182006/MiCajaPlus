@@ -3,7 +3,7 @@
     android:shape="rectangle">
 
     <!-- Fondo del input -->
-    <solid android:color="#3F8EBF" />
+    <solid android:color="#5CB3E8" />
 
 
     <!-- Radios para que quede redondeado -->
