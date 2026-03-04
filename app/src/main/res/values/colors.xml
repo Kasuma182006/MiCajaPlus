@@ -33,11 +33,10 @@
 
 
     <color name="gris_venta_targeta">#6DD0CCDB</color>
-    <color name="Azul_venta_targeta">#D0EFFF</color>
-    <color name="azulMorado_costos_targeta">#E0E7FF</color>
-    <color name="rojo_gastos_targeta">#FFDADA</color>
-    <color name="amarillo_fiados_targeta">#FEF3C7</color>
-    <color name="verde_utilidad_targeta">#D1FAE5</color>
+    <color name="azul_costos_targeta">#DBDCFF</color>
+    <color name="rojo_gastos_targeta">#F4DBFA</color>
+    <color name="amarillo_fiados_targeta">#EBECCF</color>
+    <color name="verde_utilidad_targeta">#B3E8BB</color>
 
 
     <color name="utilidad_positive">#0D0D0D</color>

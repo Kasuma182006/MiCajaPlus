@@ -136,12 +136,12 @@
                     android:layout_height="16dp"
                     android:contentDescription="Seleccionar fecha inicio"
                     android:src="@drawable/retroceso"
-                    android:rotation="180"
+                    android:rotation="270"
                     android:alpha="0.5"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:tint="#FFFFFF" />
+                    app:tint="@color/colorOnSecondary" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
@@ -201,12 +201,12 @@
                     android:layout_height="16dp"
                     android:contentDescription="Seleccionar fecha fin"
                     android:src="@drawable/retroceso"
-                    android:rotation="180"
+                    android:rotation="270"
                     android:alpha="0.5"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:tint="#FFFFFF"/>
+                    app:tint="@color/colorOnSecondary" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
@@ -252,7 +252,7 @@
             android:layout_marginStart="2dp"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="6dp"
-            app:cardBackgroundColor="@color/Azul_venta_targeta"
+            app:cardBackgroundColor="#DDDBDB"
             app:cardCornerRadius="18dp"
             app:cardElevation="2dp"
             app:layout_constraintEnd_toStartOf="@id/cardCostos"
@@ -319,7 +319,7 @@
             android:layout_marginStart="6dp"
             android:layout_marginEnd="2dp"
             android:defaultFocusHighlightEnabled="false"
-            app:cardBackgroundColor="@color/azulMorado_costos_targeta"
+            app:cardBackgroundColor="@color/azul_costos_targeta"
             app:cardCornerRadius="18dp"
             app:cardElevation="2dp"
             app:layout_constraintEnd_toEndOf="parent"

@@ -89,76 +89,65 @@
             app:cardBackgroundColor="#FFFFFF"
             app:cardCornerRadius="16dp"
             app:cardElevation="3dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btnBuscarProducto"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/labelPaso1">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textBuscarProducto"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                app:boxCornerRadiusTopStart="16dp"
+                app:boxCornerRadiusTopEnd="16dp"
+                app:boxCornerRadiusBottomStart="16dp"
+                app:boxCornerRadiusBottomEnd="16dp"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/colorOnSecondary"
+                app:startIconTint="@color/colorOnSecondary"
+                app:counterEnabled="true"
+                app:counterMaxLength="60"
+                app:hintEnabled="false">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/textBuscarProducto"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    app:boxStrokeWidth="0dp"
-                    app:boxStrokeWidthFocused="0dp"
-                    app:boxCornerRadiusTopStart="16dp"
-                    app:boxCornerRadiusTopEnd="16dp"
-                    app:boxCornerRadiusBottomStart="16dp"
-                    app:boxCornerRadiusBottomEnd="16dp"
-                    app:endIconMode="clear_text"
-                    app:endIconTint="@color/colorOnSecondary"
-                    app:startIconTint="@color/colorOnSecondary"
-                    app:counterEnabled="true"
-                    app:counterMaxLength="60"
-                    app:hintEnabled="false"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/btnBuscarProducto"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etBuscarProducto"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@android:color/transparent"
-                        android:hint="@string/hint_BuscarProducto"
-                        android:textColorHint="@color/gris"
-                        android:imeOptions="actionSearch"
-                        android:inputType="text"
-                        android:textSize="14sp"
-                        android:paddingStart="16dp"
-                        android:paddingEnd="8dp"/>
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnBuscarProducto"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginEnd="4dp"
-                    android:padding="0dp"
-                    android:insetTop="0dp"
-                    android:insetBottom="0dp"
-                    android:insetLeft="0dp"
-                    android:insetRight="0dp"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etBuscarProducto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
-                    app:cornerRadius="12dp"
-                    app:icon="@drawable/ic_search"
-                    app:iconGravity="textStart"
-                    app:iconPadding="0dp"
-                    app:iconSize="24dp"
-                    app:iconTint="@color/ic_principal"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:hint="@string/hint_BuscarProducto"
+                    android:textColorHint="@color/gris"
+                    android:imeOptions="actionSearch"
+                    android:inputType="textMultiLine"
+                    android:textSize="14sp" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.textfield.TextInputLayout>
 
         </androidx.cardview.widget.CardView>
 
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnBuscarProducto"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:contentDescription="@string/cd_btnBuscarProducto"
+            android:layout_marginStart="6.5dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:backgroundTint="@color/btn_registrarse"
+            app:cornerRadius="16dp"
+            app:icon="@drawable/ic_search"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconSize="44dp"
+            app:iconTint="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="@id/cvBuscador"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/cvBuscador"
+            app:layout_constraintVertical_bias="0.507"
+            app:rippleColor="@color/colorPrimary" />
 
         <TextView
             android:id="@+id/labelPaso2"
@@ -223,6 +212,36 @@
                         android:layout_height="wrap_content"
                         android:inputType="textCapWords"
                         app:counterMaxLength="@integer/NombreProducto"
+                        android:textSize="15sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilDescripcionProducto"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="@string/Presentación"
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:boxStrokeColor="@color/colorPrimary"
+                    app:boxStrokeWidth="1.5dp"
+                    app:hintTextColor="@color/colorOnSecondary"
+                    app:startIconTint="@color/colorOnSecondary"
+                    app:endIconMode="clear_text"
+                    app:endIconTint="@color/colorOnSecondary"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="80">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etDescripcionProducto"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textMultiLine"
+                        app:counterMaxLength="@integer/Presentacion"
                         android:textSize="15sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>

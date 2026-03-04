@@ -39,9 +39,9 @@ class ConsultarXFecha : AppCompatActivity() {
     }
 
     private fun configurarBotones() {
-        binding.cvBtnInicio.setOnClickListener { mostrarCalendario(true) }
+        binding.btnCalendarioStar.setOnClickListener { mostrarCalendario(true) }
 
-        binding.cvBtnFin.setOnClickListener { mostrarCalendario(false) }
+        binding.btnCalendarioEnd.setOnClickListener { mostrarCalendario(false) }
 
         binding.btnCerrar.setOnClickListener { cancelar() }
     }
