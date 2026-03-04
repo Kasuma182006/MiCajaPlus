@@ -43,7 +43,9 @@ class ConsultarXFecha : AppCompatActivity() {
 
         binding.cvBtnFin.setOnClickListener { mostrarCalendario(false) }
 
-        binding.btnCerrar.setOnClickListener { cancelar() }
+        binding.btnRetroceso.setOnClickListener {
+            finish() // cierra esta Activity y vuelve a la anterior
+        }
     }
 
     private fun cancelar() {

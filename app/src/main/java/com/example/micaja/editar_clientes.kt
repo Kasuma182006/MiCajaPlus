@@ -23,7 +23,7 @@ class editar_clientes : AppCompatActivity() {
             insets
         }
 
-        // Botón retroceso
+        // Boton retroceso
         binding.btnRetroceso.setOnClickListener {
             finish() // cierra esta Activity y vuelve a la anterior
         }

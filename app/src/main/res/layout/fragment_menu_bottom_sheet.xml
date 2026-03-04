@@ -142,12 +142,12 @@
                     android:textSize="17sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/menuChevronBalance"
+                    app:layout_constraintEnd_toStartOf="@+id/menuBalance"
                     app:layout_constraintStart_toEndOf="@id/menuCvIconBalance"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
-                    android:id="@+id/menuChevronBalance"
+                    android:id="@+id/menuBalance"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:contentDescription="Ir a Balance"
@@ -213,12 +213,12 @@
                     android:textSize="17sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/menuChevronEditarCliente"
+                    app:layout_constraintEnd_toStartOf="@+id/menuEditarCliente"
                     app:layout_constraintStart_toEndOf="@id/menuCvIconEditarCliente"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
-                    android:id="@+id/menuChevronEditarCliente"
+                    android:id="@+id/menuEditarCliente"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:contentDescription="Ir a Editar Cliente"
@@ -284,12 +284,12 @@
                     android:textSize="17sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/menuChevronEditarProducto"
+                    app:layout_constraintEnd_toStartOf="@+id/menuEditarProducto"
                     app:layout_constraintStart_toEndOf="@id/menuCvIconEditarProducto"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
-                    android:id="@+id/menuChevronEditarProducto"
+                    android:id="@+id/menuEditarProducto"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:contentDescription="Ir a Editar Producto"
