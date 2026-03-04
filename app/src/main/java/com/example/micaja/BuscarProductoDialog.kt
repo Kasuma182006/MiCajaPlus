@@ -1,6 +1,5 @@
 package com.example.micaja
 
-import android.R
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -37,7 +36,7 @@ class BuscarProductoDialog(
         super.onStart()
         dialog?.window?.apply {
             setLayout((resources.displayMetrics.widthPixels * 0.93).toInt(), ViewGroup.LayoutParams.WRAP_CONTENT)
-            setBackgroundDrawableResource(R.color.transparent)
+            setBackgroundDrawableResource(android.R.color.transparent)
         }
     }
 
