@@ -16,11 +16,14 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.micaja.Adapter.Adapter
 import com.example.micaja.ConexionService.ConexionServiceTienda
 import com.example.micaja.databinding.ActivityChatTiendaBinding
+import com.example.micaja.models.Identificacion
 import com.example.micaja.models.ModeloBase
+import com.example.micaja.models.cliente1
 import com.example.micaja.models.compra_Mercancia
 import com.example.micaja.models.gastoDetectado
 import com.example.micaja.models.modelo
@@ -38,7 +41,14 @@ var montoVentas = 0
 var montoGastos = 0
 var montoCostos = 0
 var baseInicial = 0
-var credito: Boolean = false
+
+var cantidad: String = ""
+
+var i: Int = 1
+
+var procesoActivo = "NINGUNO"
+var estadoCredito = "NINGUNO"
+
 var montoCredito = 0
 
 val diccionario = mapOf(
@@ -51,7 +61,9 @@ val diccionario = mapOf(
     "efectivo" to listOf("efectivo","efectivos", "plata", "paga", "a la mano", "contado", "dinero", "efectivito"),
     "abono" to listOf ("abonar", "abono", "abonos", "cuota", "adelantar" ,"adelanto"),
     "agregar producto" to listOf ("agregar producto", "añadir producto" ,"nuevo producto", "producto nuevo"),
-    "agregar cliente" to listOf("agregar nombre", "añadir cliente", "cliente nuevo", "nuevo cliente")
+    "agregar cliente" to listOf("agregar nombre", "añadir cliente", "cliente nuevo", "nuevo cliente"),
+    "si" to listOf("SI", "Si", "si", "sI", "Yes", "YES", "YeS", "yES", "yEs", "yeS"),
+    "no" to listOf("NO","No","no","nO" )
 )
 
 class chat_Tienda : AppCompatActivity() {
@@ -59,6 +71,7 @@ class chat_Tienda : AppCompatActivity() {
     private lateinit var binding: ActivityChatTiendaBinding
     private val RQ_SPEECH_REC = 102
 
+    var indicador: Boolean? = false
     var dataset = mutableListOf<modelo>()
     var sistemaData = mutableListOf<modelo>()
     lateinit var Adapter: Adapter
@@ -196,8 +209,13 @@ class chat_Tienda : AppCompatActivity() {
 
             if (tienda) {
                 if (base) {
-                    procesarCompra(mensaje)
-                    procesarGasto(mensaje)
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        procesarCompra(mensaje)
+
+                        withContext(Dispatchers.Main) {
+                            procesarGasto(mensaje)
+                        }
+                    }
                     Log.d(TAG, "El valor de la venta es ${montoVentas}")
                     Log.d(TAG, "El valor de los gastos es ${montoGastos}")
                     Log.d(TAG, "El valor de los costos es ${montoCostos}")
@@ -261,9 +279,9 @@ class chat_Tienda : AppCompatActivity() {
     )
 
 
-    fun procesarCompra(texto: String) {
+    suspend fun procesarCompra(texto: String) {
         val prefs = getSharedPreferences("SesionTendero", MODE_PRIVATE)
-        val cedula = prefs.getString("cedula", null) ?: return
+        val cedula_tendero = prefs.getString("cedula", null) ?: return
 
         // limpieza elimina  puntos y comas
         val textoLimpio = texto.replace(Regex("""(\d)[.,](\d{3})\b"""), "$1$2")
@@ -271,13 +289,28 @@ class chat_Tienda : AppCompatActivity() {
 
         // Detecta (Venta, Cierre, Crédito)
         val palabras = textoMinuscula.split(Regex("""[\s:]+"""))
+        Log.i("palabra", palabras.toString())
         val esVenta = palabras.any { diccionario["venta"]?.contains(it) == true }
+        val esCredito = palabras.any{diccionario["credito"]?.contains(it)==true}
 
-        if (esVenta) {
+        if (esVenta && esCredito) {
+            procesoActivo = "credito"
+            estadoCredito = "esperando_cedula"
+            indicador = true
+
+            model.addMensajeSistema(
+                modelo("He detectado venta a crédito. Dicte el número de cédula del cliente.")
+            )
+            return
+        }
+        if (esVenta && indicador == false){
+            indicador = false
             // Separamos por conectores para manejar múltiples productos
             val segmentos = textoMinuscula.split(Regex(",|\\by\\b|;|\\."))
                 .map { it.trim() }
                 .filter { it.length > 3 }
+
+            Log.i("segmentos", segmentos.toString())
 
             val listaResumen = mutableListOf<String>()
             var sumaTotalVenta = 0
@@ -299,7 +332,6 @@ class chat_Tienda : AppCompatActivity() {
 
                 }
             }
-
             // respuesta sistema
             if (listaResumen.isNotEmpty()) {
                 val saludo = "¡Entendido! He registrado lo siguiente:\n"
@@ -310,15 +342,67 @@ class chat_Tienda : AppCompatActivity() {
             } else {
                 model.addMensajeSistema(modelo("Detecté una venta, pero no logré identificar el producto o el precio. Intenta algo como: Arroz libra 3500"))
             }
+            return
         }
+        if (procesoActivo == "credito" && indicador == true) {
+                if (estadoCredito == "esperando_cedula") {
+                    val cedula = textoMinuscula.replace(Regex("[^0-9]"), "")
+                    Log.i("verificacion", "Llega hasta aca" )
+
+                    if ((cedula.length > 10) || (cedula.length < 6)) {
+                        model.addMensajeSistema(modelo("No pude reconocer la cédula. Por favor dictala nuevamente. Debe tener entre 6 y 10 dígitos."))
+                    } else {
+                        val conexion = ConexionServiceTienda.create()
+                        Log.i("cedula tendero", cedula_tendero)
+                        val respuesta =
+                            conexion.busca_cliente(Identificacion(cedula, cedula_tendero))
+                        if (respuesta.body()!!.nombre != null && respuesta.body()!!.saldo != null) { // Si usas Response<>
+                            Log.i("hay respuesta", respuesta.body()?.saldo.toString())
+                            estadoCredito = "pedir_cantidad"
+                            model.addMensajeSistema(modelo("Cliente encontrado: ${respuesta.body()?.nombre}.\nSaldo total: ${respuesta.body()?.saldo}\n¿Cuántos productos compró fiados?"))
+                        } else {
+                            model.addMensajeSistema(modelo("El cliente con la cedula $cedula no se encuentra registrado. ¿Le gustaría registrarlo?"))
+                            estadoCredito = "registrar_cliente"
+                        }
+                    }
+                }
+
+                if (estadoCredito == "registrar_cliente"){
+                    val si = palabras.any { diccionario["si"]?.contains(it) == true}
+                    val no = palabras.any { diccionario["no"]?.contains(it) == true}
+                    if (si){
+                        model.addMensajeSistema(modelo("¿Cuál es el nombre del cliente?"))
+                    }else if (no){
+                        model.addMensajeSistema(modelo("Saliendo de credito"))
+                        indicador = false
+                    }
+                    else{
+                        model.addMensajeSistema(modelo("Lo siento, no pude entender la respuesta. Dictela de nuevo"))
+                    }
+                }
+                if (estadoCredito == "pedir_cantidad") {
+                    cantidad = textoMinuscula.replace(Regex("[^0-9]"), "")
+                    Log.i("cantidad", cantidad.toString())
+                    if ((cantidad.toInt() > 0) and (cantidad.toInt() < 100)) {
+                        model.addMensajeSistema(modelo("Dicte el primer producto."))
+                        estadoCredito = "pedir_productos"
+                    }
+                }
+                if (estadoCredito == "pedir_productos") {
+                    Log.i("Valor de i", i.toString())
+                    if (cantidad.toInt() > i) {
+                        i++
+                        model.addMensajeSistema(modelo("Dicte el siguiente producto."))
+
+                    }
+
+                }
+
+
+            }
 
         if (palabras.any { diccionario["cerrar"]?.contains(it) == true }) {
             cerrarTienda()
-        }
-
-        if (palabras.any { diccionario["credito"]?.contains(it) == true }) {
-            credito = true
-            model.addMensajeSistema(modelo("Iniciando registro de crédito..."))
         }
     }
 

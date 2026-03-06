@@ -11,6 +11,7 @@ import com.example.micaja.models.NumeroCreditosResponse
 import com.example.micaja.models.Tendero
 import com.example.micaja.models.TipoOperacionXFecha
 import com.example.micaja.models.cliente
+import com.example.micaja.models.cliente1
 import com.example.micaja.models.clienteNuevo
 import com.example.micaja.models.compra_Mercancia
 import kotlinx.coroutines.Dispatchers
@@ -38,7 +39,7 @@ interface ConexionServiceTienda {
 
     @POST("/buscar_cliente")
     @Headers("Content-Type: application/json")
-    suspend fun busca_cliente(@Body identificacion: Identificacion): List<cliente>
+    suspend fun busca_cliente(@Body identificacion: Identificacion): Response<cliente1>
 
     @POST("/insertarcliente_credito")
     suspend fun insertar_cliente(@Body cliente: clienteNuevo): Response<Void>
@@ -65,7 +66,7 @@ interface ConexionServiceTienda {
     suspend fun traerInventario(@Query("idTendero") idTendero: String): Response<List<inventario>>
 
     companion object messi {
-        private const val BASE_URL = "http://10.6.124.193:4000"
+        private const val BASE_URL = "http://10.6.124.114:4000"
         var inventario = MutableStateFlow<List<inventario>>(emptyList())
 
         fun create(): ConexionServiceTienda {

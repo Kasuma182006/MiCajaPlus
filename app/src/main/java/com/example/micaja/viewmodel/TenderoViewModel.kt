@@ -13,13 +13,13 @@ class TenderoViewModel: ViewModel() {
 
         val list = mensajes.value?: mutableListOf()
         list.add(mensaje)
-        mensajes.value = list
+        mensajes.postValue(list)
     }
 
     fun addMensajeSistema(mensaje:modelo){
 
         val list = mensajesSistema.value?: mutableListOf()
         list.add(mensaje)
-        mensajesSistema.value = list
+        mensajesSistema.postValue(list)
     }
 }

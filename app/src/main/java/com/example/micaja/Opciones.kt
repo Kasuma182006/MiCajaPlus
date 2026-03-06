@@ -23,26 +23,27 @@ class Opciones : Fragment() {
         binding = FragmentOpcionesBinding.inflate(inflater, container, false)
         return binding.root
     }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding.abono.setOnClickListener { fragmento(true) }
-        binding.credito.setOnClickListener { fragmento(false) }
-        binding.cerrar.setOnClickListener { parentFragmentManager.popBackStack() }
-    }
-
-    fun fragmento(abono: Boolean) {
-        val fragmento = Abono().apply {
-            arguments = bundleOf(
-                "abono" to abono,
-            )
-        }
-
-        parentFragmentManager
-            .beginTransaction()
-            .replace(R.id.fragmento_credito, fragmento)
-            .addToBackStack(null)
-            .commit()
-    }
 }
+
+//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//        super.onViewCreated(view, savedInstanceState)
+//
+//        binding.abono.setOnClickListener { fragmento(true) }
+//        binding.credito.setOnClickListener { fragmento(false) }
+//        binding.cerrar.setOnClickListener { parentFragmentManager.popBackStack() }
+//    }
+
+//    fun fragmento(abono: Boolean) {
+//        val fragmento = Abono().apply {
+//            arguments = bundleOf(
+//                "abono" to abono,
+//            )
+//        }
+
+//        parentFragmentManager
+//            .beginTransaction()
+//            .replace(R.id.fragmento_credito, fragmento)
+//            .addToBackStack(null)
+//            .commit()
+//    }
+//}

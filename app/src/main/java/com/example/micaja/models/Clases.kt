@@ -16,6 +16,11 @@ data class cliente(
     val total: Int?=null
 )
 
+data class cliente1(
+    val nombre: String?=null,
+    val saldo: Int?=null,
+)
+
 data class clienteNuevo(
     val cedulaCliente: String,
     val cedulaTendero:String,
