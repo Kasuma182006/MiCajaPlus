@@ -5,6 +5,7 @@ import com.example.micaja.models.Identificacion
 import com.example.micaja.models.modelo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+
 class Abonos {
     private enum class EstadoAbono {
         INACTIVO, ESPERANDO_CEDULA, ESPERANDO_MONTO, ESPERANDO_CONFIRMACION
@@ -14,6 +15,7 @@ class Abonos {
     private var nombreCliente = ""
     private var montoAbono = 0
     private var saldoActualCliente= 0
+
     fun iniciarFlujoAbono(enviarMensajeSistema: (modelo) -> Unit) {
         estadoActual = EstadoAbono.ESPERANDO_CEDULA
         enviarMensajeSistema(
@@ -80,7 +82,7 @@ class Abonos {
                     finalizarFlujo()
                 }
             } catch (e: Exception) {
-                enviarMensajeSistema(modelo("Error de conexión: No se pudo verificar el cliente."))
+                enviarMensajeSistema(modelo("No se pudo verificar el cliente."))
             }
         } else {
             enviarMensajeSistema(modelo("La cédula debe ser numérica y tener al menos 7 dígitos."))
@@ -135,7 +137,7 @@ class Abonos {
                         enviarMensajeSistema(modelo("No se pudo procesar el abono. Intente más tarde."))
                     }
                 } catch (e: Exception) {
-                    enviarMensajeSistema(modelo("Error de red: No se pudo conectar con el servidor."))
+                    enviarMensajeSistema(modelo("No se pudo conectar con el servidor."))
                 }
             }
             negativo.any { texto.contains(it) } -> {

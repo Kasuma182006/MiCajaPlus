@@ -98,8 +98,16 @@ class chat_Tienda : AppCompatActivity() {
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime()) // Detecta el teclado
+
+            // Si el teclado está abierto (ime.bottom > 0), usamos ese valor.
+            // Si está cerrado, usamos el valor de la barra del sistema.
+            val bottomPadding = if (ime.bottom > 0) ime.bottom else systemBars.bottom
+
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, bottomPadding)
+
+            // Devolvemos los insets consumidos para que no se apliquen doble
+            WindowInsetsCompat.CONSUMED
         }
 
         val preferencia = getSharedPreferences("SesionTendero", MODE_PRIVATE)
@@ -288,22 +296,16 @@ class chat_Tienda : AppCompatActivity() {
     //////////////////////////////ABONOS
     val abono=Abonos()
     fun procesarAbonos(texto: String) {
-        // 1. Obtenemos la cédula del tendero (idTendero) de las SharedPreferences
         val preferencia = getSharedPreferences("SesionTendero", MODE_PRIVATE)
         val idTendero = preferencia.getString("cedula", "") ?: ""
-
-        // 2. Usamos lifecycleScope porque procesarRespuesta es una función 'suspend'
         lifecycleScope.launch {
-            // Ahora pasamos los 3 argumentos: el texto, la función de mensajes y el idTendero
             val fueAbono = abono.procesarRespuesta(texto, { msg ->
-                // Aseguramos que el mensaje se añada en el hilo principal
                 model.addMensajeSistema(msg)
             }, idTendero)
 
-            // Si la clase Abonos se encargó del mensaje, nos salimos
-            if (fueAbono) return@launch
+            if (fueAbono)
+                return@launch
 
-            // 3. Si no hay flujo activo, revisamos si el usuario quiere INICIAR un abono
             val textoLimpio = texto.replace(Regex("""(\d)[.,](\d{3})\b"""), "$1$2")
             val textoMinuscula = textoLimpio.lowercase()
             val palabras = textoMinuscula.split(Regex("""[\s:]+"""))

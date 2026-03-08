@@ -34,7 +34,6 @@ interface ConexionServiceTienda {
     @POST("login")
     @Headers("Content-Type: application/json")
     suspend fun login(@Body body: Tendero): Response<Tendero>
-
     @POST("addtendero")
     @Headers("Content-Type: application/json")
     suspend fun addTendero(@Body tendero: Tendero): Response<Tendero>
