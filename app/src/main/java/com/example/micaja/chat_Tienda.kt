@@ -34,6 +34,7 @@ import java.util.Locale
 import kotlin.apply
 import kotlin.getValue
 import androidx.core.view.WindowInsetsControllerCompat
+import com.example.micaja.Operaciones.OperacionVenta
 import com.example.micaja.utils.TimeUtils
 
 
@@ -69,6 +70,9 @@ class chat_Tienda : AppCompatActivity() {
     lateinit var Adapter: Adapter
     lateinit var estadoTienda: SharedPreferences
     lateinit var estadoBase: SharedPreferences
+
+    var operacionVenta =  OperacionVenta()
+
 
 
     private val model: TenderoViewModel by viewModels()
@@ -190,8 +194,26 @@ class chat_Tienda : AppCompatActivity() {
         })
     }
 
+    fun filtarPalabras(msj: String): Boolean {
+        val textoLimpio = msj.replace(Regex("""(\d)[.,](\d{3})\b"""), "$1$2").lowercase()
+        val palabras = textoLimpio.split(Regex("""[\s,.:]+"""))
+
+        for (l in diccionario.values) {
+            for (p in palabras) {
+                if (l.contains(p)) {
+                    return true
+                }
+            }
+        }
+        if (operacionVenta.inicio){
+            return true
+        }
+        return false
+    }
+
     fun evento() {
         binding.sendBtn.setOnClickListener {
+
             mensaje = binding.messageInput.text.toString()
             val tienda = estadoTienda.getBoolean("abierta",false)
             val base = estadoBase.getBoolean("base",false)
@@ -206,15 +228,41 @@ class chat_Tienda : AppCompatActivity() {
 //            val texto = modelo(mensaje, hora)   //agrega hora al mensaje del usuario
 //            model.addMensaje(texto)
 
+            val textoLimpio = mensaje.replace(Regex("""(\d)[.,](\d{3})\b"""), "$1$2").lowercase()
+            val palabras = textoLimpio.split(Regex("""[\s,.:]+"""))
 
-
-            if (tienda) {
+            if (tienda ) {
                 if (base) {
-                    procesarCompra(mensaje)
-                    procesarGasto(mensaje)
-                    Log.d(TAG, "El valor de la venta es ${montoVentas}")
-                    Log.d(TAG, "El valor de los gastos es ${montoGastos}")
-                    Log.d(TAG, "El valor de los costos es ${montoCostos}")
+                    if (operacionVenta.inicio){
+                        if (palabras.contains("fin")){
+                            operacionVenta.inicio = false
+                            model.addMensajeSistema(modelo("Venta finalizada"))
+                        }else{
+                            val respuesta= operacionVenta.procesarListaProductos(textoLimpio)
+                            model.addMensajeSistema(modelo(respuesta))
+                        }
+                        return@setOnClickListener
+                    }
+                    val operaciones = filtarPalabras(mensaje)
+
+                    if (operaciones){
+                        val esVenta = diccionario["venta"]?.any { palabras.contains(it) } == true
+
+                        if (esVenta) {
+                            operacionVenta.inicio = true
+                            model.addMensajeSistema(modelo("¡Venta iniciada! Dicta los productos uno a uno o di 'fin'."))
+                        }else{
+                            procesarGasto(mensaje)
+                            procesarCosto(mensaje)
+                            Log.d(TAG, "El valor de la venta es ${montoVentas}")
+                            Log.d(TAG, "El valor de los gastos es ${montoGastos}")
+                            Log.d(TAG, "El valor de los costos es ${montoCostos}")
+                        }
+                    }else{
+                        val errorMsj = modelo("No se pudo detectar  la operacion, por favor vuelve a intentarlo")
+                        model.addMensajeSistema(errorMsj)
+                    }
+
                 } else {
                     CoroutineScope(Dispatchers.IO).launch {
                         baseInicial(mensaje)

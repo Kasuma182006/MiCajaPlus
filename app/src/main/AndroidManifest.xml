@@ -13,7 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MiCaja"
         android:usesCleartextTraffic="true">
-
+        <activity
+            android:name=".OperacionVenta"
+            android:exported="false" />
         <activity
             android:name=".item_mensajes"
             android:exported="false" />
@@ -33,7 +35,6 @@
         <activity
             android:name=".fragments.FragmentAnadirProductos"
             android:exported="false" />
-
         <activity
             android:name=".categorias.Categorias"
             android:exported="false" />
@@ -51,16 +52,14 @@
             android:name=".chat_Tienda"
             android:exported="false"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-
         <activity
             android:name=".editar_clientes"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize|stateHidden"/>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".fragment_editar_producto"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize|stateHidden"/>
-
+            android:windowSoftInputMode="adjustResize|stateHidden" />
     </application>
 
 </manifest>
