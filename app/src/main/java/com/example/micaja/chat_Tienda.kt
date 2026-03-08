@@ -79,6 +79,8 @@ class chat_Tienda : AppCompatActivity() {
     lateinit var estadoBase: SharedPreferences
 
 
+
+
     private val model: TenderoViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -215,6 +217,10 @@ class chat_Tienda : AppCompatActivity() {
                         withContext(Dispatchers.Main) {
                             procesarGasto(mensaje)
                         }
+                        ////////ABONOS
+                        withContext(Dispatchers.Main){
+                            procesarAbonos(mensaje)
+                        }
                     }
                     Log.d(TAG, "El valor de la venta es ${montoVentas}")
                     Log.d(TAG, "El valor de los gastos es ${montoGastos}")
@@ -277,6 +283,38 @@ class chat_Tienda : AppCompatActivity() {
         "mediana",
         "vidrio"
     )
+
+
+    //////////////////////////////ABONOS
+    val abono=Abonos()
+    fun procesarAbonos(texto: String) {
+        // 1. Obtenemos la cédula del tendero (idTendero) de las SharedPreferences
+        val preferencia = getSharedPreferences("SesionTendero", MODE_PRIVATE)
+        val idTendero = preferencia.getString("cedula", "") ?: ""
+
+        // 2. Usamos lifecycleScope porque procesarRespuesta es una función 'suspend'
+        lifecycleScope.launch {
+            // Ahora pasamos los 3 argumentos: el texto, la función de mensajes y el idTendero
+            val fueAbono = abono.procesarRespuesta(texto, { msg ->
+                // Aseguramos que el mensaje se añada en el hilo principal
+                model.addMensajeSistema(msg)
+            }, idTendero)
+
+            // Si la clase Abonos se encargó del mensaje, nos salimos
+            if (fueAbono) return@launch
+
+            // 3. Si no hay flujo activo, revisamos si el usuario quiere INICIAR un abono
+            val textoLimpio = texto.replace(Regex("""(\d)[.,](\d{3})\b"""), "$1$2")
+            val textoMinuscula = textoLimpio.lowercase()
+            val palabras = textoMinuscula.split(Regex("""[\s:]+"""))
+
+            val esAbono = palabras.any { diccionario["abono"]?.contains(it) == true }
+
+            if (esAbono) {
+                abono.iniciarFlujoAbono(model::addMensajeSistema)
+            }
+        }
+    }
 
 
     suspend fun procesarCompra(texto: String) {

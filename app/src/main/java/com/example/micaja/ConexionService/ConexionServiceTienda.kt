@@ -3,15 +3,17 @@ package com.example.micaja.ConexionService
 import android.util.Log
 import com.example.micaja.models.ConsultarOperaXFecha
 import com.example.micaja.models.Credito
-import com.example.micaja.models.Datos_Abono
+import com.example.micaja.models.DatosAbono
 import com.example.micaja.models.Identificacion
 import com.example.micaja.models.inventario
 import com.example.micaja.models.ModeloBase
 import com.example.micaja.models.NumeroCreditosResponse
+import com.example.micaja.models.RespuestaAbono
 import com.example.micaja.models.Tendero
 import com.example.micaja.models.TipoOperacionXFecha
 import com.example.micaja.models.cliente
 import com.example.micaja.models.cliente1
+import com.example.micaja.models.clienteAbono
 import com.example.micaja.models.clienteNuevo
 import com.example.micaja.models.compra_Mercancia
 import kotlinx.coroutines.Dispatchers
@@ -37,6 +39,14 @@ interface ConexionServiceTienda {
     @Headers("Content-Type: application/json")
     suspend fun addTendero(@Body tendero: Tendero): Response<Tendero>
 
+    /////ABONOS
+    @POST("consultarcliente")
+    suspend fun consultarCliente(@Body datos: Identificacion): Response<clienteAbono>
+
+    /////ABONOS
+    @POST("abonos")
+    suspend fun registrarAbono(@Body datos: DatosAbono): Response<RespuestaAbono>
+
     @POST("/buscar_cliente")
     @Headers("Content-Type: application/json")
     suspend fun busca_cliente(@Body identificacion: Identificacion): Response<cliente1>
@@ -46,9 +56,6 @@ interface ConexionServiceTienda {
 
     @POST("/insertar_credito")
     suspend fun insertar_credito(@Body credito: Credito): Response<Void>
-
-    @PUT("/abono")
-    suspend fun abono(@Body abono: Datos_Abono): Response<Void>
 
     @POST("ConsultarEstadisticas")
     suspend fun consultarXFecha(@Body request: ConsultarOperaXFecha): Response<List<TipoOperacionXFecha>>
@@ -66,7 +73,7 @@ interface ConexionServiceTienda {
     suspend fun traerInventario(@Query("idTendero") idTendero: String): Response<List<inventario>>
 
     companion object messi {
-        private const val BASE_URL = "http://10.6.124.114:4000"
+        private const val BASE_URL = "http://10.50.224.9:4000/"
         var inventario = MutableStateFlow<List<inventario>>(emptyList())
 
         fun create(): ConexionServiceTienda {

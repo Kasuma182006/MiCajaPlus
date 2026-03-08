@@ -16,6 +16,24 @@ data class cliente(
     val total: Int?=null
 )
 
+////ABONOS
+data class clienteAbono(
+    val nombre: String?,
+    val cedula: String?,
+    val saldo: Int?
+)
+/////ABONOS
+data class DatosAbono(
+    val cedula: String,
+    val idTendero:String,
+    val abono: Int
+)
+//////ABONOS
+data class RespuestaAbono(
+    val nuevoSaldo: Int
+)
+
+
 data class cliente1(
     val nombre: String?=null,
     val saldo: Int?=null,
@@ -31,19 +49,13 @@ data class clienteNuevo(
 
 data class Identificacion(
     val cedula: String,
-    val tendero: String
+    val idTendero: String
 )
 
 data class Credito(
     val cedulaCliente: String,
     val monto: Int,
     val cedulaTendero: String
-)
-
-data class Datos_Abono(
-    val cedulaCliente: String,
-    val cedulaTendero:String,
-    val monto: Int
 )
 data class ConsultarOperaXFecha(
     val idTendero: String,
