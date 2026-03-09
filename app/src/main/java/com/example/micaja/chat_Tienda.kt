@@ -21,6 +21,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.micaja.Adapter.Adapter
 import com.example.micaja.ConexionService.ConexionServiceTienda
+import com.example.micaja.Operaciones.OperacionVenta
 import com.example.micaja.databinding.ActivityChatTiendaBinding
 import com.example.micaja.models.Identificacion
 import com.example.micaja.models.ModeloBase
@@ -78,6 +79,8 @@ class chat_Tienda : AppCompatActivity() {
     lateinit var Adapter: Adapter
     lateinit var estadoTienda: SharedPreferences
     lateinit var estadoBase: SharedPreferences
+
+    var operacionVenta = OperacionVenta()
 
 
 
@@ -208,6 +211,22 @@ class chat_Tienda : AppCompatActivity() {
             binding.recyclerMensajes.scrollToPosition(Adapter.itemCount - 1)
         })
     }
+    fun filtarPalabras(msj: String): Boolean {
+        val textoLimpio = msj.replace(Regex("""(\d)[.,](\d{3})\b"""), "$1$2").lowercase()
+        val palabras = textoLimpio.split(Regex("""[\s,.:]+"""))
+
+        for (l in diccionario.values) {
+            for (p in palabras) {
+                if (l.contains(p)) {
+                    return true
+                }
+            }
+        }
+        if (operacionVenta.inicio){
+            return true
+        }
+        return false
+    }
 
     fun evento() {
         binding.sendBtn.setOnClickListener {
@@ -222,10 +241,21 @@ class chat_Tienda : AppCompatActivity() {
             WindowInsetsControllerCompat(window, binding.messageInput)
                 .hide(WindowInsetsCompat.Type.ime())
 
+            val textoLimpio = mensaje.replace(Regex("""(\d)[.,](\d{3})\b"""), "$1$2").lowercase()
+            val palabras = textoLimpio.split(Regex("""[\s,.:]+"""))
+
             if (tienda) {
                 if (base) {
+                    if (operacionVenta.inicio){
+                        if (palabras.contains("fin")){
+                            operacionVenta.inicio = false
+                            model.addMensajeSistema(modelo("Venta finalizada"))
+                        }
+                    }else{
+                        val respuesta= operacionVenta.procesarListaProductos(textoLimpio)
+                        model.addMensajeSistema(modelo(respuesta))
+                    }
                     lifecycleScope.launch(Dispatchers.IO) {
-                        procesarCompra(mensaje)
 
                         withContext(Dispatchers.Main) {
                             procesarGasto(mensaje)
@@ -243,6 +273,25 @@ class chat_Tienda : AppCompatActivity() {
                         baseInicial(mensaje)
                         Log.d(TAG, "El valor de la base inicial es de ${baseInicial}")
                     }
+                    return@setOnClickListener
+                }
+                val operaciones = filtarPalabras(mensaje)
+                if (operaciones){
+                    val esVenta = diccionario["venta"]?.any { palabras.contains(it) } == true
+
+                    if (esVenta) {
+                        operacionVenta.inicio = true
+                        model.addMensajeSistema(modelo("¡Venta iniciada! Dicta los productos uno a uno o di 'fin'."))
+                    }else{
+                        procesarGasto(mensaje)
+                        procesarCosto(mensaje)
+                        Log.d(TAG, "El valor de la venta es ${montoVentas}")
+                        Log.d(TAG, "El valor de los gastos es ${montoGastos}")
+                        Log.d(TAG, "El valor de los costos es ${montoCostos}")
+                    }
+                }else{
+                    val errorMsj = modelo("No se pudo detectar  la operacion, por favor vuelve a intentarlo")
+                    model.addMensajeSistema(errorMsj)
                 }
             } else {
                 val estado = tienda(mensaje)

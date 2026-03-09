@@ -30,7 +30,7 @@ class Abonos {
 
         when (estadoActual) {
             EstadoAbono.ESPERANDO_CEDULA -> {
-                consultarClienteEnServidor(textoLimpio, enviarMensajeSistema, idTendero)
+                consultarCliente(textoLimpio, enviarMensajeSistema, idTendero)
             }
             EstadoAbono.ESPERANDO_MONTO -> {
                 validarMonto(textoLimpio, enviarMensajeSistema)
@@ -43,7 +43,7 @@ class Abonos {
         }
         return true
     }
-    private suspend fun consultarClienteEnServidor(
+    private suspend fun consultarCliente(
         texto: String,
         enviarMensajeSistema: (modelo) -> Unit,
         idTendero: String){
@@ -114,7 +114,6 @@ class Abonos {
         when {
             afirmativo.any { texto.contains(it) } -> {
                 try {
-                    // Preparamos los datos para el servidor
                     val solicitud = DatosAbono(
                         cedula = cedulaGuardada,
                         idTendero = idTendero,
