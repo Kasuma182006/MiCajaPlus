@@ -34,6 +34,7 @@ interface ConexionServiceTienda {
     @POST("login")
     @Headers("Content-Type: application/json")
     suspend fun login(@Body body: Tendero): Response<Tendero>
+
     @POST("addtendero")
     @Headers("Content-Type: application/json")
     suspend fun addTendero(@Body tendero: Tendero): Response<Tendero>
@@ -59,21 +60,26 @@ interface ConexionServiceTienda {
     @POST("ConsultarEstadisticas")
     suspend fun consultarXFecha(@Body request: ConsultarOperaXFecha): Response<List<TipoOperacionXFecha>>
 
-    @POST ("numerocredito")
+    @POST("numerocredito")
     suspend fun numeroCredito(@Body request: ConsultarOperaXFecha): Response<NumeroCreditosResponse>
 
-    @POST ("compra_Mercancia")
+    @POST("compra_Mercancia")
     suspend fun compra_Mercancia(@Body request: compra_Mercancia): Response<compra_Mercancia>
 
     @POST("agregarBase")
-    suspend fun addBase(@Body base: ModeloBase): Response<Map <String,Any>>
+    suspend fun addBase(@Body base: ModeloBase): Response<Map<String, Any>>
 
     @GET("/cargar_inventario")
     suspend fun traerInventario(@Query("idTendero") idTendero: String): Response<List<inventario>>
+//Editar Cliente
+    @GET("/cargar_clientes")
+    suspend fun traerClientes(@Query("idTendero") idTendero: String): Response<List<cliente>>
 
     companion object messi {
-        private const val BASE_URL = "http://10.50.224.9:4000/"
+        private const val BASE_URL = "http://10.6.127.1:4000/"
+
         var inventario = MutableStateFlow<List<inventario>>(emptyList())
+        var clientes = MutableStateFlow<List<cliente>>(emptyList())
 
         fun create(): ConexionServiceTienda {
             val retrofit = Retrofit.Builder()
@@ -83,20 +89,28 @@ interface ConexionServiceTienda {
             return retrofit.create(ConexionServiceTienda::class.java)
         }
 
-
-        suspend fun llamarInventario(idTendero:String){
-
-            val response = withContext(Dispatchers.IO)  {create().traerInventario(idTendero)}
-
-            if (response.isSuccessful){
+        suspend fun llamarInventario(idTendero: String) {
+            val response = withContext(Dispatchers.IO) { create().traerInventario(idTendero) }
+            if (response.isSuccessful) {
                 inventario.value = response.body() ?: emptyList()
-                Log.d("Retrofit","tamaño de lista: ${inventario.value}")
+                Log.d("Retrofit", "tamaño de lista: ${inventario.value}")
             }
-
         }
 
-        fun obtenerInventario(): MutableStateFlow<List<inventario>>{
+        fun obtenerInventario(): MutableStateFlow<List<inventario>> {
             return inventario
+        }
+
+        suspend fun llamarCliente(idTendero: String) {
+            val response = withContext(Dispatchers.IO) { create().traerClientes(idTendero) }
+            if (response.isSuccessful) {
+                clientes.value = response.body() ?: emptyList()
+                Log.d("Retrofit", "clientes cargados: ${clientes.value.size}")
+            }
+        }
+
+        fun obtenerClientes(): MutableStateFlow<List<cliente>> {
+            return clientes
         }
     }
 }

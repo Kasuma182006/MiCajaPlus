@@ -60,7 +60,7 @@
     <string name="hint_BuscarCliente">Buscar Cedula</string>
     <string name="label_Paso1">① Seleccionar cliente</string>
     <string name="cd_btnBuscar">boton buscar cliente</string>
-    <string name="label_Paso2">② Editar cliente</string>
+    <string name="label_Paso2">② Editar datos</string>
     <string name="hint_NombreCliente">Nombre del Cliente</string>
     <string name="hint_CedulaCliente">Cedula del Cliente</string>
     <string name="hint_TelefonoCliente">Telefono del Cliente</string>
