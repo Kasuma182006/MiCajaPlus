@@ -72,7 +72,7 @@ interface ConexionServiceTienda {
     @GET("/cargar_inventario")
     suspend fun traerInventario(@Query("idTendero") idTendero: String): Response<List<inventario>>
 //Editar Cliente
-    @GET("/cargar_clientes")
+    @GET("clientes")
     suspend fun traerClientes(@Query("idTendero") idTendero: String): Response<List<cliente>>
 
     companion object messi {

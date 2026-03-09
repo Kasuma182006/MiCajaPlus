@@ -80,7 +80,7 @@ class BuscarProductoDialog(
     }
 
 
-    // --- Adapter ---
+    //Adapter
     private inner class ProductoAdapter(
         private val items: List<inventario>,
         private val onClick: (inventario) -> Unit
@@ -96,7 +96,7 @@ class BuscarProductoDialog(
             val item = items[position]
             with(holder.binding) {
                 tvNombre.text = item.nombre.replaceFirstChar { it.uppercase() }
-                tvPresentacion.text = "📦  ${item.presentacion}"
+                tvPresentacion.text = "${item.presentacion}"
                 tvPrecio.text = "$ ${item.valorCompra}"
                 tvStock.text = "Stock: ${item.cantidad}"
 
