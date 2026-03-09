@@ -8,7 +8,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.micaja.ConexionService.ConexionServiceTienda
 import com.example.micaja.databinding.ActivityFragmentEditarProductoBinding
-import com.example.micaja.models.inventario
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class fragment_editar_producto : AppCompatActivity() {

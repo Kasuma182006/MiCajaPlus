@@ -5,7 +5,6 @@ import com.example.micaja.models.ConsultarOperaXFecha
 import com.example.micaja.models.Credito
 import com.example.micaja.models.DatosAbono
 import com.example.micaja.models.Identificacion
-import com.example.micaja.models.inventario
 import com.example.micaja.models.ModeloBase
 import com.example.micaja.models.NumeroCreditosResponse
 import com.example.micaja.models.RespuestaAbono
