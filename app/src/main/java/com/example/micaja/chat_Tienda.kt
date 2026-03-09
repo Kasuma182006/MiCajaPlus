@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -216,6 +217,10 @@ class chat_Tienda : AppCompatActivity() {
             val base = estadoBase.getBoolean("base", false)
             binding.messageInput.setText("")
             model.addMensaje(texto)
+
+            // Ocultar el teclado al presionar enviar
+            WindowInsetsControllerCompat(window, binding.messageInput)
+                .hide(WindowInsetsCompat.Type.ime())
 
             if (tienda) {
                 if (base) {

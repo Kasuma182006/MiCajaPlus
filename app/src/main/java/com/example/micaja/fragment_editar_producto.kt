@@ -64,7 +64,6 @@ class fragment_editar_producto : AppCompatActivity() {
             if(I.nombre == nombreProducto && I.presentacion == presentacion){
                 binding.etNombreProducto.setText(I.nombre)
                 binding.etDescripcionProducto.setText(I.presentacion)
-                binding.Proveedor.setText("No hay")
                 binding.etPrecioProducto.setText(I.valorCompra.toString())
                 binding.etCantidadProducto.setText(I.cantidad.toString())
                 break
