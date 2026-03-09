@@ -39,11 +39,11 @@ class ConsultarXFecha : AppCompatActivity() {
     }
 
     private fun configurarBotones() {
-        binding.btnCalendarioStar.setOnClickListener { mostrarCalendario(true) }
+        binding.cvBtnInicio.setOnClickListener { mostrarCalendario(true) }
 
-        binding.btnCalendarioEnd.setOnClickListener { mostrarCalendario(false) }
+        binding.cvBtnFin.setOnClickListener { mostrarCalendario(false) }
 
-        binding.btnCerrar.setOnClickListener { cancelar() }
+        binding.btnCerrar.setOnClickListener { finish() }
     }
 
     private fun cancelar() {
