@@ -68,12 +68,9 @@ interface ConexionServiceTienda {
     @POST("agregarBase")
     suspend fun addBase(@Body base: ModeloBase): Response<Map <String,Any>>
 
-    @GET("/cargar_inventario")
-    suspend fun traerInventario(@Query("idTendero") idTendero: String): Response<List<inventario>>
 
     companion object messi {
-        private const val BASE_URL = "http://10.50.224.9:4000/"
-        var inventario = MutableStateFlow<List<inventario>>(emptyList())
+        private const val BASE_URL = "http://10.6.124.54:4000"
 
         fun create(): ConexionServiceTienda {
             val retrofit = Retrofit.Builder()
@@ -84,19 +81,5 @@ interface ConexionServiceTienda {
         }
 
 
-        suspend fun llamarInventario(idTendero:String){
-
-            val response = withContext(Dispatchers.IO)  {create().traerInventario(idTendero)}
-
-            if (response.isSuccessful){
-                inventario.value = response.body() ?: emptyList()
-                Log.d("Retrofit","tamaño de lista: ${inventario.value}")
-            }
-
-        }
-
-        fun obtenerInventario(): MutableStateFlow<List<inventario>>{
-            return inventario
-        }
     }
 }
