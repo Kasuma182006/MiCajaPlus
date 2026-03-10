@@ -215,7 +215,7 @@
                     app:endIconMode="clear_text"
                     app:endIconTint="@color/colorOnSecondary"
                     app:counterEnabled="true"
-                    app:counterMaxLength="60">
+                    app:counterMaxLength="11">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etNombreProducto"
@@ -245,7 +245,7 @@
                     app:endIconMode="clear_text"
                     app:endIconTint="@color/colorOnSecondary"
                     app:counterEnabled="true"
-                    app:counterMaxLength="80">
+                    app:counterMaxLength="20">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etDescripcionProducto"
@@ -278,7 +278,7 @@
                     app:endIconMode="clear_text"
                     app:endIconTint="@color/colorOnSecondary"
                     app:counterEnabled="true"
-                    app:counterMaxLength="10">
+                    app:counterMaxLength="11">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etPrecioProducto"
@@ -308,7 +308,7 @@
                     app:endIconMode="clear_text"
                     app:endIconTint="@color/colorOnSecondary"
                     app:counterEnabled="true"
-                    app:counterMaxLength="10">
+                    app:counterMaxLength="11">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etCantidadProducto"
@@ -347,7 +347,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cvFormulario"
-            app:rippleColor="@color/colorPrimary" />
+            app:rippleColor="@color/colorPrimary"
+            android:enabled="true"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
