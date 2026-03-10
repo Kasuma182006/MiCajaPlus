@@ -35,7 +35,7 @@ class editar_clientes : AppCompatActivity() {
             val cedulaCliente: String = binding.etBuscarCliente.text.toString().trim()
 
             if (cedulaCliente != "") {
-                buscarCliente(binding, cedulaCliente)
+                //buscarCliente(binding, cedulaCliente)
             } else {
                 Toast.makeText(this, "Por favor ingresa la cédula para buscar", Toast.LENGTH_SHORT).show()
             }
@@ -44,7 +44,7 @@ class editar_clientes : AppCompatActivity() {
     }
 
 
-    fun buscarCliente(binding: ActivityEditarClientesBinding, cedulaCliente: String) {
+    /*fun buscarCliente(binding: ActivityEditarClientesBinding, cedulaCliente: String) {
 
         val clientes: MutableStateFlow<List<cliente>> = ConexionServiceTienda.obtenerClientes()
 
@@ -67,5 +67,5 @@ class editar_clientes : AppCompatActivity() {
 //        }
 
     }
-
+*/
 }

@@ -1,6 +1,5 @@
-package com.example.micaja
-
-import android.R
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,14 +7,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.micaja.ConexionService.ConexionServiceTienda
 import com.example.micaja.databinding.DialogBuscarProductoBinding
 import com.example.micaja.databinding.ItemProductoDialogBinding
-import com.example.micaja.models.inventario
+import com.example.micaja.models.EditarProducto
 
 class BuscarProductoDialog(
     private val query: String,
-    private val onProductoSeleccionado: (inventario) -> Unit
+    private val listaProductos: List<EditarProducto>, // Recibimos la lista cargada
+    private val onProductoSeleccionado: (EditarProducto) -> Unit
 ) : DialogFragment() {
 
     private var _binding: DialogBuscarProductoBinding? = null
@@ -30,14 +29,35 @@ class BuscarProductoDialog(
         super.onViewCreated(view, savedInstanceState)
         configurarHeader()
         configurarLista()
-        configurarFooter()
+        binding.btnCancelar.setOnClickListener { dismiss() }
     }
 
     override fun onStart() {
         super.onStart()
         dialog?.window?.apply {
+            // Ajuste de ancho al 93% y fondo transparente para bordes redondeados
             setLayout((resources.displayMetrics.widthPixels * 0.93).toInt(), ViewGroup.LayoutParams.WRAP_CONTENT)
-            setBackgroundDrawableResource(R.color.transparent)
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        }
+    }
+
+    private fun configurarHeader() {
+        binding.tvQueryTitulo.text = "\"${query.replaceFirstChar { it.uppercase() }}\""
+        binding.tvContador.text = "${listaProductos.size} presentación(es) encontrada(s)"
+    }
+
+    private fun configurarLista() {
+        if (listaProductos.isEmpty()) {
+            binding.layoutVacio.visibility = View.VISIBLE
+            binding.rvProductos.visibility = View.GONE
+        } else {
+            binding.layoutVacio.visibility = View.GONE
+            binding.rvProductos.visibility = View.VISIBLE
+            binding.rvProductos.layoutManager = LinearLayoutManager(requireContext())
+            binding.rvProductos.adapter = ProductoAdapter(listaProductos) { seleccionado ->
+                onProductoSeleccionado(seleccionado)
+                dismiss()
+            }
         }
     }
 
@@ -46,44 +66,10 @@ class BuscarProductoDialog(
         _binding = null
     }
 
-    private fun configurarLista() {
-        val productos = ConexionServiceTienda.obtenerInventario().value.filter {
-            it.nombre.lowercase().contains(query.lowercase())
-        }
-
-        if (productos.isEmpty()) {
-            binding.layoutVacio.visibility = View.VISIBLE
-            binding.rvProductos.visibility = View.GONE
-        } else {
-            binding.layoutVacio.visibility = View.GONE
-            binding.rvProductos.visibility = View.VISIBLE
-            binding.rvProductos.layoutManager = LinearLayoutManager(requireContext())
-            binding.rvProductos.adapter = ProductoAdapter(productos) { seleccionado ->
-                onProductoSeleccionado(seleccionado)
-                dismiss()
-            }
-        }
-    }
-    private fun configurarHeader() {
-        val total = ConexionServiceTienda.obtenerInventario().value
-            .count { it.nombre.lowercase().contains(query.lowercase()) }
-
-
-        binding.tvQueryTitulo.text = "\"${query.replaceFirstChar { it.uppercase() }}\""
-        binding.tvContador.text = if (total > 0)
-            "$total presentación(es) encontrada(s)"
-        else
-            "Sin coincidencias"
-    }
-    private fun configurarFooter() {
-        binding.btnCancelar.setOnClickListener { dismiss() }
-    }
-
-
-    // --- Adapter ---
+    // --- Adaptador Interno ---
     private inner class ProductoAdapter(
-        private val items: List<inventario>,
-        private val onClick: (inventario) -> Unit
+        private val items: List<EditarProducto>,
+        private val onClick: (EditarProducto) -> Unit
     ) : RecyclerView.Adapter<ProductoAdapter.VH>() {
 
         inner class VH(val binding: ItemProductoDialogBinding) : RecyclerView.ViewHolder(binding.root)
@@ -95,12 +81,13 @@ class BuscarProductoDialog(
         override fun onBindViewHolder(holder: VH, position: Int) {
             val item = items[position]
             with(holder.binding) {
+                // Ajusta estos nombres según los campos reales de tu modelo EditarProducto
                 tvNombre.text = item.nombre.replaceFirstChar { it.uppercase() }
-                tvPresentacion.text = "📦  ${item.presentacion}"
-                tvPrecio.text = "$ ${item.valorCompra}"
+                tvPresentacion.text = "📦  ${item.presentacion ?: "Sin presentación"}"
+                tvPrecio.text = "$ ${item.valorVenta}"
                 tvStock.text = "Stock: ${item.cantidad}"
 
-                cardProducto.setOnClickListener { onClick(item) }
+                root.setOnClickListener { onClick(item) }
             }
         }
 

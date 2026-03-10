@@ -134,7 +134,7 @@ data class OperacionesInventario(
 
 // No toquen esto, estas data class son para el modulo de editar Productos
 
-data class BuscarProducto(
+data class BuscarProductos(
     val idTendero: String,
     val nombre: String  //Nombre es el nombre del producto que el tendero agrega en el input a la hora de buscar los productos
 )
