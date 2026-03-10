@@ -1,7 +1,9 @@
 package com.example.micaja.ConexionService
 
 import android.util.Log
+import com.example.micaja.models.ActualizarCliente
 import com.example.micaja.models.BuscarProductos
+import com.example.micaja.models.ClienteCompleto
 import com.example.micaja.models.ConsultarOperaXFecha
 import com.example.micaja.models.Credito
 import com.example.micaja.models.DatosAbono
@@ -76,11 +78,20 @@ interface ConexionServiceTienda {
     @POST("/editarProducto")
     suspend fun editarProducto(@Body producto: EditarProducto): Response<Map<String,String>>
 
+    // para editar cliente
+
+    @POST("consultarclienteedit")
+    suspend fun consultarClienteEdit(@Body datos: Identificacion): Response<ClienteCompleto>
+
+    @POST("actualizar_cliente")
+    suspend fun actualizarCliente(@Body datos: ActualizarCliente): Response<Map<String, String>>
+
+
     @POST("/consultarIn")
 
     suspend fun consultarInv(@Body body: consultarIn): Response<consultarIn>
     companion object messi {
-        private const val BASE_URL = "http://10.6.124.54:4000"
+        private const val BASE_URL = "http://10.6.127.1:4000"
 
         fun create(): ConexionServiceTienda {
             val retrofit = Retrofit.Builder()
