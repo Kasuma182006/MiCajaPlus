@@ -17,6 +17,7 @@ import com.example.micaja.models.cliente1
 import com.example.micaja.models.clienteAbono
 import com.example.micaja.models.clienteNuevo
 import com.example.micaja.models.compra_Mercancia
+import com.example.micaja.models.consultarIn
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
@@ -35,7 +36,6 @@ interface ConexionServiceTienda {
     @POST("login")
     @Headers("Content-Type: application/json")
     suspend fun login(@Body body: Tendero): Response<Tendero>
-
     @POST("addtendero")
     @Headers("Content-Type: application/json")
     suspend fun addTendero(@Body tendero: Tendero): Response<Tendero>
@@ -61,14 +61,14 @@ interface ConexionServiceTienda {
     @POST("ConsultarEstadisticas")
     suspend fun consultarXFecha(@Body request: ConsultarOperaXFecha): Response<List<TipoOperacionXFecha>>
 
-    @POST("numerocredito")
+    @POST ("numerocredito")
     suspend fun numeroCredito(@Body request: ConsultarOperaXFecha): Response<NumeroCreditosResponse>
 
-    @POST("compra_Mercancia")
+    @POST ("compra_Mercancia")
     suspend fun compra_Mercancia(@Body request: compra_Mercancia): Response<compra_Mercancia>
 
     @POST("agregarBase")
-    suspend fun addBase(@Body base: ModeloBase): Response<Map<String, Any>>
+    suspend fun addBase(@Body base: ModeloBase): Response<Map <String,Any>>
 
     @POST("/buscarProductos")
     suspend fun buscarProductos(@Body nombre: BuscarProductos): Response<List<EditarProducto>>

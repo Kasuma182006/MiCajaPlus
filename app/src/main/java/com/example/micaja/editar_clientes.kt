@@ -64,6 +64,7 @@ class editar_clientes : AppCompatActivity() {
 
 //        if (!encontrado) {
 //            Toast.makeText(this, "Cliente no encontrado", Toast.LENGTH_SHORT).show()
+//            binding.btnGuardarCliente.isEnabled = false
 //        }
 
     }

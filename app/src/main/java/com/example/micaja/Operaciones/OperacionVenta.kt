@@ -1,6 +1,13 @@
 package com.example.micaja.Operaciones
 
+import com.example.micaja.ConexionService.ConexionServiceTienda
+import com.example.micaja.models.consultarIn
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
 class OperacionVenta {
+
     var inicio = false
 
     companion object {
@@ -16,21 +23,41 @@ class OperacionVenta {
 
         val limpiarN = listOf(
             "vendi", "vendí", "vende", "venta", "un", "una", "de", "del",
-            "por", "el", "la", "los", "las", "me", "compraron", "salio"
+            "por", "el", "la", "los", "las", "me", "compraron", "salio","s","S"
         )
     }
 
-    fun procesarListaProductos(texto: String): String {
+    suspend fun procesarListaProductos(texto: String): String {
+        if (texto.contains("fin")) {
+            inicio = false
+            return "Venta finalizada"
+        }
         val datos = extraerDatosProducto(texto)
 
-        if (datos != null) {
-            val (nombre, pres, cant) = datos
-            return "• $cant $pres de $nombre registrado. ¿Algo más? (o di 'fin')"
-        } else {
+        if (datos == null) {
             return "No entendí el producto, intenta decir algo como: '2 libras de arroz' o 'un aceite'"
         }
-    }
 
+        val (nombre, pres, cant) = datos
+
+
+        return try {
+            val conexion = ConexionServiceTienda.create()
+            val modelo = consultarIn(nombre)
+
+
+            val respuesta = conexion.consultarInv(modelo)
+
+            if (respuesta.isSuccessful && respuesta.body() != null) {
+                "• $cant $pres de $nombre registrado. ¿Algo más? (o di 'fin')"
+
+            } else {
+                "El producto '$nombre' no existe en tu inventario. Verifica el nombre."
+            }
+        } catch (e: Exception) {
+            "Fuera de conexion intentalo de nuevo"
+        }
+    }
     private fun extraerDatosProducto(segmento: String): Triple<String, String, Int>? {
         var texto = segmento.trim()
 

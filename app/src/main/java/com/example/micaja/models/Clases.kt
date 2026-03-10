@@ -155,3 +155,7 @@ data class EditarProducto(
 
 
 
+
+data class consultarIn(
+    val nombre: String
+)
