@@ -17,6 +17,7 @@ import com.example.micaja.models.clienteAbono
 import com.example.micaja.models.clienteNuevo
 import com.example.micaja.models.compra_Mercancia
 import com.example.micaja.models.consultarIn
+import com.example.micaja.models.gastoDetectado
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
@@ -76,8 +77,13 @@ interface ConexionServiceTienda {
 
     suspend fun consultarInv(@Body body: consultarIn): Response<consultarIn>
 
+    @POST ("gastoDetectado")
+    suspend fun gastoDetectado(@Body request: gastoDetectado): Response<gastoDetectado>
+
+
+
     companion object messi {
-        private const val BASE_URL = "http://192.168.12.101:4000/"
+        private const val BASE_URL = "http://10.6.124.113:4000/"
         var inventario = MutableStateFlow<List<inventario>>(emptyList())
 
         fun create(): ConexionServiceTienda {

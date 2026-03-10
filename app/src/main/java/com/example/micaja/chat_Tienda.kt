@@ -270,6 +270,8 @@ class chat_Tienda : AppCompatActivity() {
                         val operaciones = filtarPalabras(mensaje)
                         if (operaciones) {
                             val esVenta = diccionario["venta"]?.any { palabras.contains(it) } == true
+                            val esGasto = diccionario["gasto"]?.any { palabras.contains(it) } == true
+                            val esCompra = diccionario["compra"]?.any { palabras.contains(it) } == true
                             val esAbono = diccionario["abono"]?.any { palabras.contains(it) } == true
 
                             if (esVenta) {
@@ -278,11 +280,10 @@ class chat_Tienda : AppCompatActivity() {
                             } else if (esAbono) {
 
                                 abono.iniciarFlujoAbono(model::addMensajeSistema)
-                            } else {
-                                withContext(Dispatchers.Main) {
-                                    procesarGasto(mensaje)
-                                    procesarCosto(mensaje)
-                                }
+                            } else if(esGasto){
+                                procesarGasto(mensaje)
+                            }else if(esCompra){
+                                procesarCosto(mensaje)
                             }
                         } else {
                             model.addMensajeSistema(modelo("No se pudo detectar la operación, por favor vuelve a intentarlo"))
@@ -566,35 +567,38 @@ class chat_Tienda : AppCompatActivity() {
         val esGasto = palabras.any { diccionario["gasto"]?.contains(it) == true }
 
         if (esGasto) {
-            // 2. Separar por conectores (por si el usuario dice: "Gasto bolsas 5000 y gaseosa 2000")
             val segmentos = textoMinuscula.split(Regex(",|\\by\\b|;|\\."))
                 .map { it.trim() }
-                .filter { it.length > 3 }
+                .filter { it.length > 6 }
 
             val resumenGasto = mutableListOf<String>()
             var sumaTotalGasto = 0
 
             for (segmento in segmentos) {
-                // REUTILIZAMOS la función extraerDatosProducto que ya funciona bien
-                val datos = extraerDatosProducto(segmento)
+                val gastoDetectado = registrarGasto(segmento)
 
-                if (datos != null) {
-                    val (nombre, pres, precio) = datos
-                    resumenGasto.add("• $nombre ($pres) por $$precio")
-                    sumaTotalGasto += precio
+                if (gastoDetectado != null) {
 
-                    // Actualizamos la variable global de gastos
-                    montoGastos += precio
+                    resumenGasto.add("• ${gastoDetectado.mensaje} por $${gastoDetectado.precio}")
+                    sumaTotalGasto += gastoDetectado.precio
+                    montoGastos += gastoDetectado.precio
+
+                    CoroutineScope(Dispatchers.IO).launch {
+                        try {
+                            val service = ConexionServiceTienda.create()
+                            service.gastoDetectado(gastoDetectado)
+                        } catch (e: Exception) {
+                            Log.e("ERROR_GASTOS", e.message ?: "Error desconocido")
+                        }
+                    }
                 }
             }
 
-            // 3. Respuesta al usuario
             if (resumenGasto.isNotEmpty()) {
-                val saludo = "¡Gasto registrado con éxito!\n"
+                val saludo = "¡Gasto registrado con éxito por $$sumaTotalGasto\n"
                 val cuerpo = resumenGasto.joinToString("\n")
-                val total = "\n\nTotal de este egreso: $$sumaTotalGasto"
 
-                model.addMensajeSistema(modelo(saludo + cuerpo + total))
+                model.addMensajeSistema(modelo(saludo + cuerpo))
             } else {
                 model.addMensajeSistema(modelo("Detecté un gasto, pero no entendí el producto o el valor. Intenta: 'Gasto en bolsas 5000'"))
 
@@ -612,7 +616,6 @@ class chat_Tienda : AppCompatActivity() {
             }
         }
     }
-
     fun registrarGasto(sgmnt: String): gastoDetectado? {
         var s = sgmnt.trim()
         var precioFinal: Int? = null
@@ -629,10 +632,8 @@ class chat_Tienda : AppCompatActivity() {
         }
 
         if (precioFinal == null) return null
-
         s = s.replace(textoPrecioEncontrado, "").replace("$", "").trim()
 
-        // Limpieza de ruido específica para gastos
         val ruido = listOf("gasté", "gasto", "gastar", "gastando", "pagué", "pago", "un", "una", "de", "por", "total")
         var nombreLimpio = s
         for (r in ruido) {
@@ -663,7 +664,7 @@ class chat_Tienda : AppCompatActivity() {
         val sgmnts = textoMinuscula
             .split(Regex(",|\\by\\b|;|\\."))
             .map { it.trim() }
-            .filter { it.length > 3 }
+            .filter { it.length > 6 }
 
         val resumenCostos = mutableListOf<String>()
         var sumaTotalCostos = 0
@@ -673,9 +674,9 @@ class chat_Tienda : AppCompatActivity() {
 
             if (costoDetectado != null) {
 
-                resumenCostos.add("• ${costoDetectado.mensaje} por $${costoDetectado.monto}")
-                sumaTotalCostos += costoDetectado.monto
-                montoCostos += costoDetectado.monto
+                resumenCostos.add("• ${costoDetectado.cantidadStock} ${costoDetectado.presentacion} por $${costoDetectado.precioCompra}")
+                sumaTotalCostos += costoDetectado.precioCompra
+                montoCostos += costoDetectado.precioCompra
 
                 CoroutineScope(Dispatchers.IO).launch {
                     try {
@@ -731,10 +732,11 @@ class chat_Tienda : AppCompatActivity() {
         return if (nombreLimpio.isNotEmpty()) {
             compra_Mercancia(
                 idTendero = "",
-                mensaje = nombreLimpio.replaceFirstChar { it.uppercase() },
-                monto = precioFinal,
-                categoria = "General",
-                proveedor = "Desconocido"
+                cantidadStock = 50,
+                presentacion = "",
+                nombre = nombreLimpio.replaceFirstChar { it.uppercase() },
+                precioCompra = precioFinal,
+                proveedor = ""
             )
         } else null
     }

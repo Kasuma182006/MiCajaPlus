@@ -111,12 +111,14 @@ data class Costo(
 )
 
 data class compra_Mercancia(
-    val idTendero: String,
-    var mensaje: String,
-    var monto: Int,
-    val categoria: String,
+    val idTendero: String = "",
+    val nombre: String,
+    val presentacion: String,
+    val cantidadStock: Int,
+    val precioCompra: Int,
     val proveedor: String
 )
+
 
 data class listaProductos (
     val idTendero: String,
@@ -139,5 +141,6 @@ data class inventario (
     val presentacion: String
 )
 data class consultarIn(
-    val nombre: String
+    val nombre: String,
 )
+
