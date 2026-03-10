@@ -80,7 +80,7 @@ interface ConexionServiceTienda {
 
     suspend fun consultarInv(@Body body: consultarIn): Response<consultarIn>
     companion object messi {
-        private const val BASE_URL = "http://192.168.18.79:4000"
+        private const val BASE_URL = "http://10.6.124.54:4000"
 
         fun create(): ConexionServiceTienda {
             val retrofit = Retrofit.Builder()

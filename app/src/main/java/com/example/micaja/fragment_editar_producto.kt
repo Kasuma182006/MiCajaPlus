@@ -51,11 +51,20 @@ class fragment_editar_producto : AppCompatActivity() {
         }
 
 
+        binding.textBuscarProducto.setEndIconOnClickListener{
+            inicializarEditarProducto(binding)
+
+        }
+
+
+
+
+
 
     }
 
     fun buscarProducto(binding: ActivityFragmentEditarProductoBinding) {
-        val producto = binding.etBuscarProducto.text.toString().lowercase()
+        val producto = binding.etBuscarProducto.text.toString().lowercase().trimEnd()
         var lista : List<EditarProducto>
         if (producto.isNotEmpty()) {
             val preference = getSharedPreferences("SesionTendero", MODE_PRIVATE)
@@ -79,6 +88,7 @@ class fragment_editar_producto : AppCompatActivity() {
                                     binding.etCantidadProducto.setText(seleccionado.cantidad.toString())
                                     binding.etPrecioProducto.setText(seleccionado.valorVenta.toString())
                                     binding.btnGuardarProducto.isEnabled = true
+                                    binding.cvFormulario.alpha = 1f
                                     binding.btnGuardarProducto.setOnClickListener {
                                         editarProducto(binding,seleccionado )
                                     }
@@ -96,13 +106,12 @@ class fragment_editar_producto : AppCompatActivity() {
 
                         launch(Dispatchers.Main) {
                             Log.e("ErrorAPI", "Mensaje: ${e.message}")
-                            Toast.makeText(this@fragment_editar_producto, "Error de conexión", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@fragment_editar_producto, "No se han encontrado Coincidencias", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
             }
         }
-
 
     }
 
@@ -138,4 +147,18 @@ class fragment_editar_producto : AppCompatActivity() {
 
     }
 
+    fun inicializarEditarProducto(binding: ActivityFragmentEditarProductoBinding){
+
+
+        binding.etNombreProducto.setText("")
+        binding.etPrecioProducto.setText("")
+        binding.etDescripcionProducto.setText("")
+        binding.etCantidadProducto.setText("")
+        binding.etBuscarProducto.setText("")
+        binding.btnGuardarProducto.isEnabled = false
+        binding.cvFormulario.alpha = 0.5f
+
+
+
+    }
 }
