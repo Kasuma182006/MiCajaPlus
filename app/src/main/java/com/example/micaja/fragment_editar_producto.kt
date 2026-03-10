@@ -4,10 +4,12 @@ import BuscarProductoDialog
 import android.os.Bundle
 import android.util.Log
 import android.util.Log.e
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.micaja.ConexionService.ConexionServiceTienda
 import com.example.micaja.databinding.ActivityFragmentEditarProductoBinding
@@ -26,6 +28,11 @@ class fragment_editar_producto : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        // Forzar que la ventana deje que el sistema gestione insets (necesario para adjustResize)
+        WindowCompat.setDecorFitsSystemWindows(window, true)
+        // Forzar ajuste del layout cuando aparece el teclado
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
         // View Binding reemplaza setContentView(R.layout.activity_fragment_editar_producto)
         // Si aún no usas binding, deja el setContentView original y borra estas líneas

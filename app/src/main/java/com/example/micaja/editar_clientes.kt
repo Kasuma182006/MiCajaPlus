@@ -2,10 +2,12 @@ package com.example.micaja
 
 import android.content.Context
 import android.os.Bundle
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.micaja.ConexionService.ConexionServiceTienda
@@ -21,6 +23,11 @@ class editar_clientes : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        // Forzar que la ventana deje que el sistema gestione insets (necesario para adjustResize)
+        WindowCompat.setDecorFitsSystemWindows(window, true)
+        // Forzar ajuste del layout cuando aparece el teclado
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+
         binding = ActivityEditarClientesBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

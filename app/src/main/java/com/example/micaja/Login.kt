@@ -38,6 +38,7 @@ class Login : AppCompatActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, true)
         // Forzar ajuste del layout cuando aparece el teclado
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+
         binding = LoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
