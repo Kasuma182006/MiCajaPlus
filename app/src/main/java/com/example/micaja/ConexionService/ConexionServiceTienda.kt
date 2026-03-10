@@ -16,6 +16,7 @@ import com.example.micaja.models.cliente1
 import com.example.micaja.models.clienteAbono
 import com.example.micaja.models.clienteNuevo
 import com.example.micaja.models.compra_Mercancia
+import com.example.micaja.models.consultarIn
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
@@ -71,8 +72,12 @@ interface ConexionServiceTienda {
     @GET("/cargar_inventario")
     suspend fun traerInventario(@Query("idTendero") idTendero: String): Response<List<inventario>>
 
+    @POST("/consultarIn")
+    suspend fun consultarInv(@Body body: consultarIn): Response<consultarIn>
+
+
     companion object messi {
-        private const val BASE_URL = "http://10.50.224.9:4000/"
+        private const val BASE_URL = "http://192.168.12.101:4000/"
         var inventario = MutableStateFlow<List<inventario>>(emptyList())
 
         fun create(): ConexionServiceTienda {

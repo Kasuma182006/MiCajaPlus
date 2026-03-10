@@ -138,3 +138,6 @@ data class inventario (
     val nombre: String,
     val presentacion: String
 )
+data class consultarIn(
+    val nombre: String
+)

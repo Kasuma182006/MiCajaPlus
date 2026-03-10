@@ -53,6 +53,8 @@ var estadoCredito = "NINGUNO"
 
 var montoCredito = 0
 
+var cedulaGlobal = ""
+
 val diccionario = mapOf(
     "abrir" to listOf("abierto","iniciar","inicio","open","abrir","abriendo","comenzar","comienzo","arrancar","empezar","empezemos","dia","día"),
     "cerrar" to listOf("acabar", "cerrar","cerrando","cierre", "end", "final", "finalizar", "terminar"),
@@ -117,6 +119,8 @@ class chat_Tienda : AppCompatActivity() {
         val preferencia = getSharedPreferences("SesionTendero", MODE_PRIVATE)
 
         val cedula = preferencia.getString("cedula", null)
+
+        cedulaGlobal = cedula.toString()
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -231,78 +235,71 @@ class chat_Tienda : AppCompatActivity() {
     fun evento() {
         binding.sendBtn.setOnClickListener {
             mensaje = binding.messageInput.text.toString()
-            val texto = modelo(mensaje)
             val tienda = estadoTienda.getBoolean("abierta", false)
             val base = estadoBase.getBoolean("base", false)
             binding.messageInput.setText("")
-            model.addMensaje(texto)
 
-            // Ocultar el teclado al presionar enviar
-            WindowInsetsControllerCompat(window, binding.messageInput)
-                .hide(WindowInsetsCompat.Type.ime())
+            model.addMensaje(modelo(mensaje))
+            WindowInsetsControllerCompat(window, binding.messageInput).hide(WindowInsetsCompat.Type.ime())
 
             val textoLimpio = mensaje.replace(Regex("""(\d)[.,](\d{3})\b"""), "$1$2").lowercase()
             val palabras = textoLimpio.split(Regex("""[\s,.:]+"""))
 
             if (tienda) {
                 if (base) {
-                    if (operacionVenta.inicio){
-                        if (palabras.contains("fin")){
-                            operacionVenta.inicio = false
-                            model.addMensajeSistema(modelo("Venta finalizada"))
+                    if (operacionVenta.inicio) {
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            val respuestaChat =
+                                operacionVenta.procesarListaProductos(textoLimpio)
+                            withContext(Dispatchers.Main) {
+                                model.addMensajeSistema(modelo(respuestaChat))
+                            }
                         }
-                    }else{
-                        val respuesta= operacionVenta.procesarListaProductos(textoLimpio)
-                        model.addMensajeSistema(modelo(respuesta))
+                        return@setOnClickListener
                     }
-                    lifecycleScope.launch(Dispatchers.IO) {
 
-                        withContext(Dispatchers.Main) {
-                            procesarGasto(mensaje)
-                        }
-                        ////////ABONOS
-                        withContext(Dispatchers.Main){
-                            procesarAbonos(mensaje)
+
+                    lifecycleScope.launch {
+                        val ocupadoConAbono = abono.procesarRespuesta(mensaje, { msg ->
+                            model.addMensajeSistema(msg)
+                        },cedulaGlobal)
+
+                        if (ocupadoConAbono) return@launch
+
+
+                        val operaciones = filtarPalabras(mensaje)
+                        if (operaciones) {
+                            val esVenta = diccionario["venta"]?.any { palabras.contains(it) } == true
+                            val esAbono = diccionario["abono"]?.any { palabras.contains(it) } == true
+
+                            if (esVenta) {
+                                operacionVenta.inicio = true
+                                model.addMensajeSistema(modelo("¡Venta iniciada! Dicta los productos uno a uno o di 'fin'."))
+                            } else if (esAbono) {
+
+                                abono.iniciarFlujoAbono(model::addMensajeSistema)
+                            } else {
+                                withContext(Dispatchers.Main) {
+                                    procesarGasto(mensaje)
+                                    procesarCosto(mensaje)
+                                }
+                            }
+                        } else {
+                            model.addMensajeSistema(modelo("No se pudo detectar la operación, por favor vuelve a intentarlo"))
                         }
                     }
-                    Log.d(TAG, "El valor de la venta es ${montoVentas}")
-                    Log.d(TAG, "El valor de los gastos es ${montoGastos}")
-                    Log.d(TAG, "El valor de los costos es ${montoCostos}")
+
                 } else {
                     CoroutineScope(Dispatchers.IO).launch {
                         baseInicial(mensaje)
-                        Log.d(TAG, "El valor de la base inicial es de ${baseInicial}")
                     }
                     return@setOnClickListener
                 }
-                val operaciones = filtarPalabras(mensaje)
-                if (operaciones){
-                    val esVenta = diccionario["venta"]?.any { palabras.contains(it) } == true
-
-                    if (esVenta) {
-                        operacionVenta.inicio = true
-                        model.addMensajeSistema(modelo("¡Venta iniciada! Dicta los productos uno a uno o di 'fin'."))
-                    }else{
-                        procesarGasto(mensaje)
-                        procesarCosto(mensaje)
-                        Log.d(TAG, "El valor de la venta es ${montoVentas}")
-                        Log.d(TAG, "El valor de los gastos es ${montoGastos}")
-                        Log.d(TAG, "El valor de los costos es ${montoCostos}")
-                    }
-                }else{
-                    val errorMsj = modelo("No se pudo detectar  la operacion, por favor vuelve a intentarlo")
-                    model.addMensajeSistema(errorMsj)
-                }
             } else {
-                val estado = tienda(mensaje)
-                if (estado) {
-                    Log.d(TAG, "La tienda está Abierta")
-                    val mensaje = modelo("Tienda Abierta ¿Cúal es la base del día de hoy?")
-                    model.addMensajeSistema(mensaje)
+                if (tienda(mensaje)) {
+                    model.addMensajeSistema(modelo("Tienda Abierta ¿Cuál es la base del día de hoy?"))
                 } else {
-                    Log.d(TAG, "La tienda está Cerrada")
-                    val mensajeSistema = modelo("Tienda Cerrada. Reintente nuevamente.")
-                    model.addMensajeSistema(mensajeSistema)
+                    model.addMensajeSistema(modelo("Tienda Cerrada. Reintente nuevamente."))
                 }
             }
         }
