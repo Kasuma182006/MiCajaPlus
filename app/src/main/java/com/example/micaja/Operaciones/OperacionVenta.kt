@@ -23,7 +23,7 @@ class OperacionVenta {
 
         val limpiarN = listOf(
             "vendi", "vendí", "vende", "venta", "un", "una", "de", "del",
-            "por", "el", "la", "los", "las", "me", "compraron", "salio"
+            "por", "el", "la", "los", "las", "me", "compraron", "salio","s","S"
         )
     }
 
@@ -55,7 +55,7 @@ class OperacionVenta {
                 "El producto '$nombre' no existe en tu inventario. Verifica el nombre."
             }
         } catch (e: Exception) {
-            "No se pudo conectar con el servidor: ${e.message}"
+            "Fuera de conexion intentalo de nuevo"
         }
     }
     private fun extraerDatosProducto(segmento: String): Triple<String, String, Int>? {
