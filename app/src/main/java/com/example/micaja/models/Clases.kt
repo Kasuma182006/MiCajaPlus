@@ -120,26 +120,39 @@ data class compra_Mercancia(
 )
 
 
-data class listaProductos (
+
+
+//Esta data class es para las operaciones de ventas de unidades o agregar unidades existentes en el inventario (ventas o gastos en operciones)
+data class OperacionesInventario(
     val idTendero: String,
-    val nombreProducto: String,
+    val nombre: String,
+    val presentacion: String,
     val cantidad: Int,
-    val precioCompra: Int,
-    val precioVenta: Int,
-    val proveedor: String
+    val operacion: String // en operacion se agrega la palabra "descontar" en caso de que sea una venta o "agregar" en caso de ser un costo
 )
 
-data class inventario (
 
+
+
+
+// No toquen esto, estas data class son para el modulo de editar Productos
+
+data class BuscarProductos(
+    val idTendero: String,
+    val nombreProducto: String
+)
+
+data class EditarProducto(
+    val cantidad: Int,
     val idInventario: Int,
     val idProductos: Int,
-    val cantidad: Int,
-    val valorVenta: Int,
-    val valorCompra: Int,
-    val idCategorias: Int,
     val nombre: String,
-    val presentacion: String
+    val presentacion: String,
+    val valorVenta: Int
 )
+
+
+
 data class consultarIn(
     val nombre: String,
 )

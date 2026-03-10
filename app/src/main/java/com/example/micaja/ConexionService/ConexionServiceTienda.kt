@@ -1,11 +1,12 @@
 package com.example.micaja.ConexionService
 
 import android.util.Log
+import com.example.micaja.models.BuscarProductos
 import com.example.micaja.models.ConsultarOperaXFecha
 import com.example.micaja.models.Credito
 import com.example.micaja.models.DatosAbono
+import com.example.micaja.models.EditarProducto
 import com.example.micaja.models.Identificacion
-import com.example.micaja.models.inventario
 import com.example.micaja.models.ModeloBase
 import com.example.micaja.models.NumeroCreditosResponse
 import com.example.micaja.models.RespuestaAbono
@@ -70,8 +71,11 @@ interface ConexionServiceTienda {
     @POST("agregarBase")
     suspend fun addBase(@Body base: ModeloBase): Response<Map <String,Any>>
 
-    @GET("/cargar_inventario")
-    suspend fun traerInventario(@Query("idTendero") idTendero: String): Response<List<inventario>>
+    @POST("/buscarProductos")
+    suspend fun buscarProductos(@Body nombre: BuscarProductos): Response<List<EditarProducto>>
+
+    @POST("/editarProducto")
+    suspend fun editarProducto(@Body producto: EditarProducto): Response<Map<String,String>>
 
     @POST("/consultarIn")
 
@@ -83,8 +87,7 @@ interface ConexionServiceTienda {
 
 
     companion object messi {
-        private const val BASE_URL = "http://10.6.124.113:4000/"
-        var inventario = MutableStateFlow<List<inventario>>(emptyList())
+        private const val BASE_URL = "http://10.6.124.54:4000"
 
         fun create(): ConexionServiceTienda {
             val retrofit = Retrofit.Builder()
@@ -95,19 +98,5 @@ interface ConexionServiceTienda {
         }
 
 
-        suspend fun llamarInventario(idTendero:String){
-
-            val response = withContext(Dispatchers.IO)  {create().traerInventario(idTendero)}
-
-            if (response.isSuccessful){
-                inventario.value = response.body() ?: emptyList()
-                Log.d("Retrofit","tamaño de lista: ${inventario.value}")
-            }
-
-        }
-
-        fun obtenerInventario(): MutableStateFlow<List<inventario>>{
-            return inventario
-        }
     }
 }

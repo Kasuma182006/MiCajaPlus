@@ -53,7 +53,7 @@ class Login : AppCompatActivity() {
     private fun configurarBotones() {
         binding.tvRegistrate.setOnClickListener { irARegistro() }
         binding.BtnRegistrar.setOnClickListener { iniciarSesion() }
-        binding.plus.setOnClickListener { irAPrincipalActivity() }
+        binding.plus.setOnClickListener { irAChatTienda() }
     }
 
     private fun iniciarSesion() {
@@ -90,7 +90,7 @@ class Login : AppCompatActivity() {
                             "Inicio de sesión exitoso.",
                             Toast.LENGTH_SHORT
                         ).show()
-                        irAPrincipalActivity()
+                        irAChatTienda()
                     } else {
                         Toast.makeText(
                             this@Login,
@@ -111,8 +111,8 @@ class Login : AppCompatActivity() {
         }
     }
 
-    private fun irAPrincipalActivity() {
-        val intent = Intent(this, Principal::class.java)
+    private fun irAChatTienda() {
+        val intent = Intent(this, chat_Tienda::class.java)
         startActivity(intent)
         finish()
     }

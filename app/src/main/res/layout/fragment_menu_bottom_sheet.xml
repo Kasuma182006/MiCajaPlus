@@ -127,7 +127,7 @@
                         android:layout_gravity="center"
                         android:contentDescription="Balance"
                         android:scaleType="centerInside"
-                        android:src="@drawable/ic_balance"
+                        android:src="@drawable/informe"
                         app:tint="@color/colorSecondary" />
 
                 </androidx.cardview.widget.CardView>
@@ -269,7 +269,7 @@
                         android:layout_gravity="center"
                         android:contentDescription="Editar Producto"
                         android:scaleType="centerInside"
-                        android:src="@drawable/ic_productos"
+                        android:src="@drawable/ic_productos_ed"
                         app:tint="@color/colorSecondary" />
 
                 </androidx.cardview.widget.CardView>

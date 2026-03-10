@@ -22,7 +22,7 @@ class dialogo_comandos : BottomSheetDialogFragment() {
 
     private val comandosConVariantes = mapOf(
         "Abrir tienda" to listOf(
-            "abierto","iniciar","inicio","open","abrir","abriendo",
+            "abierto","iniciar","inicio","abrir","abriendo",
             "comenzar","comienzo","arrancar","empezar","empezemos",
             "dia","día","Ej: 'Abrir' tienda"
         ),
@@ -54,7 +54,10 @@ class dialogo_comandos : BottomSheetDialogFragment() {
             "fiar","adelanto","abono","abonando","cuota","abonos",
             "abonó","adelantó","pagó","saldó","saldar",
             "Ej: 'Credito'","Ej: 'Abono'"
-        )
+        ),"Agregar producto" to listOf
+            ("agregar producto", "añadir producto" ,"nuevo producto", "producto nuevo"),
+        "Agregar cliente" to listOf
+            ("agregar nombre", "añadir cliente", "cliente nuevo", "nuevo cliente"),
     )
 
 
@@ -173,11 +176,11 @@ class VariantesBottomSheet : BottomSheetDialogFragment() {
                 isCheckable   = false
 
                 if (variante.startsWith("Ej:")) {
-                    // Ejemplo: morado oscuro para destacar
+                    // Ejemplo morado oscuro para destacar
                     setChipBackgroundColorResource(R.color.btn_registrarse)
                     setTextColor(resources.getColor(android.R.color.white, null))
                 } else {
-                    // Variante normal: lavanda claro
+                    // Variante normal lavanda claro
                     setChipBackgroundColorResource(R.color.colorPrimary)
                     setTextColor(resources.getColor(R.color.colorOnSecondary, null))
                 }

@@ -215,7 +215,7 @@
                     app:endIconMode="clear_text"
                     app:endIconTint="@color/colorOnSecondary"
                     app:counterEnabled="true"
-                    app:counterMaxLength="11">
+                    app:counterMaxLength="@integer/NombreProducto">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etNombreProducto"
@@ -324,20 +324,19 @@
         </androidx.cardview.widget.CardView>
 
 
-
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnGuardarProducto"
             android:layout_width="250dp"
             android:layout_height="60dp"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
             android:layout_marginTop="28dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
+            android:letterSpacing="0.04"
             android:text="@string/GUARDARPRODUCTO"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:letterSpacing="0.04"
             app:backgroundTint="@color/btn_registrarse"
             app:cornerRadius="30dp"
             app:iconGravity="textStart"
@@ -345,10 +344,12 @@
             app:iconTint="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.494"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cvFormulario"
+            app:layout_constraintVertical_bias="0.0"
             app:rippleColor="@color/colorPrimary"
-            android:enabled="true"/>
+            android:enabled="false"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
