@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.micaja.Principal
 import com.example.micaja.R
+import com.example.micaja.chat_Tienda
 import com.example.micaja.databinding.ConsultarXFechaBinding
 import com.example.micaja.viewmodel.OperacionesViewModel
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -37,7 +38,7 @@ class ConsultarXFecha : AppCompatActivity() {
 
         configurarBotones()
         observarDatos()
-        cancelar()
+//        cancelar()
     }
 
     private fun configurarBotones() {
@@ -48,11 +49,11 @@ class ConsultarXFecha : AppCompatActivity() {
         binding.btnCerrar.setOnClickListener { finish() }
     }
 
-    private fun cancelar() {
-        Toast.makeText(this, "Cancelaste la operación", Toast.LENGTH_SHORT).show()
-        startActivity(Intent(this, Principal::class.java))
-        finish()
-    }
+//    private fun cancelar() {
+//        Toast.makeText(this, "Cancelaste la operación", Toast.LENGTH_SHORT).show()
+//        startActivity(Intent(this, chat_Tienda::class.java))
+//        finish()
+//    }
 
     private fun consultarBalance(idTendero: String, fechaInicial: String, fechaFin: String) {
         operacionesViewModel.consultarEstadisticas(idTendero, fechaInicial, fechaFin)

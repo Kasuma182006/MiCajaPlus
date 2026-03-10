@@ -282,7 +282,7 @@
                             android:layout_height="20dp"
                             android:layout_gravity="center"
                             android:contentDescription="Ventas"
-                            android:src="@drawable/ic_balance"
+                            android:src="@drawable/ic_venta"
                             app:tint="@color/colorOnSecondary" />
                     </androidx.cardview.widget.CardView>
 
@@ -349,7 +349,7 @@
                             android:layout_height="20dp"
                             android:layout_gravity="center"
                             android:contentDescription="Costos"
-                            android:src="@drawable/ic_productos"
+                            android:src="@drawable/ic_costos_d"
                             app:tint="@color/azul_logo" />
                     </androidx.cardview.widget.CardView>
 
@@ -415,7 +415,7 @@
                             android:layout_height="20dp"
                             android:layout_gravity="center"
                             android:contentDescription="Gastos"
-                            android:src="@drawable/ic_balance"
+                            android:src="@drawable/ic_gastos"
                             app:tint="#9C27B0" />
                     </androidx.cardview.widget.CardView>
 
@@ -481,7 +481,7 @@
                             android:layout_height="20dp"
                             android:layout_gravity="center"
                             android:contentDescription="Fiados"
-                            android:src="@drawable/ic_edit_user"
+                            android:src="@drawable/ic_usuario_credito"
                             app:tint="#E65100" />
                     </androidx.cardview.widget.CardView>
 
@@ -547,7 +547,7 @@
                         android:layout_height="24dp"
                         android:layout_gravity="center"
                         android:contentDescription="Utilidad"
-                        android:src="@drawable/ic_balance"
+                        android:src="@drawable/ic_utilidad"
                         app:tint="#2E7D32" />
 
                 </androidx.cardview.widget.CardView>
