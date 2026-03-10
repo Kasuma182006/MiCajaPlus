@@ -76,7 +76,9 @@ interface ConexionServiceTienda {
     @POST("/editarProducto")
     suspend fun editarProducto(@Body producto: EditarProducto): Response<Map<String,String>>
 
+    @POST("/consultarIn")
 
+    suspend fun consultarInv(@Body body: consultarIn): Response<consultarIn>
     companion object messi {
         private const val BASE_URL = "http://192.168.18.79:4000"
 
