@@ -10,9 +10,7 @@
     android:paddingEnd="8dp"
     tools:context=".item_mensajes">
 
-    <!-- ══════════════════════════════════
-         MENSAJE DEL USUARIO (derecha)
-         ══════════════════════════════════ -->
+
     <LinearLayout
         android:id="@+id/contenedorMensaje"
         android:layout_width="wrap_content"
@@ -35,19 +33,19 @@
             android:layout_height="wrap_content"
             android:lineSpacingExtra="2dp"
             android:text="Mensaje del usuario"
-            android:textColor="@color/color_txt_app"
+            android:textColor="@color/colorSecondary"
             android:textSize="14sp" />
 
-        <!-- Timestamp usuario -->
-        <TextView
-            android:id="@+id/timestampMensaje"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginTop="2dp"
-            android:text="10:30"
-            android:textColor="@color/Flechas"
-            android:textSize="10sp" />
+<!--        &lt;!&ndash; Timestamp usuario &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/timestampMensaje"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="end"-->
+<!--            android:layout_marginTop="2dp"-->
+<!--            android:text="10:30"-->
+<!--            android:textColor="@color/Flechas"-->
+<!--            android:textSize="10sp" />-->
     </LinearLayout>
 
 
@@ -77,15 +75,15 @@
             android:textSize="14sp" />
 
         <!-- Timestamp sistema -->
-        <TextView
-            android:id="@+id/timestampSistema"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginTop="2dp"
-            android:text="10:30"
-            android:textColor="@color/Flechas"
-            android:textSize="10sp" />
+<!--        <TextView-->
+<!--            android:id="@+id/timestampSistema"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="end"-->
+<!--            android:layout_marginTop="2dp"-->
+<!--            android:text="10:30"-->
+<!--            android:textColor="@color/Flechas"-->
+<!--            android:textSize="10sp" />-->
     </LinearLayout>
 
 </LinearLayout>
