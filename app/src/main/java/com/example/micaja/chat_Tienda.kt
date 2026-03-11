@@ -134,10 +134,10 @@ class chat_Tienda : AppCompatActivity() {
             ConfTrans()
         }
 
-        binding.btnRetroceder.setOnClickListener {
-            intent = Intent(this, Principal::class.java)
-            startActivity(intent)
-        }
+//        binding.btnRetroceder.setOnClickListener {
+//            intent = Intent(this, Principal::class.java)
+//            startActivity(intent)
+//        }
 
         evento()
         observer()

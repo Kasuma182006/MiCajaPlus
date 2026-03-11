@@ -148,6 +148,20 @@ data class EditarProducto(
     val valorVenta: Int
 )
 
-
+//data clas para traer datos del cliente
+data class ClienteCompleto(
+    val nombre: String?,
+    val cedula: String?,
+    val telefono: String?,
+    val saldo: Int?
+)
+//data clas para actualizar datos del cliente
+data class ActualizarCliente(
+    val idTendero: String,
+    val cedula: String,
+    val nombre: String,
+    val telefono: String,
+    val saldo: Int
+)
 
 

@@ -24,14 +24,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/btnRetroceder"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:contentDescription="Retroceder"
-            android:src="@drawable/flecha_retroceso"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+<!--        <TextView-->
+<!--            android:id="@+id/tvEstadoTienda"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="5dp"-->
+<!--            android:text="Cerrado"-->
+<!--            android:textColor="@color/rojo_cerrado"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textSize="15sp"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent" />-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/btnRetroceder"-->
+<!--            android:layout_width="40dp"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:contentDescription="Retroceder"-->
+<!--            android:src="@drawable/flecha_retroceso"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
 
         <ImageView
             android:id="@+id/btn_menu"
