@@ -45,7 +45,7 @@ data class clienteNuevo(
     val cedulaTendero:String,
     val nombre: String,
     val celular: String,
-    val monto: Int
+
 )
 
 data class Identificacion(
@@ -78,6 +78,14 @@ data class NumeroCreditosResponse(
 data class ModeloBase(
     val idTendero: String,
     val baseInicial: Int
+)
+
+data class Venta(
+    var nombreProducto: String ?= null,
+    val presentacion: String ?= null,
+    val cantidad: Int ?= null,
+    val idTendero: String ?= null,
+    val idcliente: String ?=null
 )
 
 

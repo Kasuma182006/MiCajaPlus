@@ -26,6 +26,7 @@ import com.example.micaja.databinding.ActivityChatTiendaBinding
 import com.example.micaja.models.Identificacion
 import com.example.micaja.models.ModeloBase
 import com.example.micaja.models.cliente1
+import com.example.micaja.models.clienteNuevo
 import com.example.micaja.models.compra_Mercancia
 import com.example.micaja.models.gastoDetectado
 import com.example.micaja.models.modelo
@@ -35,6 +36,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import retrofit2.Response
 import java.util.Locale
 import kotlin.apply
 import kotlin.getValue
@@ -48,10 +50,12 @@ var cantidad: String = ""
 
 var i: Int = 1
 
-var procesoActivo = "NINGUNO"
-var estadoCredito = "NINGUNO"
+var procesoActivo = "ninguno"
+var estadoCredito = "ninguno"
 
 var montoCredito = 0
+
+var cedulaCliente : String? = null
 
 var cedulaGlobal = ""
 
@@ -66,8 +70,7 @@ val diccionario = mapOf(
     "abono" to listOf ("abonar", "abono", "abonos", "cuota", "adelantar" ,"adelanto"),
     "agregar producto" to listOf ("agregar producto", "añadir producto" ,"nuevo producto", "producto nuevo"),
     "agregar cliente" to listOf("agregar nombre", "añadir cliente", "cliente nuevo", "nuevo cliente"),
-    "si" to listOf("SI", "Si", "si", "sI", "Yes", "YES", "YeS", "yES", "yEs", "yeS"),
-    "no" to listOf("NO","No","no","nO" )
+    "si" to listOf("si", "sí"),
 )
 
 class chat_Tienda : AppCompatActivity() {
@@ -231,15 +234,29 @@ class chat_Tienda : AppCompatActivity() {
             val textoLimpio = mensaje.replace(Regex("""(\d)[.,](\d{3})\b"""), "$1$2").lowercase()
             val palabras = textoLimpio.split(Regex("""[\s,.:]+"""))
 
+
+
             if (tienda) {
                 if (base) {
                     if (operacionVenta.inicio) {
                         lifecycleScope.launch(Dispatchers.IO) {
+                            val clienteID = if (procesoActivo == "credito") (cedulaCliente ?: "") else ""
                             val respuestaChat =
-                                operacionVenta.procesarListaProductos(textoLimpio, cedulaGlobal)
+                                operacionVenta.procesarListaProductos(textoLimpio, cedulaGlobal, fin_credito = false, clienteID, cedulaGlobal)
                             withContext(Dispatchers.Main) {
                                 model.addMensajeSistema(modelo(respuestaChat))
                             }
+                        }
+                        return@setOnClickListener
+                    }
+                    if (procesoActivo == "credito") {
+                        lifecycleScope.launch {
+                            procesarCompra(mensaje)
+                        }
+                        if (textoLimpio.contains("fin") || textoLimpio.contains("finalizar")) {
+
+                            procesoActivo = "ninguno"
+                            estadoCredito = "ninguno"
                         }
                         return@setOnClickListener
                     }
@@ -259,17 +276,21 @@ class chat_Tienda : AppCompatActivity() {
                             val esGasto = diccionario["gasto"]?.any { palabras.contains(it) } == true
                             val esCompra = diccionario["compra"]?.any { palabras.contains(it) } == true
                             val esAbono = diccionario["abono"]?.any { palabras.contains(it) } == true
+                            val esCredito = diccionario["credito"]?.any { palabras.contains(it) } == true
 
-                            if (esVenta) {
-                                operacionVenta.inicio = true
-                                model.addMensajeSistema(modelo("¡Venta iniciada! Dicta los productos uno a uno o di 'fin'."))
+                            if (esVenta && esCredito){
+                                procesarCompra(mensaje)
                             } else if (esAbono) {
-
                                 abono.iniciarFlujoAbono(model::addMensajeSistema)
                             } else if(esGasto){
                                 procesarGasto(mensaje)
                             }else if(esCompra){
                                 procesarCosto(mensaje)
+                            }else if (esVenta) {
+                                operacionVenta.inicio = true
+                                model.addMensajeSistema(modelo("¡Venta iniciada! Dicta los productos uno a uno o di 'fin'."))
+                            }else if (esAbono){
+                                procesarAbonos(mensaje)
                             }
                         } else {
                             model.addMensajeSistema(modelo("No se pudo detectar la operación, por favor vuelve a intentarlo"))
@@ -290,6 +311,43 @@ class chat_Tienda : AppCompatActivity() {
                 }
             }
         }
+    }
+    private suspend fun nuevo_cliente(
+        cedulaCliente: String?,
+        cedula_tendero: String?,
+        nombre: String?,
+        telefono: String?
+    ): Boolean {
+        val conexion = ConexionServiceTienda.create()
+        val respuesta = conexion.insertar_cliente(
+            clienteNuevo(
+                cedulaCliente!!,
+                cedula_tendero!!,
+                nombre!!,
+                telefono!!
+            )
+        )
+        Log.i("respuesta", respuesta.body().toString())
+        if (respuesta.body() == true) {
+            return true
+        } else{
+            model.addMensajeSistema(modelo("No pude insertar"))
+            return false
+        }
+    }
+
+
+
+
+
+
+    private suspend fun buscarCliente(cedula: String?, cedula_tendero: String?): Response<cliente1> {
+        val conexion = ConexionServiceTienda.create()
+        val respuesta = conexion.busca_cliente(Identificacion(cedula!!, cedula_tendero!!))
+        if (respuesta.body()!!.nombre != null && respuesta.body()!!.saldo != null) {
+            return respuesta
+        }
+        return respuesta
     }
 
 
@@ -367,117 +425,125 @@ class chat_Tienda : AppCompatActivity() {
 
         // Detecta (Venta, Cierre, Crédito)
         val palabras = textoMinuscula.split(Regex("""[\s:]+"""))
-        Log.i("palabra", palabras.toString())
-        val esVenta = palabras.any { diccionario["venta"]?.contains(it) == true }
-        val esCredito = palabras.any{diccionario["credito"]?.contains(it)==true}
+        Log.i("palabra12122", palabras.toString())
 
-        if (esVenta && esCredito) {
+        val esCredito = palabras.any { diccionario["credito"]?.contains(it) == true }
+//
+        if (esCredito) {
             procesoActivo = "credito"
-            estadoCredito = "esperando_cedula"
-            indicador = true
+            Log.i("entro a credito", procesoActivo.toString())
+            Log.i("entro a credito", estadoCredito.toString())
 
-            model.addMensajeSistema(
-                modelo("He detectado venta a crédito. Dicte el número de cédula del cliente.")
-            )
-            return
         }
-        if (esVenta && indicador == false){
-            indicador = false
-            // Separamos por conectores para manejar múltiples productos
-            val segmentos = textoMinuscula.split(Regex(",|\\by\\b|;|\\."))
-                .map { it.trim() }
-                .filter { it.length > 3 }
 
-            Log.i("segmentos", segmentos.toString())
 
-            val listaResumen = mutableListOf<String>()
-            var sumaTotalVenta = 0
+        //---------------CREDITO---------------------------------------------------------------------------------
+        if (procesoActivo == "credito" && estadoCredito == "ninguno") {
 
-            for (segmento in segmentos) {
-                val datos = extraerDatosProducto(segmento)
+            val textoSinEspacios = textoMinuscula.replace(" ", "")
+            val cedulaRegex = Regex("\\d{6,10}")
+            val cedula = cedulaRegex.find(textoSinEspacios)?.value
+            Log.i("cedula", cedula.toString())
 
-                if (datos != null) {
-                    val (nombre, pres, precio) = datos
-
-                    // Acumulamos para el mensaje final y el total
-                    listaResumen.add("• $nombre ($pres) por $$precio")
-                    sumaTotalVenta += precio
-
-                    Log.d(
-                        "DETECCION_VENTA",
-                        "REGISTRADO -> PROD: $nombre | PRES: $pres | PRECIO: $precio"
-                    )
-
+            if (cedula != null) {
+                val respuesta = buscarCliente(cedula, cedula_tendero)
+                Log.i("respuesta de cedula", respuesta.toString())
+                if (respuesta.body()?.nombre == null) {
+                    estadoCredito = "decision"
+                    cedulaCliente = cedula
+                    model.addMensajeSistema(modelo("El cliente no está registrado. ¿Le gustaría registrarlo?"))
+                }else{
+                    model.addMensajeSistema(modelo("Cliente encontrado: ${respuesta.body()?.nombre}.\nSaldo total: ${respuesta.body()?.saldo}.\nDicte el producto que vendío a crédito."))
+                    estadoCredito = "pedir_productos"
+                    cedulaCliente = cedula
                 }
-            }
-            // respuesta sistema
-            if (listaResumen.isNotEmpty()) {
-                val saludo = "¡Entendido! He registrado lo siguiente:\n"
-                val cuerpo = listaResumen.joinToString("\n")
-                val total = "\n\nTotal esta operación: $$sumaTotalVenta"
-
-                model.addMensajeSistema(modelo(saludo + cuerpo + total))
+                return
             } else {
-                model.addMensajeSistema(modelo("Detecté una venta, pero no logré identificar el producto o el precio. Intenta algo como: Arroz libra 3500"))
+                model.addMensajeSistema(modelo("Hubo un problema con la operación. Por favor dicte de nuevo la operación."))
+                return
             }
-            return
         }
-        if (procesoActivo == "credito" && indicador == true) {
-                if (estadoCredito == "esperando_cedula") {
-                    val cedula = textoMinuscula.replace(Regex("[^0-9]"), "")
-                    Log.i("verificacion", "Llega hasta aca" )
+        if (estadoCredito == "decision") {
 
-                    if ((cedula.length > 10) || (cedula.length < 6)) {
-                        model.addMensajeSistema(modelo("No pude reconocer la cédula. Por favor dictala nuevamente. Debe tener entre 6 y 10 dígitos."))
-                    } else {
-                        val conexion = ConexionServiceTienda.create()
-                        Log.i("cedula tendero", cedula_tendero)
-                        val respuesta =
-                            conexion.busca_cliente(Identificacion(cedula, cedula_tendero))
-                        if (respuesta.body()!!.nombre != null && respuesta.body()!!.saldo != null) { // Si usas Response<>
-                            Log.i("hay respuesta", respuesta.body()?.saldo.toString())
-                            estadoCredito = "pedir_cantidad"
-                            model.addMensajeSistema(modelo("Cliente encontrado: ${respuesta.body()?.nombre}.\nSaldo total: ${respuesta.body()?.saldo}\n¿Cuántos productos compró fiados?"))
-                        } else {
-                            model.addMensajeSistema(modelo("El cliente con la cedula $cedula no se encuentra registrado. ¿Le gustaría registrarlo?"))
-                            estadoCredito = "registrar_cliente"
-                        }
-                    }
-                }
+            val si = palabras.any { diccionario["si"]?.contains(it) == true }
+            Log.i("Entrando a decision", "Entreeee menor")
 
-                if (estadoCredito == "registrar_cliente"){
-                    val si = palabras.any { diccionario["si"]?.contains(it) == true}
-                    val no = palabras.any { diccionario["no"]?.contains(it) == true}
-                    if (si){
-                        model.addMensajeSistema(modelo("¿Cuál es el nombre del cliente?"))
-                    }else if (no){
-                        model.addMensajeSistema(modelo("Saliendo de credito"))
-                        indicador = false
-                    }
-                    else{
-                        model.addMensajeSistema(modelo("Lo siento, no pude entender la respuesta. Dictela de nuevo"))
-                    }
-                }
-                if (estadoCredito == "pedir_cantidad") {
-                    cantidad = textoMinuscula.replace(Regex("[^0-9]"), "")
-                    Log.i("cantidad", cantidad.toString())
-                    if ((cantidad.toInt() > 0) and (cantidad.toInt() < 100)) {
-                        model.addMensajeSistema(modelo("Dicte el primer producto."))
-                        estadoCredito = "pedir_productos"
-                    }
-                }
-                if (estadoCredito == "pedir_productos") {
-                    Log.i("Valor de i", i.toString())
-                    if (cantidad.toInt() > i) {
-                        i++
-                        model.addMensajeSistema(modelo("Dicte el siguiente producto."))
-
-                    }
-
-                }
-
-
+            Log.i("si", si.toString())
+            if (si) {
+                model.addMensajeSistema(modelo("Dicte el nombre del cliente y el número télefonico."))
+                estadoCredito = "cliente_nuevo"
+                return
             }
+            if (textoMinuscula == "no") {
+                procesoActivo = "ninguno"
+                estadoCredito = "ninguno"
+                model.addMensajeSistema(modelo("Ok, saliendo de crédito"))
+            } else {
+                model.addMensajeSistema(modelo("Lo siento, no pude entenderte, por favor dicta de nuevo"))
+            }
+
+        }
+        if (estadoCredito == "cliente_nuevo") {
+            val textoSinEspacios = textoMinuscula.replace(" ", "")
+            val regexTelefono = Regex("3\\d{9}")
+            val telefono = regexTelefono.find(textoSinEspacios)
+
+            // 2. Obtenemos el texto que está antes del número
+            if (telefono != null) {
+                // Cortamos la cadena desde el inicio hasta donde empieza el teléfono
+                val antesTelefono = textoMinuscula.substring(0, telefono.range.first).trim()
+                val palabrasAntes = antesTelefono.split(Regex("\\s+")).filter { it.isNotBlank() }
+                val nombreFinal = palabrasAntes.take(2).joinToString(" ")
+                if (nombreFinal.length >= 8 && nombreFinal.length <= 40) {
+                    if (nuevo_cliente(cedulaCliente, cedula_tendero, nombreFinal, telefono.value)){
+                        model.addMensajeSistema(modelo("El cliente $nombreFinal con la cédula $cedulaCliente y número télefonico ${telefono.value} ha sído registrado con éxito.\nPor favor dicte el producto que vendio a crédito. "))
+                        estadoCredito = "pedir_productos"
+                        return
+                    }
+                } else {
+                    model.addMensajeSistema(modelo("Lo siento, no pude entenderte, por favor dicta de nuevo"))
+                    return
+                }
+            } else {
+                model.addMensajeSistema(modelo("Lo siento, no pude entenderte, por favor dicta de nuevo"))
+                return
+            }
+
+        }
+
+        if (estadoCredito == "pedir_productos"){
+            var operacionVenta = OperacionVenta()
+            val fin_credito = diccionario["fin credito"]?.any { frase ->
+                textoMinuscula.contains(frase) }
+            if (fin_credito == true && i > 0){
+                estadoCredito = "ninguno"
+                procesoActivo = "ninguno"
+                model.addMensajeSistema(
+                    modelo(
+                        operacionVenta.procesarListaProductos(
+                            textoLimpio, cedulaGlobal,
+                            fin_credito = true,
+                            cedulaCliente!!,
+                            cedulaGlobal
+                        )
+                    ))
+            }else {
+                val textoLimpio =
+                    mensaje.replace(Regex("""(\d)[.,](\d{3})\b"""), "$1$2").lowercase()
+                model.addMensajeSistema(
+                    modelo(
+                        operacionVenta.procesarListaProductos(
+                            textoLimpio, cedulaGlobal,
+                            fin_credito = false,
+                            cedulaCliente!!,
+                            cedulaGlobal
+
+                        )
+                    )
+                )
+                i++
+            }
+        }
 
         if (palabras.any { diccionario["cerrar"]?.contains(it) == true }) {
             cerrarTienda()
@@ -572,7 +638,7 @@ class chat_Tienda : AppCompatActivity() {
                     CoroutineScope(Dispatchers.IO).launch {
                         try {
                             val service = ConexionServiceTienda.create()
-                            service.gastoDetectado(gastoDetectado)
+//                            service.gastoDetectado(gastoDetectado)
                         } catch (e: Exception) {
                             Log.e("ERROR_GASTOS", e.message ?: "Error desconocido")
                         }
