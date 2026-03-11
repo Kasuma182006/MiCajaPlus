@@ -328,7 +328,7 @@ class chat_Tienda : AppCompatActivity() {
             )
         )
         Log.i("respuesta", respuesta.body().toString())
-        if (respuesta.body() == true) {
+        if (respuesta.isSuccessful) {
             return true
         } else{
             model.addMensajeSistema(modelo("No pude insertar"))

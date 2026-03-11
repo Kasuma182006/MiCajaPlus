@@ -14,11 +14,22 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
         android:paddingTop="16dp"
         android:paddingBottom="24dp">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/color_fondo"
+        android:elevation="4dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
             android:id="@+id/btnRetroceso"
@@ -67,19 +78,34 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvTituloEditar" />
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/headerDivider"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/colorPrimary"
+            android:alpha="0.4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/header" />
+
+
 
         <TextView
             android:id="@+id/labelPaso1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
             android:text="@string/label_Paso1"
             android:textColor="@color/colorOnSecondary"
             android:textSize="14sp"
             android:textStyle="bold"
             android:letterSpacing="0.02"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvSubtitulo" />
+            app:layout_constraintTop_toBottomOf="@id/header" />
 
 
         <androidx.cardview.widget.CardView
@@ -87,8 +113,8 @@
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="2dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
             app:cardBackgroundColor="#FFFFFF"
             app:cardCornerRadius="16dp"
             app:cardElevation="3dp"
@@ -98,7 +124,9 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+
+                >
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textBuscarProducto"
@@ -128,6 +156,7 @@
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
                         android:hint="@string/hint_BuscarCliente"
+
                         android:textColorHint="@color/gris"
                         android:imeOptions="actionSearch"
                         android:inputType="text"
@@ -220,6 +249,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
             android:text="@string/label_Paso2"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
             android:textColor="@color/colorOnSecondary"
             android:textSize="14sp"
             android:textStyle="bold"
@@ -259,6 +290,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/hint_NombreCliente"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
                     app:boxCornerRadiusBottomEnd="12dp"
                     app:boxCornerRadiusBottomStart="12dp"
                     app:boxCornerRadiusTopEnd="12dp"
@@ -289,6 +322,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:hint="@string/hint_CedulaCliente"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
                     app:boxCornerRadiusBottomEnd="12dp"
                     app:boxCornerRadiusBottomStart="12dp"
                     app:boxCornerRadiusTopEnd="12dp"
@@ -320,6 +355,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:hint="@string/hint_TelefonoCliente"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
                     app:boxCornerRadiusBottomEnd="12dp"
                     app:boxCornerRadiusBottomStart="12dp"
                     app:boxCornerRadiusTopEnd="12dp"
@@ -351,6 +388,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:hint="@string/hint_ValorCredito"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
                     app:boxCornerRadiusBottomEnd="12dp"
                     app:boxCornerRadiusBottomStart="12dp"
                     app:boxCornerRadiusTopEnd="12dp"

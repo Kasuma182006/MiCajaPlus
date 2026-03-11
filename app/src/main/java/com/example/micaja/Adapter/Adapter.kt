@@ -19,20 +19,20 @@ class Adapter ( var dataset: MutableList<modelo>, var sistemaData: MutableList<m
             binding.mensajeSistema.text = sistema.mensaje
 
 
-            // Timestamps: si viene vacío se oculta el TextView
-            if (modelo.timestamp.isNotEmpty()) {
-                binding.timestampMensaje.visibility = View.VISIBLE
-                binding.timestampMensaje.text = modelo.timestamp
-            } else {
-                binding.timestampMensaje.visibility = View.GONE
-            }
-
-            if (sistema.timestamp.isNotEmpty()) {
-                binding.timestampSistema.visibility = View.VISIBLE
-                binding.timestampSistema.text = sistema.timestamp
-            } else {
-                binding.timestampSistema.visibility = View.GONE
-            }
+//            // Timestamps: si viene vacío se oculta el TextView
+//            if (modelo.timestamp.isNotEmpty()) {
+//                binding.timestampMensaje.visibility = View.VISIBLE
+//                binding.timestampMensaje.text = modelo.timestamp
+//            } else {
+//                binding.timestampMensaje.visibility = View.GONE
+//            }
+//
+//            if (sistema.timestamp.isNotEmpty()) {
+//                binding.timestampSistema.visibility = View.VISIBLE
+//                binding.timestampSistema.text = sistema.timestamp
+//            } else {
+//                binding.timestampSistema.visibility = View.GONE
+//            }
 
         }
     }

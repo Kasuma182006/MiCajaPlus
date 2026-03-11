@@ -52,7 +52,7 @@
             app:boxCornerRadiusBottomEnd="25dp"
             app:endIconMode="clear_text"
             app:endIconTint="@color/colorOnSecondary"
-            app:startIconDrawable="@drawable/ic_search"
+            app:startIconDrawable="@drawable/ic_search_inventario"
             app:startIconTint="@color/colorOnSecondary"
             app:counterEnabled="true"
             app:counterMaxLength="60"
