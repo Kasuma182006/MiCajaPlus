@@ -80,17 +80,14 @@ data class ModeloBase(
     val baseInicial: Int
 )
 
-data class venta(
-    val idTendero: String,
-    val tipo: String,
-    val monto: Int,
-    val mensaje: String
-)
+
 
 data class ventaDetectada(
-    var nombreProducto: String,
+    var idTendero: String,
     val mensaje: String,
-    val total_Venta: Int
+    val tipoPago: String,
+    val nombre: String,
+    val cantidad: Int
 )
 
 data class Gasto(
@@ -139,7 +136,7 @@ data class OperacionesInventario(
 
 data class BuscarProductos(
     val idTendero: String,
-    val nombreProducto: String
+    val nombre: String
 )
 
 data class EditarProducto(
@@ -153,7 +150,4 @@ data class EditarProducto(
 
 
 
-data class consultarIn(
-    val nombre: String,
-)
 

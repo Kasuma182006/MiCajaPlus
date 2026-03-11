@@ -1,7 +1,9 @@
 package com.example.micaja.Operaciones
 
+import android.util.Log
 import com.example.micaja.ConexionService.ConexionServiceTienda
-import com.example.micaja.models.consultarIn
+import com.example.micaja.models.OperacionesInventario
+import com.example.micaja.models.ventaDetectada
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -17,17 +19,17 @@ class OperacionVenta {
             "docena", "gramo", "libra", "kilo", "kilogramos", "litro", "litrón", "onza",
             "envase", "frasco", "plastico", "plástico", "paquete", "vidrio",
             "pequeña", "pequeño", "media", "mediana", "mediano", "grande",
-            "garrafa", "lata", "latón", "paca", "sixpack", "six-pack",
+            "garrafa", "lata", "latón", "paca", "sixpack", "six pack","sispa",
             "panal", "sobre", "rollo", "tubo", "unidad", "vasito", "vaso"
         )
 
         val limpiarN = listOf(
             "vendi", "vendí", "vende", "venta", "un", "una", "de", "del",
-            "por", "el", "la", "los", "las", "me", "compraron", "salio","s","S"
+            "por", "el", "la", "los", "las", "me", "compraron", "salio","s","S","ventas","costos"
         )
     }
 
-    suspend fun procesarListaProductos(texto: String): String {
+    suspend fun procesarListaProductos(texto: String, idTendero: String): String {
         if (texto.contains("fin")) {
             inicio = false
             return "Venta finalizada"
@@ -43,14 +45,22 @@ class OperacionVenta {
 
         return try {
             val conexion = ConexionServiceTienda.create()
-            val modelo = consultarIn(nombre)
+            val modelo = OperacionesInventario(idTendero, nombre, pres, cant, "descontar")
+            Log.d("modelo" , "modelo de datos ${modelo}")
 
-
-            val respuesta = conexion.consultarInv(modelo)
+            val respuesta = conexion.operacionesInventario(modelo)
 
             if (respuesta.isSuccessful && respuesta.body() != null) {
-                "• $cant $pres de $nombre registrado. ¿Algo más? (o di 'fin')"
 
+                val cuerpo = respuesta.body()
+                Log.d("respuesta", "respuesta del servidor ${cuerpo}")
+
+                val modeloVenta = ventaDetectada(idTendero,texto,"Efectivo", nombre,cant)
+                val respuestaVenta = conexion.ventaDetectada(modeloVenta)
+                if (respuestaVenta.isSuccessful && respuestaVenta.body() != null){
+                   Log.d("venta", "venta registrada compita")
+                }
+                "• $cant $pres de $nombre registrado. ¿Algo más? (o di 'fin')"
             } else {
                 "El producto '$nombre' no existe en tu inventario. Verifica el nombre."
             }
@@ -85,9 +95,10 @@ class OperacionVenta {
         nombre = nombre.trim().replace(Regex("""\s+"""), " ")
 
         if (nombre.isNotEmpty()) {
-            return Triple(nombre.replaceFirstChar { it.uppercase() }, unidadDetectada, cantidad)
+            return Triple(nombre, unidadDetectada, cantidad)
         } else {
             return null
         }
     }
+
 }

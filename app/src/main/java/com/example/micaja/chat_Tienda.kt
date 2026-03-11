@@ -236,7 +236,7 @@ class chat_Tienda : AppCompatActivity() {
                     if (operacionVenta.inicio) {
                         lifecycleScope.launch(Dispatchers.IO) {
                             val respuestaChat =
-                                operacionVenta.procesarListaProductos(textoLimpio)
+                                operacionVenta.procesarListaProductos(textoLimpio, cedulaGlobal)
                             withContext(Dispatchers.Main) {
                                 model.addMensajeSistema(modelo(respuestaChat))
                             }
@@ -690,6 +690,9 @@ class chat_Tienda : AppCompatActivity() {
         var precioFinal: Int? = null
         var textoPrecioEncontrado = ""
 
+        val cifra = Regex("""\b\d+\b""").find(segmento)
+        val cantidad = cifra?.value?.toIntOrNull() ?: 1
+
         val fragmentos = s.split(" ")
         for (f in fragmentos) {
             val resultadoMonto = calcularMonto(f)
@@ -718,7 +721,7 @@ class chat_Tienda : AppCompatActivity() {
         return if (nombreLimpio.isNotEmpty()) {
             compra_Mercancia(
                 idTendero = "",
-                cantidadStock = 50,
+                cantidadStock = cantidad,
                 presentacion = "",
                 nombre = nombreLimpio.replaceFirstChar { it.uppercase() },
                 precioCompra = precioFinal,

@@ -9,6 +9,7 @@ import com.example.micaja.models.EditarProducto
 import com.example.micaja.models.Identificacion
 import com.example.micaja.models.ModeloBase
 import com.example.micaja.models.NumeroCreditosResponse
+import com.example.micaja.models.OperacionesInventario
 import com.example.micaja.models.RespuestaAbono
 import com.example.micaja.models.Tendero
 import com.example.micaja.models.TipoOperacionXFecha
@@ -17,8 +18,8 @@ import com.example.micaja.models.cliente1
 import com.example.micaja.models.clienteAbono
 import com.example.micaja.models.clienteNuevo
 import com.example.micaja.models.compra_Mercancia
-import com.example.micaja.models.consultarIn
 import com.example.micaja.models.gastoDetectado
+import com.example.micaja.models.ventaDetectada
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
@@ -77,17 +78,20 @@ interface ConexionServiceTienda {
     @POST("/editarProducto")
     suspend fun editarProducto(@Body producto: EditarProducto): Response<Map<String,String>>
 
-    @POST("/consultarIn")
-
-    suspend fun consultarInv(@Body body: consultarIn): Response<consultarIn>
 
     @POST ("gastoDetectado")
     suspend fun gastoDetectado(@Body request: gastoDetectado): Response<gastoDetectado>
 
+    @POST ("/operacionesInventario")
+    suspend fun operacionesInventario(@Body body: OperacionesInventario): Response<OperacionesInventario>
+
+    @POST ("/crearventas")
+    suspend fun ventaDetectada(@Body request: ventaDetectada): Response<ventaDetectada>
+
 
 
     companion object messi {
-        private const val BASE_URL = "http://10.6.124.54:4000"
+        private const val BASE_URL = " http://192.168.12.101:4000/"
 
         fun create(): ConexionServiceTienda {
             val retrofit = Retrofit.Builder()
