@@ -90,7 +90,8 @@ class OperacionVenta() {
                     val cuerpo = respuesta.body()
                     Log.d("respuesta", "respuesta del servidor ${cuerpo}")
 
-                    val tipoVenta = if (idCliente.isNotEmpty() && idCliente != idTendero) "Credito" else "Efectivo"
+
+                    val tipoVenta = if (idCliente.isNotEmpty() && idCliente != idTendero) "credito" else "efectivo"
 
                     val modeloVenta = ventaDetectada(idTendero,texto,tipoVenta, nombre,cant)
                     val respuestaVenta = conexion.ventaDetectada(modeloVenta)

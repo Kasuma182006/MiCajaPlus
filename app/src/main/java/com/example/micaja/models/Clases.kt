@@ -105,15 +105,17 @@ data class Gasto(
 )
 
 data class gastoDetectado(
+    val idTendero: String,
     val mensaje: String,
     val precio: Int
 )
-
-data class Costo(
+data class costoDetectado(
     val idTendero: String,
     val mensaje: String,
-    var precioCompra: Int
+    val precioCompra: Int,
+    val proveedor: String
 )
+
 
 data class compra_Mercancia(
     val idTendero: String = "",

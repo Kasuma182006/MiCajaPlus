@@ -25,9 +25,11 @@ import com.example.micaja.Operaciones.OperacionVenta
 import com.example.micaja.databinding.ActivityChatTiendaBinding
 import com.example.micaja.models.Identificacion
 import com.example.micaja.models.ModeloBase
+import com.example.micaja.models.OperacionesInventario
 import com.example.micaja.models.cliente1
 import com.example.micaja.models.clienteNuevo
 import com.example.micaja.models.compra_Mercancia
+import com.example.micaja.models.costoDetectado
 import com.example.micaja.models.gastoDetectado
 import com.example.micaja.models.modelo
 import com.example.micaja.utils.SesionManager
@@ -328,7 +330,7 @@ class chat_Tienda : AppCompatActivity() {
             )
         )
         Log.i("respuesta", respuesta.body().toString())
-        if (respuesta.isSuccessful) {
+        if (respuesta.body() == true) {
             return true
         } else{
             model.addMensajeSistema(modelo("No pude insertar"))
@@ -550,66 +552,6 @@ class chat_Tienda : AppCompatActivity() {
         }
     }
 
-    private fun extraerDatosProducto(segmento: String): Triple<String, String, Int>? {
-        var s = segmento.trim()
-
-        //Extraer Monto
-        var precioFinal: Int? = null
-        var textoPrecioEncontrado = ""
-
-        val fragmentos = s.split(" ")
-        for (f in fragmentos) {
-            val resultadoMonto = calcularMonto(f) // 20k, 20.000, etc.
-            if (resultadoMonto != null && resultadoMonto >= 100) {
-                precioFinal = resultadoMonto
-                textoPrecioEncontrado = f
-                break
-            }
-        }
-
-        if (precioFinal == null) return null
-
-        // LIMPIEZA DE PRECIO Y SÍMBOLOS
-        s = s.replace(textoPrecioEncontrado, "").replace("$", "").trim()
-
-        // identifica presentacion Usando tu lista de 'unidades'
-        var unidadDetectada = "unidad"
-        for (u in unidades) {
-            if (s.contains(u)) {
-                unidadDetectada = u
-                s = s.replace(u, "").trim()
-                break
-            }
-        }
-
-        // limpieza de piskini
-        val ruido = listOf(
-            "vendi",
-            "vendí",
-            "vende",
-            "venta",
-            "un",
-            "una",
-            "de",
-            "a",
-            "por",
-            "el",
-            "la",
-            "total",
-            "precio",
-            "también"
-        )
-        var nombreLimpio = s
-        for (r in ruido) {
-            nombreLimpio = nombreLimpio.replace(Regex("\\b$r\\b", RegexOption.IGNORE_CASE), "")
-        }
-
-        nombreLimpio = nombreLimpio.trim().replace(Regex("\\s+"), " ")
-
-        return if (nombreLimpio.isNotEmpty()) {
-            Triple(nombreLimpio.replaceFirstChar { it.uppercase() }, unidadDetectada, precioFinal)
-        } else null
-    }
 
     fun procesarGasto(texto: String) {
         val textoLimpio = texto.replace(Regex("""(\d)[.,](\d{3})\b"""), "$1$2")
@@ -638,7 +580,10 @@ class chat_Tienda : AppCompatActivity() {
                     CoroutineScope(Dispatchers.IO).launch {
                         try {
                             val service = ConexionServiceTienda.create()
-//                            service.gastoDetectado(gastoDetectado)
+                            val modelo = gastoDetectado(cedulaGlobal, gastoDetectado.mensaje,
+                                gastoDetectado.precio)
+                            val respuesta = service.gastosDetectadoss(modelo)
+                            Log.i("respuesta", respuesta.toString())
                         } catch (e: Exception) {
                             Log.e("ERROR_GASTOS", e.message ?: "Error desconocido")
                         }
@@ -697,6 +642,7 @@ class chat_Tienda : AppCompatActivity() {
         return if (nombreLimpio.isNotEmpty()) {
 
             gastoDetectado(
+                idTendero = cedulaGlobal,
                 mensaje = nombreLimpio.replaceFirstChar { it.uppercase() },
                 precio = precioFinal
             )
@@ -733,7 +679,16 @@ class chat_Tienda : AppCompatActivity() {
                 CoroutineScope(Dispatchers.IO).launch {
                     try {
                         val service = ConexionServiceTienda.create()
-                        service.compra_Mercancia(costoDetectado)
+                        val modelo = OperacionesInventario(cedulaGlobal, costoDetectado.nombre, costoDetectado.presentacion, costoDetectado.cantidadStock, "agregar")
+                        val respuesta = service.operacionesInventario(modelo)
+                        CoroutineScope(Dispatchers.Main).launch {
+                            val datos = costoDetectado(
+                                cedulaGlobal, segmento, costoDetectado.precioCompra, costoDetectado.proveedor
+                            )
+                            val resultado = service.compra_Mercancia(datos)
+                            Log.i("respuesta", resultado.toString())
+                        }
+                        Log.i("respuesta", respuesta.toString())
                     } catch (e: Exception) {
                         Log.e("ERROR_COSTO", e.message ?: "Error desconocido")
                     }
