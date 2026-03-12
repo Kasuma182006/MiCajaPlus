@@ -63,11 +63,6 @@ class fragment_editar_producto : AppCompatActivity() {
 
         }
 
-
-
-
-
-
     }
 
     fun buscarProducto(binding: ActivityFragmentEditarProductoBinding) {

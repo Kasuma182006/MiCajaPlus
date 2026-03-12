@@ -50,7 +50,7 @@ data class clienteNuevo(
     val cedulaTendero:String,
     val nombre: String,
     val celular: String,
-    val monto: Int
+
 )
 
 data class Identificacion(
@@ -85,17 +85,22 @@ data class ModeloBase(
     val baseInicial: Int
 )
 
-data class venta(
-    val idTendero: String,
-    val tipo: String,
-    val monto: Int,
-    val mensaje: String
+data class Venta(
+    var nombreProducto: String ?= null,
+    val presentacion: String ?= null,
+    val cantidad: Int ?= null,
+    val idTendero: String ?= null,
+    val idcliente: String ?=null
 )
 
+
+
 data class ventaDetectada(
-    var nombreProducto: String,
+    var idTendero: String,
     val mensaje: String,
-    val total_Venta: Int
+    val tipoPago: String,
+    val nombre: String,
+    val cantidad: Int
 )
 
 data class Gasto(
@@ -116,12 +121,15 @@ data class Costo(
 )
 
 data class compra_Mercancia(
-    val idTendero: String,
-    var mensaje: String,
-    var monto: Int,
-    val categoria: String,
+    val idTendero: String = "",
+    val nombre: String,
+    val presentacion: String,
+    val cantidadStock: Int,
+    val precioCompra: Int,
     val proveedor: String
 )
+
+
 
 
 //Esta data class es para las operaciones de ventas de unidades o agregar unidades existentes en el inventario (ventas o gastos en operciones)
@@ -141,10 +149,8 @@ data class OperacionesInventario(
 
 data class BuscarProductos(
     val idTendero: String,
-    val nombre: String  //Nombre es el nombre del producto que el tendero agrega en el input a la hora de buscar los productos
+    val nombre: String
 )
-
-
 
 data class EditarProducto(
     val cantidad: Int,
@@ -172,9 +178,3 @@ data class ActualizarCliente(
 )
 
 
-
-
-
-data class consultarIn(
-    val nombre: String
-)
