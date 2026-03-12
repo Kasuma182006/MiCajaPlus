@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.micaja.models.ActualizarCliente
 import com.example.micaja.models.BuscarProductos
 import com.example.micaja.models.ClienteCompleto
+import com.example.micaja.models.ConsultaCedulaTendero
 import com.example.micaja.models.ConsultarOperaXFecha
 import com.example.micaja.models.Credito
 import com.example.micaja.models.DatosAbono
@@ -93,6 +94,9 @@ interface ConexionServiceTienda {
 
     @POST("/creargasto")
     suspend fun gastosDetectadoss(@Body body: gastoDetectado): Response<gastoDetectado>
+
+    @POST("consultaCedulaTendero")
+    suspend fun buscarTendero(@Body consulta: ConsultaCedulaTendero): Response<Tendero>
 
 
 
