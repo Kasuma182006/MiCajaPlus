@@ -5,7 +5,8 @@ import com.google.gson.annotations.SerializedName
 data class Tendero(
     @SerializedName("cedula") val cedula: String,
     @SerializedName("telefono") val telefono: String,
-    @SerializedName("nombre") val nombre: String
+    @SerializedName("nombre") val nombre: String,
+    @SerializedName("fechaCreacion") val fechaCreacion: String
 )
 
 
@@ -66,19 +67,18 @@ data class Credito(
 data class ConsultarOperaXFecha(
     val idTendero: String,
     val fechaInicial: String? = null,
-    val fechaFin: String? = null,
-    val precio: Int? = null
+    val fechaFin: String? = null
 )
 
 data class TipoOperacionXFecha(
     val ventas: String,
+    val valorCredito: String,
+    val ncreditos: String,
     val costos: String,
     val gastos: String
 )
 
-data class NumeroCreditosResponse(
-    val Ncredito: String
-)
+
 
 data class ModeloBase(
     val idTendero: String,
@@ -177,6 +177,13 @@ data class ActualizarCliente(
     val nombre: String,
     val telefono: String,
     val saldo: Int
+)
+
+data class Producto(
+    val idTendero: String,
+    val categoria: String,
+    val nombre: String,
+    val presentacion: String
 )
 
 

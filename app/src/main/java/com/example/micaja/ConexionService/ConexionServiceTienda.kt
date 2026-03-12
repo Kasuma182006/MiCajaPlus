@@ -11,8 +11,8 @@ import com.example.micaja.models.DatosAbono
 import com.example.micaja.models.EditarProducto
 import com.example.micaja.models.Identificacion
 import com.example.micaja.models.ModeloBase
-import com.example.micaja.models.NumeroCreditosResponse
 import com.example.micaja.models.OperacionesInventario
+import com.example.micaja.models.Producto
 import com.example.micaja.models.RespuestaAbono
 import com.example.micaja.models.Tendero
 import com.example.micaja.models.TipoOperacionXFecha
@@ -65,11 +65,9 @@ interface ConexionServiceTienda {
     @POST("/insertar_credito")
     suspend fun insertar_credito(@Body credito: Credito): Response<Void>
 
-    @POST("ConsultarEstadisticas")
+    @POST("/consultarEstadisticas")
     suspend fun consultarXFecha(@Body request: ConsultarOperaXFecha): Response<List<TipoOperacionXFecha>>
 
-    @POST ("numerocredito")
-    suspend fun numeroCredito(@Body request: ConsultarOperaXFecha): Response<NumeroCreditosResponse>
 
     @POST ("/crearcosto")
     suspend fun compra_Mercancia(@Body request: costoDetectado): Response<costoDetectado>
@@ -97,6 +95,9 @@ interface ConexionServiceTienda {
 
     @POST("consultaCedulaTendero")
     suspend fun buscarTendero(@Body consulta: ConsultaCedulaTendero): Response<Tendero>
+
+    @POST("/registrar_compra")
+    suspend fun addProducto(@Body body: Producto): Response<Producto>
 
 
 

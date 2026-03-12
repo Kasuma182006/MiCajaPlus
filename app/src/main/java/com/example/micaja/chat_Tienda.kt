@@ -279,6 +279,8 @@ class chat_Tienda : AppCompatActivity() {
                             val esCompra = diccionario["compra"]?.any { palabras.contains(it) } == true
                             val esAbono = diccionario["abono"]?.any { palabras.contains(it) } == true
                             val esCredito = diccionario["credito"]?.any { palabras.contains(it) } == true
+                            val esAgregar = diccionario["agregar producto"]?.any { palabras.contains(it) } == true
+
 
                             if (esVenta && esCredito){
                                 procesarCompra(mensaje)
@@ -293,6 +295,7 @@ class chat_Tienda : AppCompatActivity() {
                                 model.addMensajeSistema(modelo("¡Venta iniciada! Dicta los productos uno a uno o di 'fin'."))
                             }else if (esAbono){
                                 procesarAbonos(mensaje)
+                            }else if(esAgregar){
                             }
                         } else {
                             model.addMensajeSistema(modelo("No se pudo detectar la operación, por favor vuelve a intentarlo"))

@@ -102,7 +102,7 @@ class Login : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val apiService = ConexionServiceTienda.create()
-                val registrarNuevoTendero = Tendero(cedula = cedula, telefono = telefono, nombre = "")
+                val registrarNuevoTendero = Tendero(cedula = cedula, telefono = telefono, nombre = "", fechaCreacion = "")
                 val response = apiService.login(registrarNuevoTendero)
 
                 withContext(Dispatchers.Main) {
@@ -116,6 +116,7 @@ class Login : AppCompatActivity() {
                         editor.putBoolean("logueado", true)
                         editor.putString("cedula", cedula)
                         editor.putString("nombre", tendero.nombre)
+                        editor.putString("telefono", tendero.telefono)
                         editor.apply()
 
                         Toast.makeText(

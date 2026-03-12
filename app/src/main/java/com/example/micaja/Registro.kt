@@ -48,6 +48,9 @@ class Registro : AppCompatActivity() {
                 binding.inputNombre.error = "El nombre solo debe contener letras"
             } else {
                 binding.inputNombre.error = null
+                if(texto.length > 20){
+                    binding.inputNombre.error = "El nombre debe tener menos de 20 caracteres"
+                }
             }
         }
         binding.inputCedula.addTextChangedListener {
@@ -68,6 +71,9 @@ class Registro : AppCompatActivity() {
                 binding.inputTelefono.error = "El teléfono solo debe contener números"
             } else {
                 binding.inputTelefono.error = null
+                if (texto.length > 10) {
+                    binding.inputTelefono.error = "Longitud permitida: 10 dígitos"
+                }
             }
         }
         configurarBotones()
@@ -97,7 +103,7 @@ class Registro : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val apiServicer = ConexionServiceTienda.create()
-                val registrarNuevoTendero = Tendero(cedula = cedula, telefono = telefono , nombre = nombre)
+                val registrarNuevoTendero = Tendero(cedula = cedula, telefono = telefono , nombre = nombre, fechaCreacion = "")
                 val responset = apiServicer.login(registrarNuevoTendero)
 
 
@@ -113,7 +119,7 @@ class Registro : AppCompatActivity() {
                 }
 
                 val apiService = ConexionServiceTienda.create()
-                val nuevoTendero = Tendero(cedula = cedula, telefono = telefono, nombre = nombre)
+                val nuevoTendero = Tendero(cedula = cedula, telefono = telefono, nombre = nombre, fechaCreacion = "")
                 val response = apiService.addTendero(nuevoTendero)
 
                 withContext(Dispatchers.Main) {

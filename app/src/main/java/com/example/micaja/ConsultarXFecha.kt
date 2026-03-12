@@ -1,8 +1,10 @@
 package com.example.micaja.Calendario
 
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +14,10 @@ import com.example.micaja.R
 import com.example.micaja.chat_Tienda
 import com.example.micaja.databinding.ConsultarXFechaBinding
 import com.example.micaja.viewmodel.OperacionesViewModel
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.CompositeDateValidator
+import com.google.android.material.datepicker.DateValidatorPointBackward
+import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
@@ -20,6 +26,7 @@ import java.time.ZoneId
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
+import java.time.LocalDate
 
 class ConsultarXFecha : AppCompatActivity() {
 
@@ -35,6 +42,7 @@ class ConsultarXFecha : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ConsultarXFechaBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
 
         configurarBotones()
         observarDatos()
@@ -57,7 +65,6 @@ class ConsultarXFecha : AppCompatActivity() {
 
     private fun consultarBalance(idTendero: String, fechaInicial: String, fechaFin: String) {
         operacionesViewModel.consultarEstadisticas(idTendero, fechaInicial, fechaFin)
-        operacionesViewModel.consultarNumeroCreditos(idTendero, fechaInicial, fechaFin)
     }
 
     fun observarDatos() {
@@ -66,13 +73,18 @@ class ConsultarXFecha : AppCompatActivity() {
                 val ventas = datos.ventas?.toIntOrNull() ?: 0
                 val gastos = datos.gastos?.toIntOrNull() ?: 0
                 val costos = datos.costos?.toIntOrNull() ?: 0
+                val ncreditos = datos.ncreditos?.toIntOrNull() ?: 0
+                val valorCredito = datos.valorCredito?.toIntOrNull() ?: 0
 
-                val respuesta = ventas - gastos - costos
-                val utilidad  = respuesta
+
+
+                val utilidad  = (ventas + valorCredito) - (gastos + costos)
 
                 binding.tvVentas.text   = "$$ventas"
                 binding.tvGastos.text   = "$$gastos"
                 binding.tvCostos.text   = "$$costos"
+                binding.tvFiados.text   = "$ncreditos"
+
 
                 // Formatear texto de utilidad (ejemplo simple)
                 val utilidadTexto = "$$utilidad"
@@ -108,59 +120,82 @@ class ConsultarXFecha : AppCompatActivity() {
     }
 
     private fun mostrarCalendario(esFechaInicial: Boolean) {
+        val prefs = getSharedPreferences("SesionTendero", Context.MODE_PRIVATE)
+
+
+        val hoyMs = MaterialDatePicker.todayInUtcMilliseconds()
+
+        // 2. Obtener la fecha de registro (Mínimo) y convertirla a Long
+        val fechaRegistroStr = prefs.getString("fecha", null)
+        Log.d("fecha", fechaRegistroStr.toString())
+        val fechaMinimaMs: Long = if (fechaRegistroStr != null) {
+            try {
+                val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                sdf.timeZone = TimeZone.getTimeZone("UTC")
+                sdf.parse(fechaRegistroStr)?.time ?: hoyMs //convertidor de string a Date
+            } catch (e: Exception) {
+                hoyMs
+            }
+        } else {
+            hoyMs
+        }
+
+        // 3. Definir las RESTRICCIONES (Antes de crear el picker)
+        val constraints = CalendarConstraints.Builder()
+            .setStart(fechaMinimaMs) // Mes donde empieza el calendario
+            .setEnd(hoyMs)           // Mes donde termina
+            .setValidator(CompositeDateValidator.allOf(listOf(
+                DateValidatorPointForward.from(fechaMinimaMs), // Bloquea antes del registro
+                DateValidatorPointBackward.before(hoyMs)       // Bloquea después de hoy
+            )))
+            .build()
+
+        // 4. Construir el Picker usando las restricciones
         val dateRangePicker = MaterialDatePicker.Builder.datePicker()
             .setTitleText("Selecciona la fecha")
+            .setCalendarConstraints(constraints) // Aplicamos los bloqueos aquí
             .build()
 
         dateRangePicker.addOnPositiveButtonClickListener { selection ->
-            val formato = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            formato.timeZone = TimeZone.getTimeZone("UTC")
+            // "selection" ya es un Long con los milisegundos de la fecha elegida
+            val formatoEnvio = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            formatoEnvio.timeZone = TimeZone.getTimeZone("UTC")
 
-            val fechaSeleccionada = formato.format(Date(selection))
+            val fechaSeleccionada = formatoEnvio.format(Date(selection))
 
-
+            // Lógica de asignación de fechas inicial/final
             if (esFechaInicial) {
                 fechaInicial = "$fechaSeleccionada 00:00:00"
             } else {
                 fechaFinal = "$fechaSeleccionada 23:59:59"
             }
 
+            // Ajustar nulos
             if (fechaInicial != null && fechaFinal == null) {
                 fechaFinal = fechaInicial!!.replace("00:00:00", "23:59:59")
-            }
-
-            if (fechaFinal != null && fechaInicial == null) {
+            } else if (fechaFinal != null && fechaInicial == null) {
                 fechaInicial = fechaFinal!!.replace("23:59:59", "00:00:00")
-            }else{
-                fechaInicial = fechaInicial
-                fechaFinal = fechaFinal
             }
 
-            val fechaInicioSoloDia = fechaInicial!!.substring(0, 10)
-            val fechaFinSoloDia = fechaFinal!!.substring(0, 10)
+            // Actualizar UI
+            val fechaInicioSoloDia = fechaInicial?.substring(0, 10) ?: ""
+            val fechaFinSoloDia = fechaFinal?.substring(0, 10) ?: ""
 
-            binding.tvRangoFecha.text =
-                if (fechaInicioSoloDia == fechaFinSoloDia) {
-                    fechaInicioSoloDia
-                }else{
-                    "$fechaInicioSoloDia - $fechaFinSoloDia"
-                }
+            binding.tvRangoFecha.text = if (fechaInicioSoloDia == fechaFinSoloDia) {
+                fechaInicioSoloDia
+            } else {
+                "$fechaInicioSoloDia - $fechaFinSoloDia"
+            }
+
+            Log.d("fecha", fechaInicial.toString())
+            Log.d("fecha", fechaFinal.toString())
 
 
-
-            val prefs = getSharedPreferences("SesionTendero", MODE_PRIVATE)
+            // Consultar balance
             val tendero = prefs.getString("cedula", null)
-
-
-            if (tendero.isNullOrEmpty()) {
-                Toast.makeText(this, "Error: No se encontró la sesión del tendero", Toast.LENGTH_LONG).show()
-                return@addOnPositiveButtonClickListener
+            if (!tendero.isNullOrEmpty()) {
+                consultarBalance(tendero, fechaInicial!!, fechaFinal!!)
             }
-
-            val idTendero = tendero
-
-
-            consultarBalance(idTendero, fechaInicial.toString(), fechaFinal.toString())
         }
 
         dateRangePicker.show(supportFragmentManager, "DATE_RANGE_PICKER")

@@ -25,7 +25,7 @@ class OperacionesViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val api = ConexionServiceTienda.create()
-                val request = ConsultarOperaXFecha(idTendero, fechaInicial, fechaFin, precio = null)
+                val request = ConsultarOperaXFecha(idTendero, fechaInicial, fechaFin)
                 val responseEstadisticas = api.consultarXFecha(request)
                 if (responseEstadisticas.isSuccessful) {
                     val lista = responseEstadisticas.body()
@@ -35,29 +35,12 @@ class OperacionesViewModel : ViewModel() {
                         mensajeError.postValue("No existen datos en ese rango de fechas")
                     }
                 } else {
-                    mensajeError.postValue("Error en estadísticas: ${responseEstadisticas.code()}")
+                    mensajeError.postValue("Error de estadisticas")
                 }
             } catch (e: Exception) {
-                mensajeError.postValue("Error: ${e.message}")
+                mensajeError.postValue("Error de conexion intenta mas tarde")
             }
         }
     }
 
-    fun consultarNumeroCreditos(idTendero: String, fechaInicial: String, fechaFin: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val api = ConexionServiceTienda.create()
-                val request = ConsultarOperaXFecha(idTendero, fechaInicial, fechaFin, precio = null)
-                val responseCreditos = api.numeroCredito(request)
-                if (responseCreditos.isSuccessful) {
-                    val cantidad = responseCreditos.body()?.Ncredito?.toIntOrNull()
-                    _numeroCreditos.postValue(cantidad)
-                } else {
-                    mensajeError.postValue("Error en número de créditos: ${responseCreditos.code()}")
-                }
-            } catch (e: Exception) {
-                mensajeError.postValue("Error: ${e.message}")
-            }
-        }
-    }
 }
