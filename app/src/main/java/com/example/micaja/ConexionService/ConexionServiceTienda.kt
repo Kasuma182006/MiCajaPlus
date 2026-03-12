@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.micaja.models.ActualizarCliente
 import com.example.micaja.models.BuscarProductos
 import com.example.micaja.models.ClienteCompleto
+import com.example.micaja.models.ConsultaCedulaTendero
 import com.example.micaja.models.ConsultarOperaXFecha
 import com.example.micaja.models.Credito
 import com.example.micaja.models.DatosAbono
@@ -20,9 +21,6 @@ import com.example.micaja.models.clienteAbono
 import com.example.micaja.models.clienteNuevo
 import com.example.micaja.models.compra_Mercancia
 import com.example.micaja.models.consultarIn
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.withContext
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -41,6 +39,11 @@ interface ConexionServiceTienda {
     @POST("addtendero")
     @Headers("Content-Type: application/json")
     suspend fun addTendero(@Body tendero: Tendero): Response<Tendero>
+
+    @POST("consultaCedulaTendero")
+    suspend fun buscarTendero(@Body consulta: ConsultaCedulaTendero): Response<Tendero>
+
+
 
     /////ABONOS
     @POST("consultarcliente")
@@ -91,7 +94,7 @@ interface ConexionServiceTienda {
 
     suspend fun consultarInv(@Body body: consultarIn): Response<consultarIn>
     companion object messi {
-        private const val BASE_URL = "http://10.6.127.96:4000"
+        private const val BASE_URL = "http://10.81.185.9:4000/"
 
         fun create(): ConexionServiceTienda {
             val retrofit = Retrofit.Builder()

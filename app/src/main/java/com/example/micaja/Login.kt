@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.widget.addTextChangedListener
 import com.example.micaja.ConexionService.ConexionServiceTienda
 import com.example.micaja.databinding.LoginBinding
 import com.example.micaja.models.Tendero
@@ -47,7 +48,34 @@ class Login : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
+        binding.cedulaInput.addTextChangedListener {
+            val texto = it.toString()
+            val textoSoloNumeros = texto.replace(Regex("[^0-9]"), "")
+            if (texto.isNotEmpty() && texto != textoSoloNumeros){
+                binding.cedulaInput.error = "La cédula solo debe contener números"
+            } else {
+                binding.cedulaInput.error = null
+                if (texto.length>10){
+                    binding.cedulaInput.error = "La cédula debe tener una longitud máxima de 10 dígitos."
+                }else{
+                    binding.cedulaInput.error = null
+                }
+            }
+        }
+        binding.telefonoInput.addTextChangedListener{
+            val texto = it.toString()
+            val textoSoloNumeros = texto.replace(Regex("[^0-9]"), "")
+            if (texto.isNotEmpty() && texto != textoSoloNumeros){
+                binding.telefonoInput.error = "El teléfono solo debe contener números"
+            }else{
+                binding.telefonoInput.error = null
+                if(texto.length>10){
+                    binding.telefonoInput.error = "Longitud permitida: 10 dígitos"
+                }else{
+                    binding.telefonoInput.error = null
+                }
+            }
+        }
         configurarBotones()
     }
 
@@ -62,8 +90,12 @@ class Login : AppCompatActivity() {
         val telefono = binding.telefonoInput.text.toString().trim()
 
         if (cedula.isEmpty() || telefono.isEmpty()) {
-            Toast.makeText(this, "Por favor diligencie todos los campos.", Toast.LENGTH_SHORT)
-                .show()
+            Toast.makeText(this, "Por favor diligencie todos los campos.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if(binding.cedulaInput.error != null || binding.telefonoInput.error != null){
+            Toast.makeText(this,"Por favor verifique los campos.", Toast.LENGTH_SHORT).show()
             return
         }
 

@@ -2,6 +2,7 @@ package com.example.micaja
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -9,13 +10,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import com.example.micaja.ConexionService.ConexionServiceTienda
 import com.example.micaja.databinding.RegistroBinding
+import com.example.micaja.models.ConsultaCedulaTendero
 import com.example.micaja.models.Tendero
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import androidx.core.widget.addTextChangedListener
 
 class Registro : AppCompatActivity() {
 
@@ -37,7 +41,35 @@ class Registro : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
+        binding.inputNombre.addTextChangedListener {
+            val texto = it.toString()
+            val textoSoloLetras = texto.replace(Regex("[^a-zA-ZñÑ ]"), "")
+            if (texto.isNotEmpty() && texto != textoSoloLetras) {
+                binding.inputNombre.error = "El nombre solo debe contener letras"
+            } else {
+                binding.inputNombre.error = null
+            }
+        }
+        binding.inputCedula.addTextChangedListener {
+            val texto = it.toString()
+            val textoSoloNumeros = texto.replace(Regex("[^0-9]"), "")
+            if (texto.isNotEmpty() && texto != textoSoloNumeros) {
+                binding.inputCedula.error = "La cédula solo debe contener números"
+            } else {
+                if (texto.length == 10) {
+                    validarExistenciaCedula(texto)
+                }
+            }
+        }
+        binding.inputTelefono.addTextChangedListener {
+            val texto = it.toString()
+            val textoSoloNumeros = texto.replace(Regex("[^0-9]"), "")
+            if (texto.isNotEmpty() && texto != textoSoloNumeros) {
+                binding.inputTelefono.error = "El teléfono solo debe contener números"
+            } else {
+                binding.inputTelefono.error = null
+            }
+        }
         configurarBotones()
     }
 
@@ -47,13 +79,18 @@ class Registro : AppCompatActivity() {
     }
 
     private fun registrarTendero() {
-        val nombre= binding.inputNombre.text.toString().trim().lowercase()
+        val nombre = binding.inputNombre.text.toString().trim().lowercase()
         val cedula = binding.inputCedula.text.toString().trim()
         val telefono = binding.inputTelefono.text.toString().trim()
 
 
         if (cedula.isEmpty() || telefono.isEmpty() || nombre.isEmpty()) {
             Toast.makeText(this, "Por favor diligencie los dos campos.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (binding.inputNombre.error != null || binding.inputCedula.error != null || binding.inputTelefono.error != null) {
+            Toast.makeText(this, "Por favor verifique los campos.", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -94,15 +131,33 @@ class Registro : AppCompatActivity() {
 
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(
-                        this@Registro,
-                        "Error de conexión: ${e.localizedMessage}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(this@Registro, "Error de conexión: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
+    private fun validarExistenciaCedula(cedula: String) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val apiService = ConexionServiceTienda.create()
+                val consultaCedula = ConsultaCedulaTendero(cedula)
+                val respuesta = apiService.buscarTendero(consultaCedula)
+
+                withContext(Dispatchers.Main) {
+                    if (respuesta.isSuccessful && respuesta.body() != null) {
+                        binding.inputCedula.error = "Esta cédula ya existe"
+                        binding.btnRegistrar.isEnabled = false
+                    } else {
+                        binding.inputCedula.error = null
+                        binding.btnRegistrar.isEnabled = true
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("Registro", "Error al validar la cédula", e)
+            }
+        }
+    }
+
 
     private fun irALogin() {
         startActivity(Intent(this, Login::class.java))

@@ -8,6 +8,11 @@ data class Tendero(
     @SerializedName("nombre") val nombre: String
 )
 
+
+data class ConsultaCedulaTendero(
+    val cedula: String
+)
+
 data class cliente(
     val cedula: String?=null,
     val nombre: String?=null,
