@@ -178,14 +178,9 @@ class ConsultarXFecha : AppCompatActivity() {
             }
 
             // Actualizar UI
-            val fechaInicioSoloDia = fechaInicial?.substring(0, 10) ?: ""
-            val fechaFinSoloDia = fechaFinal?.substring(0, 10) ?: ""
+//            val fechaInicioSoloDia = fechaInicial?.substring(0, 10) ?: ""
+//            val fechaFinSoloDia = fechaFinal?.substring(0, 10) ?: ""
 
-            binding.tvRangoFecha.text = if (fechaInicioSoloDia == fechaFinSoloDia) {
-                fechaInicioSoloDia
-            } else {
-                "$fechaInicioSoloDia - $fechaFinSoloDia"
-            }
 
             Log.d("fecha", fechaInicial.toString())
             Log.d("fecha", fechaFinal.toString())
