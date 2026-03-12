@@ -139,12 +139,12 @@ class ConsultarXFecha : AppCompatActivity() {
             val fechaInicioSoloDia = fechaInicial!!.substring(0, 10)
             val fechaFinSoloDia = fechaFinal!!.substring(0, 10)
 
-            binding.tvRangoFecha.text =
-                if (fechaInicioSoloDia == fechaFinSoloDia) {
-                    fechaInicioSoloDia
-                }else{
-                    "$fechaInicioSoloDia - $fechaFinSoloDia"
-                }
+//            binding.tvRangoFecha.text =
+//                if (fechaInicioSoloDia == fechaFinSoloDia) {
+//                    fechaInicioSoloDia
+//                }else{
+//                    "$fechaInicioSoloDia - $fechaFinSoloDia"
+//                }
 
 
 

@@ -29,7 +29,7 @@ class Login : AppCompatActivity() {
 
         if (logueado) {
             // Ya está logueado, ir directamente a Principal
-            startActivity(Intent(this, Principal::class.java))
+            startActivity(Intent(this, chat_Tienda::class.java))
             finish()
             return
         }

@@ -231,7 +231,8 @@ class chat_Tienda : AppCompatActivity() {
             binding.messageInput.setText("")
 
             model.addMensaje(modelo(mensaje))
-            WindowInsetsControllerCompat(window, binding.messageInput).hide(WindowInsetsCompat.Type.ime())
+            WindowInsetsControllerCompat(window, binding.messageInput)
+                .hide(WindowInsetsCompat.Type.ime())
 
             val textoLimpio = mensaje.replace(Regex("""(\d)[.,](\d{3})\b"""), "$1$2").lowercase()
             val palabras = textoLimpio.split(Regex("""[\s,.:]+"""))

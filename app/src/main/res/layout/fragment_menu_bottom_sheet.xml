@@ -43,7 +43,9 @@
             android:paddingEnd="8dp"
             android:clickable="true"
             android:focusable="true"
-            android:background="?attr/selectableItemBackground">
+            android:background="?attr/selectableItemBackground"
+            app:cardCornerRadius="38dp"
+            >
 
             <ImageView
                 android:layout_width="24dp"
@@ -98,9 +100,11 @@
             android:layout_marginBottom="12dp"
             android:clickable="true"
             android:focusable="true"
+            app:cardElevation="0dp"
+            app:cardMaxElevation="0dp"
             app:cardBackgroundColor="@color/Target_principal"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="3dp">
+            app:cardCornerRadius="33dp"
+            >
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -170,8 +174,9 @@
             android:clickable="true"
             android:focusable="true"
             app:cardBackgroundColor="@color/Target_principal"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="3dp">
+            app:cardCornerRadius="38dp"
+            app:cardElevation="0dp"
+            app:cardMaxElevation="0dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -241,8 +246,9 @@
             android:clickable="true"
             android:focusable="true"
             app:cardBackgroundColor="@color/Target_principal"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="3dp">
+            app:cardCornerRadius="38dp"
+            app:cardElevation="0dp"
+            app:cardMaxElevation="0dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 xmlns:app="http://schemas.android.com/apk/res-auto"

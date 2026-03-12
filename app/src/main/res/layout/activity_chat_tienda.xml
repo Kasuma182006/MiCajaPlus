@@ -47,22 +47,22 @@
 
         <ImageView
             android:id="@+id/btn_menu"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="12dp"
+            android:layout_width="35dp"
+            android:layout_height="45dp"
+            android:layout_marginEnd="8dp"
             android:contentDescription="Menú"
             android:src="@drawable/ic_menu_hamburges"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            />
 
         <ImageView
             android:id="@+id/Logo_app"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_marginTop="4dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:src="@drawable/logo_app"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.023"
+            android:layout_marginStart="8dp"
+            app:layout_constraintEnd_toStartOf="@id/Logo_app"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -73,13 +73,13 @@
             android:layout_marginTop="10dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="Buen Día"
+            android:text="Buen día"
             android:textColor="@color/colorOnSecondary"
             android:textSize="26sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_menu"
             app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/Logo_app"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

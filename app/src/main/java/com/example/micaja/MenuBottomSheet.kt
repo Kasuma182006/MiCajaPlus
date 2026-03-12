@@ -40,7 +40,7 @@ class MenuBottomSheet(
         binding.menuBtnEditarCliente.setOnClickListener {
             dismiss()
 //            // TODO: reemplaza editar_clientes::class.java por tu Activity real
-//            startActivity(Intent(requireContext(), editar_clientes::class.java))
+          startActivity(Intent(requireContext(), editar_clientes::class.java))
         }
 
         //Editar Producto
