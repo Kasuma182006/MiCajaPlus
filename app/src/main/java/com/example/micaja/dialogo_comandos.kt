@@ -1,11 +1,10 @@
 package com.example.micaja
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager   // ← reemplaza LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.micaja.databinding.FragmentDialogoComandosBinding
 import com.example.micaja.databinding.ItemComandoBinding
@@ -17,49 +16,48 @@ class dialogo_comandos : BottomSheetDialogFragment() {
     private var _binding: FragmentDialogoComandosBinding? = null
     private val binding get() = _binding!!
 
-
-
-
     private val comandosConVariantes = mapOf(
         "Abrir tienda" to listOf(
-            "abierto","iniciar","inicio","abrir","abriendo",
-            "comenzar","comienzo","arrancar","empezar","empezemos",
-            "dia","día","Ej: 'Abrir' tienda"
+            "abierto", "iniciar", "inicio", "abrir", "abriendo",
+            "comenzar", "comienzo", "arrancar", "empezar", "empezemos",
+            "dia", "día", "Ej: 'Abrir' tienda"
         ),
         "Registrar base inicial" to listOf(
-            "base","base inicial","registrar base",
+            "base", "base inicial", "registrar base",
             "Ej: 'Base' \$ 25000"
         ),
         "Registrar venta" to listOf(
-            "venta","ventas","vendí","vendiendo","vender","vendido",
-            "vendieron","vendo","vendió","vendimos","vende","vendes",
-            "vendidos","ingreso","ingresos","Ej: 'Venta' \$ 50000"
+            "venta", "ventas", "vendí", "vendiendo", "vender", "vendido",
+            "vendieron", "vendo", "vendió", "vendimos", "vende", "vendes",
+            "vendidos", "ingreso", "ingresos", "Ej: 'Venta' \$ 50000"
         ),
         "Registrar gasto" to listOf(
-            "gasto","gasté","gastando","gastos","gasta","gastaron",
-            "gastamos","gastan","gasten","gastemos","gastó",
-            "egresos","Ej: 'gaste' \$ 30000"
+            "gasto", "gasté", "gastando", "gastos", "gasta", "gastaron",
+            "gastamos", "gastan", "gasten", "gastemos", "gastó",
+            "egresos", "Ej: 'gaste' \$ 30000"
         ),
         "Registrar costo" to listOf(
-            "costo","costos","pago","pagos","pagué","pagando","pagamos",
-            "paguen","pague","compra","compré","proveedor","proveedores",
-            "paguemos","Ej: 'pague' \$ 70000 a alpina"
+            "costo", "costos", "pago", "pagos", "pagué", "pagando", "pagamos",
+            "paguen", "pague", "compra", "compré", "proveedor", "proveedores",
+            "paguemos", "Ej: 'pague' \$ 70000 a alpina"
         ),
         "Cerrar tienda" to listOf(
-            "cerrar","cerrando","final","terminar","finalizar","fin",
-            "end","cierre","acabar","Ej: 'Cerrar' tienda"
+            "cerrar", "cerrando", "final", "terminar", "finalizar", "fin",
+            "end", "cierre", "acabar", "Ej: 'Cerrar' tienda"
         ),
         "Registrar crédito o abono" to listOf(
-            "credito","crédito","créditos","creditos","fiado","fiados",
-            "fiar","adelanto","abono","abonando","cuota","abonos",
-            "abonó","adelantó","pagó","saldó","saldar",
-            "Ej: 'Credito'","Ej: 'Abono'"
-        ),"Agregar producto" to listOf
-            ("agregar producto", "añadir producto" ,"nuevo producto", "producto nuevo"),
-        "Agregar cliente" to listOf
-            ("agregar nombre", "añadir cliente", "cliente nuevo", "nuevo cliente"),
+            "credito", "crédito", "créditos", "creditos", "fiado", "fiados",
+            "fiar", "adelanto", "abono", "abonando", "cuota", "abonos",
+            "abonó", "adelantó", "pagó", "saldó", "saldar",
+            "Ej: 'Credito'", "Ej: 'Abono'"
+        ),
+        "Agregar producto" to listOf(
+            "agregar producto", "añadir producto", "nuevo producto", "producto nuevo", "Ej: nuevo Producto"
+        ),
+        "Agregar cliente" to listOf(
+            "agregar nombre", "añadir cliente", "cliente nuevo", "nuevo cliente", "Ej: nuevo Cliente"
+        ),
     )
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,17 +68,16 @@ class dialogo_comandos : BottomSheetDialogFragment() {
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.cerrar.setOnClickListener {
-            dismiss() // Esto cierra el BottomSheet
-        }
+        binding.cerrar.setOnClickListener { dismiss() }
 
         val comandos = comandosConVariantes.keys.toList()
 
-        binding.listaComandos.layoutManager = LinearLayoutManager(requireContext())
+
+        binding.listaComandos.layoutManager = GridLayoutManager(requireContext(), 2)
+
         binding.listaComandos.adapter = ComandosAdapter(comandos) { comandoSeleccionado ->
             val variantes = comandosConVariantes[comandoSeleccionado] ?: emptyList()
             VariantesBottomSheet
@@ -92,7 +89,6 @@ class dialogo_comandos : BottomSheetDialogFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-
     }
 
 
@@ -113,20 +109,19 @@ class dialogo_comandos : BottomSheetDialogFragment() {
         override fun getItemCount() = items.size
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val comando  = items[position]
+            val comando   = items[position]
             val variantes = comandosConVariantes[comando] ?: emptyList()
 
             with(holder.b) {
-
-
-                // Nombre
+                // Nombre del comando — centrado en la card (gravity="center" en el XML)
                 tvNombreComando.text = comando
 
-                // Ejemplo: último ítem que empiece con "Ej:"
+                // Chip ejemplo: última variante que empiece con "Ej:", o la primera si no hay
                 tvEjemplo.text = variantes.lastOrNull { it.startsWith("Ej:") }
                     ?: variantes.firstOrNull()
                             ?: ""
 
+                // Tap en cualquier parte de la card → abre VariantesBottomSheet
                 root.setOnClickListener { onClick(comando) }
             }
         }
@@ -161,26 +156,22 @@ class VariantesBottomSheet : BottomSheetDialogFragment() {
         val comando   = arguments?.getString(ARG_COMANDO) ?: ""
         val variantes = arguments?.getStringArrayList(ARG_VARIANTES) ?: arrayListOf()
 
-        // Título
         view.findViewById<android.widget.TextView>(R.id.tvTituloVariantes).text = comando
 
-        // Chips
         val chipGroup = view.findViewById<com.google.android.material.chip.ChipGroup>(
             R.id.chipGroupVariantes
         )
 
         variantes.forEach { variante ->
             Chip(requireContext()).apply {
-                text          = variante
-                isClickable   = false
-                isCheckable   = false
+                text        = variante
+                isClickable = false
+                isCheckable = false
 
                 if (variante.startsWith("Ej:")) {
-                    // Ejemplo morado oscuro para destacar
                     setChipBackgroundColorResource(R.color.btn_registrarse)
                     setTextColor(resources.getColor(android.R.color.white, null))
                 } else {
-                    // Variante normal lavanda claro
                     setChipBackgroundColorResource(R.color.colorPrimary)
                     setTextColor(resources.getColor(R.color.colorOnSecondary, null))
                 }

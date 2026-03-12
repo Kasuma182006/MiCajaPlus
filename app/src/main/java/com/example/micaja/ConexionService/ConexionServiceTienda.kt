@@ -105,14 +105,14 @@ interface ConexionServiceTienda {
 
     // para editar cliente
 
-    @POST("consultarclienteedit")
+    @POST("consultarcliente")
     suspend fun consultarClienteEdit(@Body datos: Identificacion): Response<ClienteCompleto>
 
     @POST("actualizar_cliente")
     suspend fun actualizarCliente(@Body datos: ActualizarCliente): Response<Map<String, String>>
 
     companion object messi {
-        private const val BASE_URL = "http://192.168.12.101:4000/"
+        private const val BASE_URL = "http://192.168.1.4:4000"
 
         fun create(): ConexionServiceTienda {
             val retrofit = Retrofit.Builder()

@@ -1,6 +1,5 @@
 package com.example.micaja
 
-import BuscarProductoDialog
 import android.os.Bundle
 import android.util.Log
 import android.util.Log.e
@@ -11,10 +10,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.example.micaja.ConexionService.ConexionServiceTienda
 import com.example.micaja.databinding.ActivityFragmentEditarProductoBinding
 import com.example.micaja.models.BuscarProductos
 import com.example.micaja.models.EditarProducto
+import com.example.micaja.ui.dialogs.BuscarProductoDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
@@ -55,6 +56,9 @@ class fragment_editar_producto : AppCompatActivity() {
 
         binding.btnBuscarProducto.setOnClickListener {
             buscarProducto(binding)
+            // Ocultar el teclado al presionar enviar
+            WindowInsetsControllerCompat(window, binding.btnBuscarProducto)
+                .hide(WindowInsetsCompat.Type.ime())
         }
 
 
@@ -80,7 +84,7 @@ class fragment_editar_producto : AppCompatActivity() {
                         val response = conexionService.buscarProductos(buscarProductos)
 
                         if (response.isSuccessful && response.body() != null) {
-                             lista = response.body()!!
+                            lista = response.body()!!
 
 
                             launch(Dispatchers.Main) {
@@ -92,7 +96,7 @@ class fragment_editar_producto : AppCompatActivity() {
                                     binding.btnGuardarProducto.isEnabled = true
                                     binding.cvFormulario.alpha = 1f
                                     binding.btnGuardarProducto.setOnClickListener {
-                                        editarProducto(binding,seleccionado )
+                                        editarProducto(binding, seleccionado)
                                     }
                                 }
                                 dialog.show(supportFragmentManager, "buscar_producto")
