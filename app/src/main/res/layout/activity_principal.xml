@@ -111,8 +111,8 @@
                     android:contentDescription="Tienda"
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_chat_vz"
-                    android:tint="@color/colorSecondary"
-                     />
+                    app:tint="@color/colorSecondary" />
+
 
             </androidx.cardview.widget.CardView>
 

@@ -2,7 +2,9 @@ package com.example.micaja.Operaciones
 
 import android.util.Log
 import com.example.micaja.ConexionService.ConexionServiceTienda
+import com.example.micaja.models.OperacionesInventario
 import com.example.micaja.models.Venta
+import com.example.micaja.models.ventaDetectada
 import java.text.Normalizer
 
 class OperacionVenta() {
@@ -23,7 +25,7 @@ class OperacionVenta() {
         // Palabras de acción que deben eliminarse para no ensuciar el nombre del producto
         val limpiarN = listOf(
             "vendi", "vende", "venta", "un", "una", "de", "del",
-            "por", "el", "la", "los", "las", "me", "compraron", "salio", "pago"
+            "por", "el", "la", "los", "las", "me", "compraron", "salio", "pago","s","S"
         )
 
         // Mapa para convertir dictado de voz a números procesables
@@ -50,13 +52,19 @@ class OperacionVenta() {
         return resultado
     }
 
-    suspend fun procesarListaProductos(texto: String, cedula: String, fin_credito: Boolean, idCliente: String): String {
+    suspend fun procesarListaProductos(texto: String, cedula: String, fin_credito: Boolean, idCliente: String = "", idTendero: String): String {
         // Paso fundamental: Limpiar la entrada de voz antes de procesar
         val textoLimpio = normalizarTexto(texto)
+        if (textoLimpio.contains("fin") || fin_credito) {
+            this.inicio = false
 
-        if (fin_credito) {
-            return "Perfecto, el crédito se ha registrado con éxito"
+            return if (idCliente.isNotEmpty() && idCliente != idTendero) {
+                "¡Listo! El crédito se ha registrado con éxito para el cliente."
+            } else {
+                "Venta de contado finalizada correctamente."
+            }
         }
+
 
         val datos = extraerDatosProducto(textoLimpio)
 
@@ -66,13 +74,36 @@ class OperacionVenta() {
 
             Log.i("datos_procesados", "Nombre: $nombre, Pres: $pres, Cant: $cant")
 
-            val producto = Venta(nombre, pres, cant, cedula, idcliente = idCliente)
+
+            val producto = Venta(nombre, pres, cant, cedula,  idCliente)
             val respuesta = conexion.registrarVenta(producto)
 
-            if (respuesta.body() == "resultado") {
-                return "• $cant $pres de $nombre registrado. ¿Algo más? (o di 'fin')"
-            } else if (respuesta.body() == "sinResultado") {
-                return "El producto no está registrado o no hay cantidades suficientes."
+            return try {
+                val conexion = ConexionServiceTienda.create()
+                val modelo = OperacionesInventario(idTendero, nombre, pres, cant, "descontar")
+                Log.d("modelo" , "modelo de datos ${modelo}")
+
+                val respuesta = conexion.operacionesInventario(modelo)
+
+                if (respuesta.isSuccessful && respuesta.body() != null) {
+
+                    val cuerpo = respuesta.body()
+                    Log.d("respuesta", "respuesta del servidor ${cuerpo}")
+
+
+                    val tipoVenta = if (idCliente.isNotEmpty() && idCliente != idTendero) "credito" else "efectivo"
+
+                    val modeloVenta = ventaDetectada(idTendero,texto,tipoVenta, nombre,cant)
+                    val respuestaVenta = conexion.ventaDetectada(modeloVenta)
+                    if (respuestaVenta.isSuccessful && respuestaVenta.body() != null){
+                        Log.d("venta", "venta registrada compita")
+                    }
+                    "• $cant $pres de $nombre registrado. ¿Algo más? (o di 'fin')"
+                } else {
+                    "El producto '$nombre' no existe en tu inventario. Verifica el nombre."
+                }
+            } catch (e: Exception) {
+                "Fuera de conexion intentalo de nuevo"
             }
         }
 
@@ -105,12 +136,13 @@ class OperacionVenta() {
                 break
             }
         }
+        val nombreSinS = texto.replace(Regex("(?i)\\b[s]\\b"), "").trim()
 
         // 4. LIMPIEZA FINAL DEL NOMBRE: Quitar espacios dobles y basura
-        val nombreFinal = texto.trim().replace(Regex("""\s+"""), " ")
+        val nombreFinal = nombreSinS.replace(Regex("""\s+"""), " ")
 
         return if (nombreFinal.isNotEmpty()) {
-            Triple(nombreFinal.replaceFirstChar { it.uppercase() }, unidadDetectada, cantidad)
+            Triple(nombreFinal, unidadDetectada, cantidad)
         } else {
             null
         }

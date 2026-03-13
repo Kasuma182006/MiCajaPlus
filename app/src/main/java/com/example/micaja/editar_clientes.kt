@@ -1,70 +1,110 @@
 package com.example.micaja
 
+import android.content.Context
 import android.os.Bundle
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.lifecycleScope
 import com.example.micaja.ConexionService.ConexionServiceTienda
 import com.example.micaja.databinding.ActivityEditarClientesBinding
-import com.example.micaja.models.cliente
-import kotlinx.coroutines.flow.MutableStateFlow
+import com.example.micaja.models.ActualizarCliente
+import com.example.micaja.models.Identificacion
+import kotlinx.coroutines.launch
 
 class editar_clientes : AppCompatActivity() {
+    private lateinit var binding: ActivityEditarClientesBinding
+    private val service = ConexionServiceTienda.create()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        // Forzar que la ventana deje que el sistema gestione insets (necesario para adjustResize)
+        WindowCompat.setDecorFitsSystemWindows(window, true)
+        // Forzar ajuste del layout cuando aparece el teclado
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
-        val binding = ActivityEditarClientesBinding.inflate(layoutInflater)
+        binding = ActivityEditarClientesBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+        // Recupera id del tendero desde la sesion iniciada en Login
+        val prefs = getSharedPreferences("SesionTendero", Context.MODE_PRIVATE)
+        val idTendero = prefs.getString("cedula", "") ?: ""
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        // Botón retroceso
-        binding.btnRetroceso.setOnClickListener {
-            finish()
+        binding.btnRetroceso.setOnClickListener { finish() }
+
+        binding.btnBuscarCliente.setOnClickListener {
+
+            val cedulaBusqueda = binding.etBuscarCliente.text.toString().trim()
+            if (cedulaBusqueda.isNotEmpty() && idTendero.isNotEmpty()) {
+                buscarCliente(cedulaBusqueda, idTendero)
+            } else {
+                Toast.makeText(this, "Ingresa una cédula válida", Toast.LENGTH_SHORT).show()
+            }
+            // Ocultar el teclado al presionar enviar
+        WindowInsetsControllerCompat(window, binding.btnBuscarCliente)
+            .hide(WindowInsetsCompat.Type.ime())
         }
 
-        // Botón Buscar Cliente
-        binding.btnBuscarCliente.setOnClickListener {
-            val cedulaCliente: String = binding.etBuscarCliente.text.toString().trim()
+        binding.btnGuardarCliente.setOnClickListener {
+            guardarCambios(idTendero)
+        }
+    }
 
-            if (cedulaCliente != "") {
-//                buscarCliente(binding, cedulaCliente)
-            } else {
-                Toast.makeText(this, "Por favor ingresa la cédula para buscar", Toast.LENGTH_SHORT).show()
+    private fun buscarCliente(cedula: String, idTendero: String) {
+        lifecycleScope.launch {
+            try {
+                val response = service.consultarClienteEdit(Identificacion(cedula, idTendero))
+                if (response.isSuccessful && response.body() != null) {
+                    val c = response.body()!!
+                    // Llena el formulario
+                    binding.etNombreCliente.setText(c.nombre)
+                    binding.etCedulaCliente.setText(c.cedula)
+                    binding.etTelefonoCliente.setText(c.telefono)
+                    binding.etValorCredito.setText(c.saldo?.toString())
+
+                    // Habilita edicion visualmente
+                    binding.cvFormulario.alpha = 1.0f
+                    binding.btnGuardarCliente.isEnabled = true
+                } else {
+                    Toast.makeText(this@editar_clientes, "Cliente no encontrado", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(this@editar_clientes, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
-
     }
 
+    private fun guardarCambios(idTendero: String) {
+        val datos = ActualizarCliente(
+            idTendero = idTendero,
+            cedula = binding.etCedulaCliente.text.toString(),
+            nombre = binding.etNombreCliente.text.toString(),
+            telefono = binding.etTelefonoCliente.text.toString(),
+            saldo = binding.etValorCredito.text.toString().toIntOrNull() ?: 0
+        )
 
-//    fun buscarCliente(binding: ActivityEditarClientesBinding, cedulaCliente: String) {
-//
-//        val clientes: MutableStateFlow<List<cliente>> = ConexionServiceTienda.obtenerClientes()
-//
-////        var encontrado = false
-//
-//        for (c in clientes.value) {
-//            if (c.cedula == cedulaCliente) {
-//                binding.etNombreCliente.setText(c.nombre)
-//                binding.etCedulaCliente.setText(c.cedula)
-//                binding.etTelefonoCliente.setText(c.celular)
-//                binding.etValorCredito.setText(c.total?.toString())
-//                binding.btnGuardarCliente.isEnabled = true
-////                encontrado = true
-//                break
-//            }
-//        }
-
-//        if (!encontrado) {
-//            Toast.makeText(this, "Cliente no encontrado", Toast.LENGTH_SHORT).show()
-//        }
-
+        lifecycleScope.launch {
+            try {
+                val response = service.actualizarCliente(datos)
+                if (response.isSuccessful) {
+                    Toast.makeText(this@editar_clientes, "Cliente actualizado con éxito", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(this@editar_clientes, "Error al guardar", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
-
+}
