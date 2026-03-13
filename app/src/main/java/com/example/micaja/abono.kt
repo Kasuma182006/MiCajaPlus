@@ -52,7 +52,7 @@ class Abonos {
         if (cedulaLimpia.length >= 7) {
             try {
                 val respuesta = withContext(Dispatchers.IO) {
-                    ConexionServiceTienda.create().consultarCliente(Identificacion(cedulaLimpia, idTendero))
+                    ConexionServiceTienda.create().consultarCliente(Identificacion(cedulaLimpia, idTendero), "consultarCliente")
                 }
                 if (respuesta.isSuccessful && respuesta.body()?.nombre != null) {
                     val cliente = respuesta.body()!!

@@ -35,7 +35,7 @@ class editar_clientes : AppCompatActivity() {
             val cedulaCliente: String = binding.etBuscarCliente.text.toString().trim()
 
             if (cedulaCliente != "") {
-                buscarCliente(binding, cedulaCliente)
+//                buscarCliente(binding, cedulaCliente)
             } else {
                 Toast.makeText(this, "Por favor ingresa la cédula para buscar", Toast.LENGTH_SHORT).show()
             }
@@ -44,23 +44,23 @@ class editar_clientes : AppCompatActivity() {
     }
 
 
-    fun buscarCliente(binding: ActivityEditarClientesBinding, cedulaCliente: String) {
-
-        val clientes: MutableStateFlow<List<cliente>> = ConexionServiceTienda.obtenerClientes()
-
-//        var encontrado = false
-
-        for (c in clientes.value) {
-            if (c.cedula == cedulaCliente) {
-                binding.etNombreCliente.setText(c.nombre)
-                binding.etCedulaCliente.setText(c.cedula)
-                binding.etTelefonoCliente.setText(c.celular)
-                binding.etValorCredito.setText(c.total?.toString())
-                binding.btnGuardarCliente.isEnabled = true
-//                encontrado = true
-                break
-            }
-        }
+//    fun buscarCliente(binding: ActivityEditarClientesBinding, cedulaCliente: String) {
+//
+//        val clientes: MutableStateFlow<List<cliente>> = ConexionServiceTienda.obtenerClientes()
+//
+////        var encontrado = false
+//
+//        for (c in clientes.value) {
+//            if (c.cedula == cedulaCliente) {
+//                binding.etNombreCliente.setText(c.nombre)
+//                binding.etCedulaCliente.setText(c.cedula)
+//                binding.etTelefonoCliente.setText(c.celular)
+//                binding.etValorCredito.setText(c.total?.toString())
+//                binding.btnGuardarCliente.isEnabled = true
+////                encontrado = true
+//                break
+//            }
+//        }
 
 //        if (!encontrado) {
 //            Toast.makeText(this, "Cliente no encontrado", Toast.LENGTH_SHORT).show()
@@ -68,4 +68,3 @@ class editar_clientes : AppCompatActivity() {
 
     }
 
-}

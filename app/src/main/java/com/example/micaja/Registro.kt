@@ -59,34 +59,18 @@ class Registro : AppCompatActivity() {
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val apiServicer = ConexionServiceTienda.create()
-                val registrarNuevoTendero = Tendero(cedula = cedula, telefono = telefono , nombre = nombre)
-                val responset = apiServicer.login(registrarNuevoTendero)
-
-
-                if (responset.isSuccessful && responset.body() != null) {
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(
-                            this@Registro,
-                            "La tienda ya está registrada.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                    return@launch
-                }
-
                 val apiService = ConexionServiceTienda.create()
                 val nuevoTendero = Tendero(cedula = cedula, telefono = telefono, nombre = nombre)
-                val response = apiService.addTendero(nuevoTendero)
+                val response = apiService.addTendero(nuevoTendero, "addtendero")
 
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
-                        Toast.makeText(this@Registro, "Registro exitoso.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@Registro, response.body()?.get("mensaje"), Toast.LENGTH_SHORT).show()
                         irALogin()
                     } else {
                         Toast.makeText(
                             this@Registro,
-                            "Error durante el registro: ${response.code()}",
+                            response.errorBody()?.toString(),
                             Toast.LENGTH_SHORT
                         ).show()
                     }

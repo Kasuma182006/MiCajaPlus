@@ -14,9 +14,7 @@
         android:theme="@style/Theme.MiCaja"
         android:usesCleartextTraffic="true">
 
-        <activity
-            android:name=".BuscarProductoDialog"
-            android:exported="false" />
+
         <activity
             android:name=".item_mensajes"
             android:exported="false" />
