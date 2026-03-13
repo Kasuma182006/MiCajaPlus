@@ -142,6 +142,7 @@
                         android:textColorHint="@color/gris"
                         android:imeOptions="actionSearch"
                         android:inputType="text"
+                        android:maxLength="10"
                         android:textSize="14sp"
                         android:paddingStart="16dp"
                         android:paddingEnd="8dp"/>
@@ -222,6 +223,7 @@
                     android:background="@drawable/bg_input_chat_tendero"
                     android:inputType="textPersonName"
                     android:textSize="15sp"
+                    android:maxLength="40"
                     app:counterMaxLength="@integer/NombreCliente"
                     />
 
@@ -251,6 +253,7 @@
                     android:inputType="number"
                     android:enabled="false"
                     android:textSize="15sp"
+                    android:maxLength="10"
                     app:counterMaxLength="@integer/Cedula"
                     />
 
@@ -279,6 +282,7 @@
                     android:background="@drawable/bg_input_chat_tendero"
                     android:inputType="phone"
                     android:textSize="15sp"
+                    android:maxLength="10"
                     app:counterMaxLength="@integer/Telefono"
                     />
 
@@ -309,6 +313,7 @@
                     android:background="@drawable/bg_input_chat_tendero"
                     android:inputType="numberDecimal"
                     android:textSize="15sp"
+                    android:maxLength="11"
                     app:counterMaxLength="@integer/valorCredito"
                     />
 

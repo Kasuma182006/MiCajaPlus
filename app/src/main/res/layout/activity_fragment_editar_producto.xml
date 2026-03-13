@@ -140,9 +140,11 @@
                         android:textColorHint="@color/gris"
                         android:imeOptions="actionSearch"
                         android:inputType="textMultiLine"
+                        android:maxLength="40"
                         android:textSize="14sp"
                         android:paddingStart="16dp"
                         android:paddingEnd="8dp"/>
+
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.button.MaterialButton
@@ -219,6 +221,7 @@
                     android:background="@drawable/bg_input_chat_tendero"
                     app:counterMaxLength="@integer/NombreProducto"
                     android:inputType="textMultiLine"
+                    android:maxLength="40"
                     android:textSize="15sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -248,6 +251,7 @@
                     android:background="@drawable/bg_input_chat_tendero"
                     android:inputType="text"
                     android:textSize="15sp"
+                    android:maxLength="20"
                     app:counterMaxLength="@integer/Presentacion"
                     />
             </com.google.android.material.textfield.TextInputLayout>
@@ -276,6 +280,7 @@
                     android:background="@drawable/bg_input_chat_tendero"
                     android:inputType="numberDecimal"
                     android:textSize="15sp"
+                    android:maxLength="11"
                     app:counterMaxLength="11"/>
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -302,6 +307,7 @@
                     android:background="@drawable/bg_input_chat_tendero"
                     android:inputType="number"
                     android:textSize="15sp"
+                    android:maxLength="11"
                     app:counterMaxLength="@integer/CantidadProducto"
                     />
             </com.google.android.material.textfield.TextInputLayout>

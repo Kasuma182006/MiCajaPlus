@@ -48,7 +48,7 @@ class Registro : AppCompatActivity() {
                 binding.inputNombre.error = "El nombre solo debe contener letras"
             } else {
                 binding.inputNombre.error = null
-                if(texto.length > 20){
+                if(texto.length > 40){
                     binding.inputNombre.error = "El nombre debe tener menos de 20 caracteres"
                 }
             }
@@ -59,6 +59,9 @@ class Registro : AppCompatActivity() {
             if (texto.isNotEmpty() && texto != textoSoloNumeros) {
                 binding.inputCedula.error = "La cédula solo debe contener números"
             } else {
+                if (texto.length > 10){
+                    binding.inputCedula.error = "Longitud permitida de  7 a 10 digitos"
+                }
                 if (texto.length == 10) {
                     validarExistenciaCedula(texto)
                 }
