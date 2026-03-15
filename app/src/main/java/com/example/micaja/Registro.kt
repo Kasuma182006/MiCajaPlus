@@ -59,7 +59,9 @@ class Registro : AppCompatActivity() {
             if (texto.isNotEmpty() && texto != textoSoloNumeros) {
                 binding.inputCedula.error = "La cédula solo debe contener números"
             } else {
-                if (texto.length == 10) {
+                if (texto.length > 10) {
+                    binding.inputCedula.error = "Longitud permitida: 7 a 10 dígitos"
+                }else if (texto.length == 10) {
                     validarExistenciaCedula(texto)
                 }
             }

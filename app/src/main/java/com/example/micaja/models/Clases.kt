@@ -96,12 +96,21 @@ data class Venta(
 
 
 data class ventaDetectada(
-    var idTendero: String,
+    val idTendero: String,
     val mensaje: String,
     val tipoPago: String,
     val nombre: String,
-    val cantidad: Int
+    val cantidad: Int,
+    val presentacion: String
 )
+
+data class cantidadIn (
+    val idTendero: String,
+    val cantidad: Int,
+    val presentacion: String,
+    val nombre: String
+)
+
 
 data class Gasto(
     val idTendero: String,

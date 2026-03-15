@@ -17,6 +17,7 @@ import com.example.micaja.models.RespuestaAbono
 import com.example.micaja.models.Tendero
 import com.example.micaja.models.TipoOperacionXFecha
 import com.example.micaja.models.Venta
+import com.example.micaja.models.cantidadIn
 import com.example.micaja.models.cliente
 import com.example.micaja.models.cliente1
 import com.example.micaja.models.clienteAbono
@@ -99,6 +100,10 @@ interface ConexionServiceTienda {
     @POST("/registrar_compra")
     suspend fun addProducto(@Body body: Producto): Response<Producto>
 
+    @POST("/cantidadProducto")
+    suspend fun cantidadProducto(@Body body: cantidadIn): Response<cantidadIn>
+
+
 
 
 
@@ -112,7 +117,7 @@ interface ConexionServiceTienda {
     suspend fun actualizarCliente(@Body datos: ActualizarCliente): Response<Map<String, String>>
 
     companion object messi {
-        private const val BASE_URL = "http://192.168.1.4:4000"
+        private const val BASE_URL = "http://192.168.12.101:4000"
 
         fun create(): ConexionServiceTienda {
             val retrofit = Retrofit.Builder()
