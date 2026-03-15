@@ -90,7 +90,7 @@ interface ConexionServiceTienda {
     suspend fun operacionesInventario(@Body body: OperacionesInventario): Response<OperacionesInventario>
 
     @POST("/registrar_venta")
-    suspend fun registrarVenta(@Body venta: Venta): Response<String>
+    suspend fun registrarCredito(@Body venta: Venta): Response<String>
 
     @POST("consultaCedulaTendero")
     suspend fun buscarTendero(@Body consulta: ConsultaCedulaTendero): Response<Tendero>

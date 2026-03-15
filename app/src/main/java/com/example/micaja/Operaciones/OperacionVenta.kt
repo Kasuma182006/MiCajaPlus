@@ -69,6 +69,9 @@ class OperacionVenta() {
         }
 
 
+
+
+
         val datos = extraerDatosProducto(textoLimpio)
 
         if (datos != null) {
@@ -89,7 +92,7 @@ class OperacionVenta() {
                     val respuestaOperacion = conexion.operacionesInventario(modeloOperacion)
 
                     return if(respuestaOperacion.isSuccessful) {
-                        val modeloVenta = ventaDetectada(idTendero, texto, tipoVenta, nombre, cant, pres)
+                        val modeloVenta = ventaDetectada(idTendero, texto, tipoVenta, nombre, cant, idCliente, pres)
                         val respuestaVenta = conexion.ventaDetectada(modeloVenta)
 
                         return if (respuestaVenta.isSuccessful) {
