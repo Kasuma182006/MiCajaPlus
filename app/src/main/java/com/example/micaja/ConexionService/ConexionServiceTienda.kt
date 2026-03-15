@@ -92,9 +92,6 @@ interface ConexionServiceTienda {
     @POST("/registrar_venta")
     suspend fun registrarVenta(@Body venta: Venta): Response<String>
 
-    @POST("/creargasto")
-    suspend fun gastosDetectadoss(@Body body: gastoDetectado): Response<gastoDetectado>
-
     @POST("consultaCedulaTendero")
     suspend fun buscarTendero(@Body consulta: ConsultaCedulaTendero): Response<Tendero>
 
@@ -106,6 +103,12 @@ interface ConexionServiceTienda {
 
     @POST("/agregarProducto")
     suspend fun addProducto(@Body body: AgregarProducto): Response<AgregarProducto>
+
+    @POST("/creargasto")
+    suspend fun gastosDetectadoss(@Body body: gastoDetectado): Response<gastoDetectado>
+
+    @POST ("/crearcosto")
+    suspend fun compra_Mercancia(@Body request: compra_Mercancia): Response<compra_Mercancia>
 
 
 
