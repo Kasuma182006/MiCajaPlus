@@ -303,6 +303,8 @@ class chat_Tienda : AppCompatActivity() {
                             }else if(esAgregar && mensaje.contains("producto")){
                                 val intent = Intent(this@chat_Tienda, Agregar_Producto::class.java)
                                 startActivity(intent)
+                            }else if(esAgregar && mensaje.contains("cliente")){
+
                             }
                         } else {
                             model.addMensajeSistema(modelo("No se pudo detectar la operación, por favor vuelve a intentarlo"))
