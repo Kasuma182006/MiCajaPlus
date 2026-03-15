@@ -43,6 +43,7 @@ import retrofit2.Response
 import java.util.Locale
 import kotlin.apply
 import kotlin.getValue
+import kotlin.text.contains
 
 var montoVentas = 0
 var montoGastos = 0
@@ -299,7 +300,7 @@ class chat_Tienda : AppCompatActivity() {
                                 model.addMensajeSistema(modelo("¡Venta iniciada! Dicta los productos uno a uno o di 'fin'."))
                             }else if (esAbono){
                                 procesarAbonos(mensaje)
-                            }else if(esAgregar){
+                            }else if(esAgregar && mensaje.contains("producto")){
                                 val intent = Intent(this@chat_Tienda, Agregar_Producto::class.java)
                                 startActivity(intent)
                             }

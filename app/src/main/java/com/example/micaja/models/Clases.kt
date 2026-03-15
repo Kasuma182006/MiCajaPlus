@@ -102,6 +102,7 @@ data class ventaDetectada(
     val tipoPago: String,
     val nombre: String,
     val cantidad: Int,
+    val idcliente: String? = null,
     val presentacion: String
 )
 
