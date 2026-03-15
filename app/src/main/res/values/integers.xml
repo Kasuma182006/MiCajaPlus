@@ -11,4 +11,5 @@
     <integer name="Proveedor">60</integer>
     <integer name="PrecioProducto">11</integer>
     <integer name="CantidadProducto">11</integer>
+    <integer name="CategoriaProducto">20</integer>
 </resources>

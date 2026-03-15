@@ -88,6 +88,13 @@
     <string name="label_Paso2_Producto">② Editar datos</string>
     <string name="cd_btnBuscarProducto">buscar_producto</string>
     <string name="hint_BuscarPresentacion">Buscar por precentacion...</string>
+    <string name="precioCompra">Precio Compra ($)</string>
+    <string name="CategoriaProducto">Categoria</string>
+    <string name="label_Paso1_Producto_Añadir">Datos del Producto</string>
+    <string name="hint_AñadirProductoNombre">Nombre del Producto</string>
+    <string name="Añadir_Inventario">Agregar Producto</string>
+    <string name="subtitulo_Agregar_Producto">Agrega un nuevo producto al inventario</string>
+    <string name="GUARDARPRODUCTONUEVO">Guardar Producto</string>
 
 
 </resources>
