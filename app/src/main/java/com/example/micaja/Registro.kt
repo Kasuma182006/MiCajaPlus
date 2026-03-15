@@ -62,7 +62,7 @@ class Registro : AppCompatActivity() {
                 if (texto.length > 10){
                     binding.inputCedula.error = "Longitud permitida de  7 a 10 digitos"
                 }
-                if (texto.length == 10) {
+                if (texto.length >= 6 && texto.length <= 10) {
                     validarExistenciaCedula(texto)
                 }
             }
@@ -107,7 +107,7 @@ class Registro : AppCompatActivity() {
             try {
                 val apiServicer = ConexionServiceTienda.create()
                 val registrarNuevoTendero = Tendero(cedula = cedula, telefono = telefono , nombre = nombre, fechaCreacion = "")
-                val responset = apiServicer.login(registrarNuevoTendero)
+                val responset = apiServicer.login(registrarNuevoTendero, "login")
 
 
                 if (responset.isSuccessful && responset.body() != null) {
@@ -123,7 +123,7 @@ class Registro : AppCompatActivity() {
 
                 val apiService = ConexionServiceTienda.create()
                 val nuevoTendero = Tendero(cedula = cedula, telefono = telefono, nombre = nombre, fechaCreacion = "")
-                val response = apiService.addTendero(nuevoTendero)
+                val response = apiService.addTendero(nuevoTendero, "addtendero")
 
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
@@ -150,7 +150,9 @@ class Registro : AppCompatActivity() {
             try {
                 val apiService = ConexionServiceTienda.create()
                 val consultaCedula = ConsultaCedulaTendero(cedula)
-                val respuesta = apiService.buscarTendero(consultaCedula)
+                val respuesta = apiService.buscarTendero(consultaCedula, "consultarTendero")
+
+                Log.i("respuesta", respuesta.toString())
 
                 withContext(Dispatchers.Main) {
                     if (respuesta.isSuccessful && respuesta.body() != null) {

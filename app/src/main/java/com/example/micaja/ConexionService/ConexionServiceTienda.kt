@@ -40,12 +40,12 @@ import retrofit2.http.Query
 
 interface ConexionServiceTienda {
 
-    @POST("login")
+    @POST("routes/tenderos.php")
     @Headers("Content-Type: application/json")
-    suspend fun login(@Body body: Tendero): Response<Tendero>
-    @POST("addtendero")
+    suspend fun login(@Body body: Tendero, @Query("action") action: String): Response<Tendero>
+    @POST("routes/tenderos.php")
     @Headers("Content-Type: application/json")
-    suspend fun addTendero(@Body tendero: Tendero): Response<Tendero>
+    suspend fun addTendero(@Body tendero: Tendero, @Query("action") action: String): Response<Tendero>
 
     /////ABONOS
     @POST("consultarcliente")
@@ -93,8 +93,8 @@ interface ConexionServiceTienda {
     @POST("/creargasto")
     suspend fun gastosDetectadoss(@Body body: gastoDetectado): Response<gastoDetectado>
 
-    @POST("consultaCedulaTendero")
-    suspend fun buscarTendero(@Body consulta: ConsultaCedulaTendero): Response<Tendero>
+    @POST("routes/tenderos.php")
+    suspend fun buscarTendero(@Body consulta: ConsultaCedulaTendero, @Query("action") action: String ): Response<Tendero>
 
     @POST("/registrar_compra")
     suspend fun addProducto(@Body body: Producto): Response<Producto>
@@ -112,7 +112,7 @@ interface ConexionServiceTienda {
     suspend fun actualizarCliente(@Body datos: ActualizarCliente): Response<Map<String, String>>
 
     companion object messi {
-        private const val BASE_URL = "http://10.6.126.62:4000"
+        private const val BASE_URL = "http://192.168.152.1:80/repaso/"
 
         fun create(): ConexionServiceTienda {
             val retrofit = Retrofit.Builder()
@@ -121,7 +121,6 @@ interface ConexionServiceTienda {
                 .build()
             return retrofit.create(ConexionServiceTienda::class.java)
         }
-
 
     }
 }
