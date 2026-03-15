@@ -97,6 +97,7 @@ data class Venta(
 
 data class ventaDetectada(
     val idTendero: String,
+    val cedula: String ? = null,
     val mensaje: String,
     val tipoPago: String,
     val nombre: String,

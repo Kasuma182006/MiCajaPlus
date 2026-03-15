@@ -286,7 +286,7 @@ class chat_Tienda : AppCompatActivity() {
                             val esAgregar = diccionario["agregar"]?.any { palabras.contains(it) } == true
 
 
-                            if (esVenta && esCredito){
+                            if (esCredito){
                                 procesarCompra(mensaje)
                             } else if (esAbono) {
                                 abono.iniciarFlujoAbono(model::addMensajeSistema)
@@ -496,18 +496,27 @@ class chat_Tienda : AppCompatActivity() {
         }
         if (estadoCredito == "cliente_nuevo") {
             val textoSinEspacios = textoMinuscula.replace(" ", "")
-            val regexTelefono = Regex("3\\d{9}")
+            val regexTelefono = Regex("3[\\d\\s]{9,}")
             val telefono = regexTelefono.find(textoSinEspacios)
 
             // 2. Obtenemos el texto que está antes del número
             if (telefono != null) {
-                // Cortamos la cadena desde el inicio hasta donde empieza el teléfono
-                val antesTelefono = textoMinuscula.substring(0, telefono.range.first).trim()
-                val palabrasAntes = antesTelefono.split(Regex("\\s+")).filter { it.isNotBlank() }
-                val nombreFinal = palabrasAntes.take(2).joinToString(" ")
-                if (nombreFinal.length >= 8 && nombreFinal.length <= 40) {
-                    if (nuevo_cliente(cedulaCliente, cedula_tendero, nombreFinal, telefono.value)){
-                        model.addMensajeSistema(modelo("El cliente $nombreFinal con la cédula $cedulaCliente y número télefonico ${telefono.value} ha sído registrado con éxito.\nPor favor dicte el producto que vendio a crédito. "))
+                // 2. CORTAMOS EL NOMBRE (Índices exactos)
+                // Cortamos desde el inicio hasta donde empezó el primer '3'
+                val nombreFinal = textoMinuscula.substring(0, telefono.range.first).trim()
+
+                // 3. LIMPIAMOS EL TELÉFONO
+                // Tomamos desde el '3' hasta el final y le quitamos los espacios
+                val telefonoLimpio = telefono.value.replace(" ", "").trim()
+
+                // 4. VALIDACIÓN Y REGISTRO
+                if (nombreFinal.length >= 3 && nombreFinal.length <= 40) {
+                    val nombreFormateado = nombreFinal.split(" ")
+                        .filter { it.isNotBlank() }
+                        .joinToString(" ") { it.replaceFirstChar { char -> char.uppercase() } }
+
+                    if (nuevo_cliente(cedulaCliente, cedula_tendero, nombreFormateado, telefonoLimpio)) {
+                        model.addMensajeSistema(modelo("El cliente $nombreFormateado con la cédula $cedulaCliente y número $telefonoLimpio registrado con éxito. \nDicte el producto que vendío a crédito."))
                         estadoCredito = "pedir_productos"
                         return
                     }
@@ -526,7 +535,7 @@ class chat_Tienda : AppCompatActivity() {
             var operacionVenta = OperacionVenta()
             val fin_credito = diccionario["fin credito"]?.any { frase ->
                 textoMinuscula.contains(frase) }
-            if (fin_credito == true && i > 0){
+            if (fin_credito == true ){
                 estadoCredito = "ninguno"
                 procesoActivo = "ninguno"
                 model.addMensajeSistema(

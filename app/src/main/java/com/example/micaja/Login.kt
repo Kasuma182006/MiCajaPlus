@@ -103,7 +103,7 @@ class Login : AppCompatActivity() {
             try {
                 val apiService = ConexionServiceTienda.create()
                 val registrarNuevoTendero = Tendero(cedula = cedula, telefono = telefono, nombre = "", fechaCreacion = "")
-                val response = apiService.login(registrarNuevoTendero, "login")
+                val response = apiService.login(registrarNuevoTendero)
 
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful && response.body() != null) {

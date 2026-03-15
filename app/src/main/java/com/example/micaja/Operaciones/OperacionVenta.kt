@@ -78,19 +78,24 @@ class OperacionVenta() {
 
             return try {
                 val conexion = ConexionServiceTienda.create()
+
                 val tipoVenta =
                     if (idCliente.isNotEmpty() && idCliente != idTendero) "credito" else "efectivo"
+
+                Log.i("idcliente", tipoVenta)
 
                 val modeloCantidad = cantidadIn(idTendero, cant, pres, nombre)
                 val respuestaCantidad = conexion.cantidadProducto(modeloCantidad)
 
                 return if (respuestaCantidad.isSuccessful) {
+                    Log.i("cantidad suficiente", "hay cantidad")
                     val modeloOperacion = OperacionesInventario(idTendero, nombre, pres, cant, "descontar")
                     val respuestaOperacion = conexion.operacionesInventario(modeloOperacion)
 
                     return if(respuestaOperacion.isSuccessful) {
-                        val modeloVenta = ventaDetectada(idTendero, texto, tipoVenta, nombre, cant, pres)
+                        val modeloVenta = ventaDetectada(idTendero, idCliente, texto, tipoVenta, nombre, cant, pres)
                         val respuestaVenta = conexion.ventaDetectada(modeloVenta)
+                        Log.i("respuestaOperacion", respuestaVenta.toString())
 
                         return if (respuestaVenta.isSuccessful) {
                             "• $cant  $nombre de $pres registrado. ¿Algo más? (o di 'fin')"
