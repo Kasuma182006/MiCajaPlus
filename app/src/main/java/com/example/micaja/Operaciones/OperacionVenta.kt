@@ -1,9 +1,11 @@
 package com.example.micaja.Operaciones
 
 import android.util.Log
+import android.widget.Switch
 import com.example.micaja.ConexionService.ConexionServiceTienda
 import com.example.micaja.models.OperacionesInventario
 import com.example.micaja.models.Venta
+import com.example.micaja.models.cantidadIn
 import com.example.micaja.models.ventaDetectada
 import java.text.Normalizer
 
@@ -15,17 +17,18 @@ class OperacionVenta() {
         val unidades = listOf(
             "bolsa", "bolsita", "caja", "cajetilla", "canasta", "chuspa",
             "barra", "capsula", "cubeta", "tableta",
-            "docena", "gramo", "libra", "kilo", "kilogramos", "litro", "litron", "onza",
-            "envase", "frasco", "plastico", "paquete", "vidrio",
-            "pequena", "pequeno", "media", "mediana", "mediano", "grande",
-            "garrafa", "lata", "laton", "paca", "sixpack", "six-pack",
-            "panal", "sobre", "rollo", "tubo", "unidad", "vasito", "vaso"
+            "docena", "gramo", "libra", "libras", "kilo", "kilogramos", "litro", "litron", "onza",
+            "envase", "frasco", "plastico", "paquete",
+            "pequeña", "pequeño", "media", "mediana", "mediano", "grande",
+            "garrafa", "lata", "laton", "paca", "sixpack",
+            "panal", "sobre", "rollo", "tubo", "unidad", "vasito", "vaso", "botella",
+            "kg","l","ml","sobre","tubo","spray","carta","hojas","g","cubo","lata","jumbo","mini","atado","unidades"
         )
 
         // Palabras de acción que deben eliminarse para no ensuciar el nombre del producto
         val limpiarN = listOf(
             "vendi", "vende", "venta", "un", "una", "de", "del",
-            "por", "el", "la", "los", "las", "me", "compraron", "salio", "pago","s","S"
+            "por", "el", "la", "los", "las", "me", "compraron", "salio", "pago","s","S", "es"
         )
 
         // Mapa para convertir dictado de voz a números procesables
@@ -70,38 +73,37 @@ class OperacionVenta() {
 
         if (datos != null) {
             val (nombre, pres, cant) = datos
-            val conexion = ConexionServiceTienda.create()
 
             Log.i("datos_procesados", "Nombre: $nombre, Pres: $pres, Cant: $cant")
 
-
-            val producto = Venta(nombre, pres, cant, cedula,  idCliente)
-            val respuesta = conexion.registrarVenta(producto)
-
             return try {
                 val conexion = ConexionServiceTienda.create()
-                val modelo = OperacionesInventario(idTendero, nombre, pres, cant, "descontar")
-                Log.d("modelo" , "modelo de datos ${modelo}")
+                val tipoVenta =
+                    if (idCliente.isNotEmpty() && idCliente != idTendero) "credito" else "efectivo"
 
-                val respuesta = conexion.operacionesInventario(modelo)
+                val modeloCantidad = cantidadIn(idTendero, cant, pres, nombre)
+                val respuestaCantidad = conexion.cantidadProducto(modeloCantidad)
 
-                if (respuesta.isSuccessful && respuesta.body() != null) {
+                return if (respuestaCantidad.isSuccessful) {
+                    val modeloOperacion = OperacionesInventario(idTendero, nombre, pres, cant, "descontar")
+                    val respuestaOperacion = conexion.operacionesInventario(modeloOperacion)
 
-                    val cuerpo = respuesta.body()
-                    Log.d("respuesta", "respuesta del servidor ${cuerpo}")
+                    return if(respuestaOperacion.isSuccessful) {
+                        val modeloVenta = ventaDetectada(idTendero, texto, tipoVenta, nombre, cant, pres)
+                        val respuestaVenta = conexion.ventaDetectada(modeloVenta)
 
-
-                    val tipoVenta = if (idCliente.isNotEmpty() && idCliente != idTendero) "credito" else "efectivo"
-
-                    val modeloVenta = ventaDetectada(idTendero,texto,tipoVenta, nombre,cant)
-                    val respuestaVenta = conexion.ventaDetectada(modeloVenta)
-                    if (respuestaVenta.isSuccessful && respuestaVenta.body() != null){
-                        Log.d("venta", "venta registrada compita")
+                        return if (respuestaVenta.isSuccessful) {
+                            "• $cant  $nombre de $pres registrado. ¿Algo más? (o di 'fin')"
+                        } else {
+                            "No pude registrar la venta"
+                        }
+                    }else{
+                        "No se pudo descontar la cantidad"
                     }
-                    "• $cant $pres de $nombre registrado. ¿Algo más? (o di 'fin')"
                 } else {
-                    "El producto '$nombre' no existe en tu inventario. Verifica el nombre."
+                    "No pude registrar la cantidad"
                 }
+
             } catch (e: Exception) {
                 "Fuera de conexion intentalo de nuevo"
             }
@@ -119,30 +121,46 @@ class OperacionVenta() {
         }
 
         // 2. EXTRAER CANTIDAD: Buscamos el primer número que aparezca
-        val cifra = Regex("""\b\d+\b""").find(texto)
-        val cantidad = cifra?.value?.toIntOrNull() ?: 1
+        val cifraCabtidad = Regex("""\b\d+\b""").find(texto)
+        val cantidad = cifraCabtidad?.value?.toIntOrNull() ?: 1
 
         // Removemos la cifra del texto para que no sea parte del nombre
-        if (cifra != null) {
-            texto = texto.replaceFirst(cifra.value, "").trim()
+        if (cifraCabtidad != null) {
+            texto = texto.replaceFirst(cifraCabtidad.value, "").trim()
         }
 
         // 3. DETECTAR UNIDAD/PRESENTACIÓN
         var unidadDetectada = "unidad"
         for (u in unidades) {
-            if (texto.contains(u)) {
-                unidadDetectada = u
-                texto = texto.replace(u, "").trim()
-                break
+            val  presentacion = Regex("""\b\d+\s*$u\b""")
+            val concidencia = presentacion.find(texto)
+
+            if (concidencia != null){
+                unidadDetectada = concidencia.value.trim()
+                texto = texto.replaceFirst(concidencia.value, "").trim()
+                 break
+            }else{
+                val unidad = Regex("""\b$u\b""")
+                val coincidenciaUnidad = unidad.find(texto)
+                if (coincidenciaUnidad != null) {
+                    unidadDetectada = coincidenciaUnidad.value.trim()
+                    texto = texto.replace(coincidenciaUnidad.value, "").trim()
+                    break
+                }
             }
+
         }
-        val nombreSinS = texto.replace(Regex("(?i)\\b[s]\\b"), "").trim()
 
-        // 4. LIMPIEZA FINAL DEL NOMBRE: Quitar espacios dobles y basura
-        val nombreFinal = nombreSinS.replace(Regex("""\s+"""), " ")
+        var nombreProducto = texto
+            .replace(Regex("(?i)\\b[s]\\b"), "")
+            .replace(Regex("""\s+"""), " ")
+            .lowercase()
+            .trim()
 
-        return if (nombreFinal.isNotEmpty()) {
-            Triple(nombreFinal, unidadDetectada, cantidad)
+        nombreProducto = nombreProducto.removePrefix("de ").removeSuffix(" de").trim()
+
+        return if (nombreProducto.isNotEmpty()) {
+            Triple(nombreProducto, unidadDetectada, cantidad)
         } else {
             null
         }

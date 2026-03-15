@@ -6,9 +6,10 @@
     <integer name="valorCredito">11</integer>
 
 
-    <integer name="NombreProducto">40</integer>
-    <integer name="Presentacion">20</integer>
+    <integer name="NombreProducto">20</integer>
+    <integer name="Presentacion">10</integer>
     <integer name="Proveedor">60</integer>
     <integer name="PrecioProducto">11</integer>
-    <integer name="CantidadProducto">11</integer>
+    <integer name="CantidadProducto">3</integer>
+    <integer name="CategoriaProducto">20</integer>
 </resources>

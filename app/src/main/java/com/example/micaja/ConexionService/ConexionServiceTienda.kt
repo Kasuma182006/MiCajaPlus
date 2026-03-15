@@ -2,6 +2,7 @@ package com.example.micaja.ConexionService
 
 import android.util.Log
 import com.example.micaja.models.ActualizarCliente
+import com.example.micaja.models.AgregarProducto
 import com.example.micaja.models.BuscarProductos
 import com.example.micaja.models.ClienteCompleto
 import com.example.micaja.models.ConsultaCedulaTendero
@@ -17,6 +18,7 @@ import com.example.micaja.models.RespuestaAbono
 import com.example.micaja.models.Tendero
 import com.example.micaja.models.TipoOperacionXFecha
 import com.example.micaja.models.Venta
+import com.example.micaja.models.cantidadIn
 import com.example.micaja.models.cliente
 import com.example.micaja.models.cliente1
 import com.example.micaja.models.clienteAbono
@@ -40,12 +42,12 @@ import retrofit2.http.Query
 
 interface ConexionServiceTienda {
 
-    @POST("routes/tenderos.php")
+    @POST("login")
     @Headers("Content-Type: application/json")
-    suspend fun login(@Body body: Tendero, @Query("action") action: String): Response<Tendero>
-    @POST("routes/tenderos.php")
+    suspend fun login(@Body body: Tendero): Response<Tendero>
+    @POST("addtendero")
     @Headers("Content-Type: application/json")
-    suspend fun addTendero(@Body tendero: Tendero, @Query("action") action: String): Response<Tendero>
+    suspend fun addTendero(@Body tendero: Tendero): Response<Tendero>
 
     /////ABONOS
     @POST("consultarcliente")
@@ -90,14 +92,25 @@ interface ConexionServiceTienda {
     @POST("/registrar_venta")
     suspend fun registrarVenta(@Body venta: Venta): Response<String>
 
-    @POST("/creargasto")
-    suspend fun gastosDetectadoss(@Body body: gastoDetectado): Response<gastoDetectado>
-
-    @POST("routes/tenderos.php")
-    suspend fun buscarTendero(@Body consulta: ConsultaCedulaTendero, @Query("action") action: String ): Response<Tendero>
+    @POST("consultaCedulaTendero")
+    suspend fun buscarTendero(@Body consulta: ConsultaCedulaTendero): Response<Tendero>
 
     @POST("/registrar_compra")
     suspend fun addProducto(@Body body: Producto): Response<Producto>
+
+    @POST("/cantidadProducto")
+    suspend fun cantidadProducto(@Body body: cantidadIn): Response<cantidadIn>
+
+    @POST("/agregarProducto")
+    suspend fun addProducto(@Body body: AgregarProducto): Response<AgregarProducto>
+
+    @POST("/creargasto")
+    suspend fun gastosDetectadoss(@Body body: gastoDetectado): Response<gastoDetectado>
+
+    @POST ("/crearcosto")
+    suspend fun compra_Mercancia(@Body request: compra_Mercancia): Response<compra_Mercancia>
+
+
 
 
 
@@ -112,7 +125,7 @@ interface ConexionServiceTienda {
     suspend fun actualizarCliente(@Body datos: ActualizarCliente): Response<Map<String, String>>
 
     companion object messi {
-        private const val BASE_URL = "http://192.168.152.1:80/repaso/"
+        private const val BASE_URL = "http://192.168.12.101:4000"
 
         fun create(): ConexionServiceTienda {
             val retrofit = Retrofit.Builder()
@@ -121,6 +134,7 @@ interface ConexionServiceTienda {
                 .build()
             return retrofit.create(ConexionServiceTienda::class.java)
         }
+
 
     }
 }

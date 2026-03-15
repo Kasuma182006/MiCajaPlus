@@ -4,12 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.GridLayoutManager   // ← reemplaza LinearLayoutManager
+import android.widget.TextView
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.micaja.databinding.FragmentDialogoComandosBinding
 import com.example.micaja.databinding.ItemComandoBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.chip.Chip
 
 class dialogo_comandos : BottomSheetDialogFragment() {
 
@@ -52,10 +52,12 @@ class dialogo_comandos : BottomSheetDialogFragment() {
             "Ej: 'Credito'", "Ej: 'Abono'"
         ),
         "Agregar producto" to listOf(
-            "agregar producto", "añadir producto", "nuevo producto", "producto nuevo", "Ej: nuevo Producto"
+            "agregar producto", "añadir producto", "nuevo producto", "producto nuevo",
+            "Ej: nuevo Producto"
         ),
         "Agregar cliente" to listOf(
-            "agregar nombre", "añadir cliente", "cliente nuevo", "nuevo cliente", "Ej: nuevo Cliente"
+            "agregar nombre", "añadir cliente", "cliente nuevo", "nuevo cliente",
+            "Ej: nuevo Cliente"
         ),
     )
 
@@ -75,9 +77,7 @@ class dialogo_comandos : BottomSheetDialogFragment() {
 
         val comandos = comandosConVariantes.keys.toList()
 
-
         binding.listaComandos.layoutManager = GridLayoutManager(requireContext(), 2)
-
         binding.listaComandos.adapter = ComandosAdapter(comandos) { comandoSeleccionado ->
             val variantes = comandosConVariantes[comandoSeleccionado] ?: emptyList()
             VariantesBottomSheet
@@ -91,7 +91,6 @@ class dialogo_comandos : BottomSheetDialogFragment() {
         _binding = null
     }
 
-
     private inner class ComandosAdapter(
         private val items: List<String>,
         private val onClick: (String) -> Unit
@@ -100,28 +99,17 @@ class dialogo_comandos : BottomSheetDialogFragment() {
         inner class ViewHolder(val b: ItemComandoBinding) : RecyclerView.ViewHolder(b.root)
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            ViewHolder(
-                ItemComandoBinding.inflate(
-                    LayoutInflater.from(parent.context), parent, false
-                )
-            )
+            ViewHolder(ItemComandoBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
         override fun getItemCount() = items.size
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val comando   = items[position]
             val variantes = comandosConVariantes[comando] ?: emptyList()
-
             with(holder.b) {
-                // Nombre del comando — centrado en la card (gravity="center" en el XML)
                 tvNombreComando.text = comando
-
-                // Chip ejemplo: última variante que empiece con "Ej:", o la primera si no hay
                 tvEjemplo.text = variantes.lastOrNull { it.startsWith("Ej:") }
-                    ?: variantes.firstOrNull()
-                            ?: ""
-
-                // Tap en cualquier parte de la card → abre VariantesBottomSheet
+                    ?: variantes.firstOrNull() ?: ""
                 root.setOnClickListener { onClick(comando) }
             }
         }
@@ -156,28 +144,26 @@ class VariantesBottomSheet : BottomSheetDialogFragment() {
         val comando   = arguments?.getString(ARG_COMANDO) ?: ""
         val variantes = arguments?.getStringArrayList(ARG_VARIANTES) ?: arrayListOf()
 
-        view.findViewById<android.widget.TextView>(R.id.tvTituloVariantes).text = comando
+        view.findViewById<TextView>(R.id.tvTituloVariantes).text = comando
 
-        val chipGroup = view.findViewById<com.google.android.material.chip.ChipGroup>(
-            R.id.chipGroupVariantes
-        )
+        val palabras  = variantes.filter { !it.startsWith("Ej:") }
+        val ejemplos  = variantes.filter {  it.startsWith("Ej:") }
 
-        variantes.forEach { variante ->
-            Chip(requireContext()).apply {
-                text        = variante
-                isClickable = false
-                isCheckable = false
 
-                if (variante.startsWith("Ej:")) {
-                    setChipBackgroundColorResource(R.color.btn_registrarse)
-                    setTextColor(resources.getColor(android.R.color.white, null))
-                } else {
-                    setChipBackgroundColorResource(R.color.colorPrimary)
-                    setTextColor(resources.getColor(R.color.colorOnSecondary, null))
-                }
+        view.findViewById<TextView>(R.id.tvVariantes).text =
+            palabras.joinToString(separator = "  ,  ")
 
-                chipGroup.addView(this)
-            }
+        val labelEjemplos = view.findViewById<TextView>(R.id.labelEjemplos)
+        val tvEjemplos    = view.findViewById<TextView>(R.id.tvEjemplos)
+
+        if (ejemplos.isNotEmpty()) {
+            labelEjemplos.visibility = View.VISIBLE
+            tvEjemplos.visibility    = View.VISIBLE
+
+            tvEjemplos.text = ejemplos.joinToString(separator = "\n")
+        } else {
+            labelEjemplos.visibility = View.GONE
+            tvEjemplos.visibility    = View.GONE
         }
     }
 }

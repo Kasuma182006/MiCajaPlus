@@ -21,6 +21,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.micaja.Adapter.Adapter
 import com.example.micaja.ConexionService.ConexionServiceTienda
+import com.example.micaja.Operaciones.OperacionProducto
 import com.example.micaja.Operaciones.OperacionVenta
 import com.example.micaja.databinding.ActivityChatTiendaBinding
 import com.example.micaja.models.Identificacion
@@ -70,7 +71,7 @@ val diccionario = mapOf(
     "credito" to listOf ("credito", "crédito", "créditos", "creditos", "fiado a", "fiado", "fiados", "fiar", "fié"),
     "efectivo" to listOf("efectivo","efectivos", "plata", "paga", "a la mano", "contado", "dinero", "efectivito"),
     "abono" to listOf ("abonar", "abono", "abonos", "cuota", "adelantar" ,"adelanto"),
-    "agregar producto" to listOf ("agregar producto", "añadir producto" ,"nuevo producto", "producto nuevo"),
+    "agregar" to listOf ("agregar", "añadir" ,"nuevo", "producto"),
     "agregar cliente" to listOf("agregar nombre", "añadir cliente", "cliente nuevo", "nuevo cliente"),
     "si" to listOf("si", "sí"),
 )
@@ -88,6 +89,7 @@ class chat_Tienda : AppCompatActivity() {
     lateinit var estadoBase: SharedPreferences
 
     var operacionVenta = OperacionVenta()
+    var operacionProducto = OperacionProducto()
 
 
 
@@ -265,6 +267,7 @@ class chat_Tienda : AppCompatActivity() {
                     }
 
 
+
                     lifecycleScope.launch {
                         val ocupadoConAbono = abono.procesarRespuesta(mensaje, { msg ->
                             model.addMensajeSistema(msg)
@@ -280,7 +283,7 @@ class chat_Tienda : AppCompatActivity() {
                             val esCompra = diccionario["compra"]?.any { palabras.contains(it) } == true
                             val esAbono = diccionario["abono"]?.any { palabras.contains(it) } == true
                             val esCredito = diccionario["credito"]?.any { palabras.contains(it) } == true
-                            val esAgregar = diccionario["agregar producto"]?.any { palabras.contains(it) } == true
+                            val esAgregar = diccionario["agregar"]?.any { palabras.contains(it) } == true
 
 
                             if (esVenta && esCredito){
@@ -297,6 +300,8 @@ class chat_Tienda : AppCompatActivity() {
                             }else if (esAbono){
                                 procesarAbonos(mensaje)
                             }else if(esAgregar){
+                                val intent = Intent(this@chat_Tienda, Agregar_Producto::class.java)
+                                startActivity(intent)
                             }
                         } else {
                             model.addMensajeSistema(modelo("No se pudo detectar la operación, por favor vuelve a intentarlo"))

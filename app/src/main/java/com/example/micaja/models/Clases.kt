@@ -96,11 +96,29 @@ data class Venta(
 
 
 data class ventaDetectada(
-    var idTendero: String,
+    val idTendero: String,
     val mensaje: String,
     val tipoPago: String,
     val nombre: String,
-    val cantidad: Int
+    val cantidad: Int,
+    val presentacion: String
+)
+
+data class cantidadIn (
+    val idTendero: String,
+    val cantidad: Int,
+    val presentacion: String,
+    val nombre: String
+)
+
+data class AgregarProducto(
+    val idTendero: String,
+    val nombre: String,
+    val presentacion: String,
+    val cantidad: Int,
+    val valorVenta: Int,
+    val idCategoria: Int,
+    val valorCompra: Int
 )
 
 data class Gasto(
@@ -109,11 +127,6 @@ data class Gasto(
     var valor: Int
 )
 
-data class gastoDetectado(
-    val idTendero: String,
-    val mensaje: String,
-    val precio: Int
-)
 data class costoDetectado(
     val idTendero: String,
     val mensaje: String,
@@ -121,6 +134,12 @@ data class costoDetectado(
     val proveedor: String
 )
 
+
+data class gastoDetectado(
+    val idTendero: String,
+    val mensaje: String,
+    val precio: Int
+)
 
 data class compra_Mercancia(
     val idTendero: String = "",
@@ -156,11 +175,12 @@ data class BuscarProductos(
 
 data class EditarProducto(
     val cantidad: Int,
+    val idTendero: String,
     val idInventario: Int,
-    val idProductos: Int,
-    val nombre: String,
+    val nombreProducto: String,
     val presentacion: String,
-    val valorVenta: Int
+    val valorVenta: Int,
+    val valorCompra:Int
 )
 
 //data clas para traer datos del cliente
