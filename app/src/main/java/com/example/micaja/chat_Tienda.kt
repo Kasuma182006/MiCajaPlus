@@ -304,7 +304,7 @@ class chat_Tienda : AppCompatActivity() {
                                 val intent = Intent(this@chat_Tienda, Agregar_Producto::class.java)
                                 startActivity(intent)
                             }else if(esAgregar && mensaje.contains("cliente")){
-
+                                nuevoCliente(mensaje)
                             }
                         } else {
                             model.addMensajeSistema(modelo("No se pudo detectar la operación, por favor vuelve a intentarlo"))
@@ -347,6 +347,83 @@ class chat_Tienda : AppCompatActivity() {
         } else{
             model.addMensajeSistema(modelo("No pude insertar"))
             return false
+        }
+    }
+
+    private suspend fun nuevoCliente(texto: String) {
+        val prefs = getSharedPreferences("SesionTendero", MODE_PRIVATE)
+        val cedula_tendero = prefs.getString("cedula", null) ?: return
+        // limpieza elimina  puntos y comas
+        val textoLimpio = texto.replace(Regex("""(\d)[.,](\d{3})\b"""), "$1$2")
+        val textoMinuscula = textoLimpio.lowercase()
+
+        val nuevoCliente = diccionario["agregar cliente"]?.any { frase ->
+            textoMinuscula.contains(frase)
+        }
+        Log.i("nuevo cliente", nuevoCliente.toString())
+        if (nuevoCliente == true) {
+            model.addMensajeSistema(modelo("Dicte el número de cédula del cliente por favor."))
+            procesoActivo = "cliente_nuevo"
+            return
+        }
+        if (procesoActivo == "cliente_nuevo") {
+            val textoSinEspacios = textoMinuscula.replace(" ", "")
+            val cedulaRegex = Regex("\\d{6,10}")
+            val cedula = cedulaRegex.find(textoSinEspacios)?.value
+            Log.i("cedula", cedula.toString() )
+            if (cedula != null) {
+                val respuesta = buscarCliente(cedula, cedula_tendero)
+                if (respuesta.body()?.nombre == null) {
+                    cedulaCliente = cedula
+                    procesoActivo = "registro_cliente"
+                    model.addMensajeSistema(modelo("Dicte el nombre del cliente y su número télefonico."))
+                    return
+                } else {
+                    model.addMensajeSistema(modelo("Cliente encontrado: ${respuesta.body()?.nombre}.\nSaldo total: ${respuesta.body()?.saldo}\n"))
+                    procesoActivo = "ninguno"
+                    return
+                }
+            }else {
+                model.addMensajeSistema(modelo("Lo siento no pude entender la cédula del cliente. Dictela de nuevo."))
+                return
+            }
+        }
+        if (procesoActivo == "registro_cliente") {
+            val textoSinEspacios = textoMinuscula.replace(" ", "")
+            val regexTelefono = Regex("3[\\d\\s]{9,}")
+            val telefono = regexTelefono.find(textoSinEspacios)
+
+            // 2. Obtenemos el texto que está antes del número
+            if (telefono != null) {
+                // 2. CORTAMOS EL NOMBRE (Índices exactos)
+                // Cortamos desde el inicio hasta donde empezó el primer '3'
+                val nombreFinal = textoMinuscula.substring(0, telefono.range.first).trim()
+
+                // 3. LIMPIAMOS EL TELÉFONO
+                // Tomamos desde el '3' hasta el final y le quitamos los espacios
+                val telefonoLimpio = telefono.value.replace(" ", "").trim()
+
+                // 4. VALIDACIÓN Y REGISTRO
+                if (nombreFinal.length >= 3 && nombreFinal.length <= 40) {
+                    val nombreFormateado = nombreFinal.split(" ")
+                        .filter { it.isNotBlank() }
+                        .joinToString(" ") { it.replaceFirstChar { char -> char.uppercase() } }
+
+                    if (nuevo_cliente(cedulaCliente, cedula_tendero, nombreFormateado, telefonoLimpio)) {
+                        model.addMensajeSistema(modelo("El cliente $nombreFormateado con la cédula $cedulaCliente y número $telefonoLimpio registrado con éxito. \nDicte el producto que vendío a crédito."))
+                        estadoCredito = "pedir_productos"
+                        return
+                    }
+                } else {
+                    model.addMensajeSistema(modelo("Lo siento, no pude entenderte, por favor dicta de nuevo"))
+                    Log.i("entro a este else", "jajajaja")
+                }
+            } else {
+                model.addMensajeSistema(modelo("Lo siento, no pude entenderte, por favor dicta de nuevo"))
+                Log.i("entre menor", "ñiñin")
+            }
+
+
         }
     }
 
