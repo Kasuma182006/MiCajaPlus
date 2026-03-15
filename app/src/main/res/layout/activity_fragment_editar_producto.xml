@@ -358,6 +358,36 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilPrecioCompra"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="@string/precioCompra"
+                app:boxStrokeWidth="1.5dp"
+                app:boxStrokeWidthFocused="0dp"
+                app:hintTextColor="@color/colorOnSecondary"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/colorOnSecondary"
+                app:counterEnabled="true"
+                app:counterMaxLength="11"
+                app:prefixText="$ "
+                app:prefixTextColor="@color/colorOnSecondary">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etPrecioCompra"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_input_chat_tendero"
+                    android:inputType="phone"
+                    android:enabled="false"
+                    android:maxLength="11"
+                    android:textSize="15sp"
+                    app:counterMaxLength="11" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilCantidadProducto"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"

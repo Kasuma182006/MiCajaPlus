@@ -75,7 +75,7 @@ interface ConexionServiceTienda {
     @POST("agregarBase")
     suspend fun addBase(@Body base: ModeloBase): Response<Map <String,Any>>
 
-    @POST("/buscarProductos")
+    @POST("/sugerirProductos")
     suspend fun buscarProductos(@Body nombre: BuscarProductos): Response<List<EditarProducto>>
 
     @POST("/editarProducto")
@@ -112,7 +112,7 @@ interface ConexionServiceTienda {
     suspend fun actualizarCliente(@Body datos: ActualizarCliente): Response<Map<String, String>>
 
     companion object messi {
-        private const val BASE_URL = "http://10.6.126.62:4000"
+        private const val BASE_URL = "http://192.168.18.79:4000"
 
         fun create(): ConexionServiceTienda {
             val retrofit = Retrofit.Builder()

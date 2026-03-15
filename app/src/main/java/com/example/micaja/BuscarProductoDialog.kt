@@ -101,7 +101,7 @@ class BuscarProductoDialog(
             if (itemIndex < listaProductos.size) {
                 val item = listaProductos[itemIndex]
                 slot.card.visibility = View.VISIBLE
-                slot.nombre.text = item.nombre.replaceFirstChar { it.uppercase() }
+                slot.nombre.text = item.nombreProducto?.replaceFirstChar { it.uppercase() } ?: "Sin nombre"
                 slot.presentacion.text = "${item.presentacion ?: "Sin presentación"}"
                 slot.precio.text = "$ ${item.valorVenta}"
                 slot.stock.text = "Stock: ${item.cantidad}"

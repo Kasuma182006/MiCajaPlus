@@ -123,7 +123,7 @@ class fragment_editar_producto : AppCompatActivity() {
             if (i < lista.size) {
                 val item = lista[i]
                 chip.text = buildString {
-                    append(item.nombre.replaceFirstChar { it.uppercase() })
+                    append(item.nombreProducto.replaceFirstChar { it.uppercase() })
                     if (!item.presentacion.isNullOrEmpty()) append("  •  ${item.presentacion}")
                 }
                 chip.visibility = View.VISIBLE
@@ -145,16 +145,17 @@ class fragment_editar_producto : AppCompatActivity() {
         // Evitamos que el cambio de texto dispare otra búsqueda
         binding.etBuscarProducto.removeTextChangedListener(buscadorTextWatcher)
 
-        binding.etBuscarProducto.setText(seleccionado.nombre)
-        binding.etNombreProducto.setText(seleccionado.nombre)
+        binding.etBuscarProducto.setText(seleccionado.nombreProducto)
+        binding.etNombreProducto.setText(seleccionado.nombreProducto)
         binding.etDescripcionProducto.setText(seleccionado.presentacion)
         binding.etCantidadProducto.setText(seleccionado.cantidad.toString())
         binding.etPrecioProducto.setText(seleccionado.valorVenta.toString())
+        binding.etPrecioCompra.setText(seleccionado.valorCompra.toString())
         binding.etNombreProducto.isEnabled = true
         binding.etDescripcionProducto.isEnabled = true
         binding.etCantidadProducto.isEnabled = true
         binding.etPrecioProducto.isEnabled = true
-
+        binding.etPrecioCompra.isEnabled = true
 
         // Restauramos el listener
         binding.etBuscarProducto.addTextChangedListener(buscadorTextWatcher)
@@ -206,11 +207,12 @@ class fragment_editar_producto : AppCompatActivity() {
                 val conexion = ConexionServiceTienda.create()
                 val editado = EditarProducto(
                     cantidad = binding.etCantidadProducto.text.toString().toIntOrNull() ?: 0,
+                    idTendero = producto.idTendero,
                     idInventario = producto.idInventario,
-                    idProductos = producto.idProductos,
-                    nombre = binding.etNombreProducto.text.toString().lowercase(),
+                    nombreProducto = binding.etNombreProducto.text.toString().lowercase(),
                     presentacion = binding.etDescripcionProducto.text.toString(),
-                    valorVenta = binding.etPrecioProducto.text.toString().toIntOrNull() ?: 0
+                    valorVenta = binding.etPrecioProducto.text.toString().toIntOrNull() ?: 0,
+                    valorCompra= binding.etPrecioCompra.text.toString().toIntOrNull() ?:0
                 )
                 val response = conexion.editarProducto(editado)
 
@@ -218,6 +220,12 @@ class fragment_editar_producto : AppCompatActivity() {
                     if (response.isSuccessful) {
                         Toast.makeText(this@fragment_editar_producto, "Producto editado con éxito", Toast.LENGTH_SHORT).show()
                         inicializarEditarProducto()
+                    }
+                    else{
+                        when (response.code()){
+                            409 -> Toast.makeText(this@fragment_editar_producto, "Ya existe un producto con ese nombre y presentación", Toast.LENGTH_SHORT).show()
+                            500 -> Toast.makeText(this@fragment_editar_producto, "Error en el servidor", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             } catch (e: Exception) {
@@ -232,6 +240,7 @@ class fragment_editar_producto : AppCompatActivity() {
         binding.etPrecioProducto.setText("")
         binding.etDescripcionProducto.setText("")
         binding.etCantidadProducto.setText("")
+        binding.etPrecioCompra.setText("")
 
         binding.etBuscarProducto.removeTextChangedListener(buscadorTextWatcher)
         binding.etBuscarProducto.setText("")
