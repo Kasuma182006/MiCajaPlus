@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorBackground">
@@ -11,10 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
         android:paddingTop="8dp"
-        android:paddingBottom="32dp">
+        android:paddingBottom="36dp">
 
         <View
             android:layout_width="40dp"
@@ -26,36 +24,60 @@
 
         <TextView
             android:id="@+id/tvTituloVariantes"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:textColor="@color/colorOnSecondary"
-            android:textSize="20sp"
+            android:textSize="22sp"
             android:textStyle="bold"
-            android:text="Abrir tienda" />
+            android:textColor="@color/colorOnSecondary"
+            android:layout_marginBottom="4dp"
+            android:text="Ejemplo"/>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
             android:text="Puedes decir cualquiera de estas palabras:"
+            android:textSize="20sp"
             android:textColor="@color/gris"
-            android:textSize="13sp" />
+            android:layout_marginBottom="16dp" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/colorPrimary"
-            android:alpha="0.4"
-            android:layout_marginBottom="16dp" />
+            android:alpha="0.3"
+            android:layout_marginBottom="20dp" />
 
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroupVariantes"
+        <TextView
+            android:id="@+id/tvVariantes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:chipSpacingHorizontal="8dp"
-            app:chipSpacingVertical="8dp" />
+            android:textSize="18sp"
+            android:textColor="@color/colorOnSecondary"
+            android:lineSpacingMultiplier="1.7"
+            android:layout_marginBottom="24dp" />
+
+        <TextView
+            android:id="@+id/labelEjemplos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ejemplo de uso:"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.04"
+            android:textColor="@color/gris"
+            android:layout_marginBottom="6dp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tvEjemplos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/btn_registrarse"
+            android:lineSpacingMultiplier="1.7"
+            android:visibility="gone" />
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

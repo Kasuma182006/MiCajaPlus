@@ -106,12 +106,11 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginTop="12dp"
-            android:alpha="0.5"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/labelPaso2"
-            tools:alpha="1.0">
+            >
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilNombreProducto"
@@ -168,31 +167,36 @@
                     />
             </com.google.android.material.textfield.TextInputLayout>
 
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilCatategoriaProducto"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:hint="@string/CategoriaProducto"
                 app:boxStrokeWidth="1.5dp"
+                app:boxStrokeWidthFocused="1.5dp"
+                app:boxStrokeColor="@color/colorPrimary"
                 app:hintTextColor="@color/colorOnSecondary"
-                app:endIconMode="clear_text"
-                app:endIconTint="@color/colorOnSecondary"
-                app:counterEnabled="true"
-                app:counterMaxLength="@integer/CategoriaProducto"
-                app:boxStrokeWidthFocused="0dp"
-                app:prefixTextColor="@color/colorOnSecondary">
+                app:endIconTint="@color/colorOnSecondary">
 
-                <com.google.android.material.textfield.TextInputEditText
+
+                <AutoCompleteTextView
                     android:id="@+id/etCatagoriaProducto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_input_chat_tendero"
-                    android:inputType="text"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:inputType="none"
                     android:textSize="15sp"
-                    android:maxLength="20"
-                    app:counterMaxLength="20"/>
+                    android:textColor="@color/colorOnSecondary"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp" />
+
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -200,7 +204,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="25dp"
                 android:hint="@string/precioCompra"
                 app:boxStrokeWidth="1.5dp"
                 app:hintTextColor="@color/colorOnSecondary"

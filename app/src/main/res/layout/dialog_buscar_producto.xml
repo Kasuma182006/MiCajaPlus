@@ -42,7 +42,7 @@
             android:id="@+id/tvQueryTitulo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="22sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@android:color/white"
             android:letterSpacing="-0.01" />
@@ -156,7 +156,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:textSize="25sp"
+                                android:textSize="20sp"
                                 android:textStyle="bold"
                                 android:textColor="@color/colorOnSecondary"
                                 tools:text="Aceite fino" />
@@ -165,13 +165,12 @@
                                 android:id="@+id/tvStock1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textSize="11sp"
+                                android:textSize="15sp"
                                 android:textStyle="bold"
                                 android:textColor="#2E7D5E"
                                 android:background="@drawable/bg_chip_stock"
                                 android:paddingStart="10dp"
                                 android:paddingEnd="10dp"
-                                android:paddingTop="4dp"
                                 android:paddingBottom="4dp"
                                 android:layout_marginStart="8dp"
                                 tools:text="Stock: 10" />
@@ -182,7 +181,7 @@
                             android:id="@+id/tvPresentacion1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="13sp"
+                            android:textSize="16sp"
                             android:textColor="@color/colorOnPrimary"
                             android:layout_marginTop="6dp"
                             tools:text="1 litro" />
@@ -199,7 +198,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:textSize="14sp"
+                                android:textSize="16sp"
                                 android:textStyle="bold"
                                 android:textColor="@color/colorOnSecondary"
                                 tools:text="$ 28500" />
@@ -264,7 +263,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:textSize="25sp"
+                                android:textSize="20sp"
                                 android:textStyle="bold"
                                 android:textColor="@color/colorOnSecondary" />
 
@@ -272,7 +271,7 @@
                                 android:id="@+id/tvStock2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textSize="11sp"
+                                android:textSize="15sp"
                                 android:textStyle="bold"
                                 android:textColor="#2E7D5E"
                                 android:background="@drawable/bg_chip_stock"
@@ -288,7 +287,7 @@
                             android:id="@+id/tvPresentacion2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="13sp"
+                            android:textSize="16sp"
                             android:textColor="@color/colorOnPrimary"
                             android:layout_marginTop="6dp" />
 
@@ -304,7 +303,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:textSize="14sp"
+                                android:textSize="16sp"
                                 android:textStyle="bold"
                                 android:textColor="@color/colorOnSecondary" />
 
@@ -368,7 +367,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:textSize="25sp"
+                                android:textSize="20sp"
                                 android:textStyle="bold"
                                 android:textColor="@color/colorOnSecondary" />
 
@@ -376,7 +375,7 @@
                                 android:id="@+id/tvStock3"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textSize="11sp"
+                                android:textSize="15sp"
                                 android:textStyle="bold"
                                 android:textColor="#2E7D5E"
                                 android:background="@drawable/bg_chip_stock"
@@ -392,7 +391,7 @@
                             android:id="@+id/tvPresentacion3"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="13sp"
+                            android:textSize="16sp"
                             android:textColor="@color/colorOnPrimary"
                             android:layout_marginTop="6dp" />
 
@@ -408,7 +407,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:textSize="14sp"
+                                android:textSize="16sp"
                                 android:textStyle="bold"
                                 android:textColor="@color/colorOnSecondary" />
 
