@@ -174,11 +174,12 @@ data class BuscarProductos(
 
 data class EditarProducto(
     val cantidad: Int,
+    val idTendero: String,
     val idInventario: Int,
-    val idProductos: Int,
-    val nombre: String,
+    val nombreProducto: String,
     val presentacion: String,
-    val valorVenta: Int
+    val valorVenta: Int,
+    val valorCompra:Int
 )
 
 //data clas para traer datos del cliente

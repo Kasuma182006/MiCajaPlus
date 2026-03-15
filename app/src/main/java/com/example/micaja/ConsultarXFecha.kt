@@ -6,9 +6,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.example.micaja.Principal
 import com.example.micaja.R
 import com.example.micaja.chat_Tienda
@@ -36,12 +39,20 @@ class ConsultarXFecha : AppCompatActivity() {
 
     private lateinit var binding: ConsultarXFechaBinding
     private val operacionesViewModel: OperacionesViewModel by viewModels()
-//    private val creditoViewModel: CreditoViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ConsultarXFechaBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Ajustamos solo el padding del HEADER para que no lo tapen los iconos del sistema
+        ViewCompat.setOnApplyWindowInsetsListener(binding.header) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            // Aplicamos el margen superior según la altura de la barra de estado del dispositivo
+            view.setPadding(view.paddingLeft, systemBars.top, view.paddingRight, view.paddingBottom)
+            insets
+        }
 
 
         configurarBotones()

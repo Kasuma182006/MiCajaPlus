@@ -32,6 +32,26 @@ class editar_clientes : AppCompatActivity() {
         binding = ActivityEditarClientesBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.textBuscarCliente.setEndIconOnClickListener {
+            // Limpia el campo de busqueda principal
+            binding.etBuscarCliente.setText("")
+
+            // Limpia los campos especificos del cliente
+            binding.etNombreCliente.setText("")
+            binding.etCedulaCliente.setText("")
+            binding.etTelefonoCliente.setText("")
+            binding.etValorCredito.setText("")
+
+            // Restaura el estado visual y deshabilitar el boton de guardado
+            binding.cvFormulario.alpha = 0.5f
+            binding.btnGuardarCliente.isEnabled = false
+
+            //Quita el foco y desactiva teclado
+            binding.etBuscarCliente.clearFocus()
+            WindowInsetsControllerCompat(window, binding.etBuscarCliente)
+                .hide(WindowInsetsCompat.Type.ime())
+        }
+
         // Recupera id del tendero desde la sesion iniciada en Login
         val prefs = getSharedPreferences("SesionTendero", Context.MODE_PRIVATE)
         val idTendero = prefs.getString("cedula", "") ?: ""
@@ -73,6 +93,10 @@ class editar_clientes : AppCompatActivity() {
                     binding.etCedulaCliente.setText(c.cedula)
                     binding.etTelefonoCliente.setText(c.telefono)
                     binding.etValorCredito.setText(c.saldo?.toString())
+                    binding.etNombreCliente.isEnabled = true
+                    binding.etTelefonoCliente.isEnabled = true
+                    binding.etValorCredito.isEnabled = true
+
 
                     // Habilita edicion visualmente
                     binding.cvFormulario.alpha = 1.0f

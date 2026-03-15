@@ -43,7 +43,7 @@
                     android:layout_height="wrap_content"
                     android:text="EJEMPLOS"
                     android:textColor="@color/colorOnSecondary"
-                    android:textSize="18sp"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -52,7 +52,7 @@
                     android:layout_marginTop="2dp"
                     android:text="Toca un ejemplo para ver sus variantes"
                     android:textColor="@color/gris"
-                    android:textSize="12sp" />
+                    android:textSize="18sp" />
 
             </LinearLayout>
 

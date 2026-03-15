@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:gravity="center_vertical"
+        android:gravity="center"
         android:paddingStart="12dp"
         android:paddingEnd="12dp"
         android:paddingTop="10dp"
@@ -31,8 +31,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Nombre del Ejemplo"
+            android:textAlignment="center"
             android:textColor="@color/colorSecondary"
-            android:textSize="13sp"
+            android:textSize="16sp"
             android:textStyle="bold"
             android:maxLines="2"
             android:ellipsize="end"
@@ -50,7 +51,7 @@
             android:paddingBottom="3dp"
             android:text="Ej: 'Venta' $ 50000"
             android:textColor="@color/colorOnSecondary"
-            android:textSize="10sp"
+            android:textSize="15sp"
             android:maxLines="1"
             android:ellipsize="end" />
 
