@@ -2,6 +2,7 @@ package com.example.micaja.ConexionService
 
 import android.util.Log
 import com.example.micaja.models.ActualizarCliente
+import com.example.micaja.models.AgregarProducto
 import com.example.micaja.models.BuscarProductos
 import com.example.micaja.models.ClienteCompleto
 import com.example.micaja.models.ConsultaCedulaTendero
@@ -102,6 +103,10 @@ interface ConexionServiceTienda {
 
     @POST("/cantidadProducto")
     suspend fun cantidadProducto(@Body body: cantidadIn): Response<cantidadIn>
+
+    @POST("/agregarProducto")
+    suspend fun addProducto(@Body body: AgregarProducto): Response<AgregarProducto>
+
 
 
 

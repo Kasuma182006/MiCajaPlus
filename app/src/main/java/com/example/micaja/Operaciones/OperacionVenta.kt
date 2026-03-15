@@ -85,13 +85,20 @@ class OperacionVenta() {
                 val respuestaCantidad = conexion.cantidadProducto(modeloCantidad)
 
                 return if (respuestaCantidad.isSuccessful) {
-                    val modeloVenta = ventaDetectada(idTendero, texto, tipoVenta, nombre, cant, pres)
-                    val respuestaVenta = conexion.ventaDetectada(modeloVenta)
+                    val modeloOperacion = OperacionesInventario(idTendero, nombre, pres, cant, "descontar")
+                    val respuestaOperacion = conexion.operacionesInventario(modeloOperacion)
 
-                    return if (respuestaVenta.isSuccessful) {
-                        "• $cant  $nombre de $pres registrado. ¿Algo más? (o di 'fin')"
-                    } else {
-                        "No pude registrar la venta"
+                    return if(respuestaOperacion.isSuccessful) {
+                        val modeloVenta = ventaDetectada(idTendero, texto, tipoVenta, nombre, cant, pres)
+                        val respuestaVenta = conexion.ventaDetectada(modeloVenta)
+
+                        return if (respuestaVenta.isSuccessful) {
+                            "• $cant  $nombre de $pres registrado. ¿Algo más? (o di 'fin')"
+                        } else {
+                            "No pude registrar la venta"
+                        }
+                    }else{
+                        "No se pudo descontar la cantidad"
                     }
                 } else {
                     "No pude registrar la cantidad"

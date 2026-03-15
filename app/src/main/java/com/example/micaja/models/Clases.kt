@@ -111,6 +111,15 @@ data class cantidadIn (
     val nombre: String
 )
 
+data class AgregarProducto(
+    val idTendero: String,
+    val nombre: String,
+    val presentacion: String,
+    val cantidad: Int,
+    val valorVenta: Int,
+    val idCategoria: Int,
+    val valorCompra: Int
+)
 
 data class Gasto(
     val idTendero: String,

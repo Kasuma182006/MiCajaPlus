@@ -265,15 +265,6 @@ class chat_Tienda : AppCompatActivity() {
                         }
                         return@setOnClickListener
                     }
-                    if (operacionProducto.inicio) {
-                        lifecycleScope.launch {
-                            val respuestaChat = operacionProducto.procesarFlujo(mensaje, cedulaGlobal)
-                            withContext(Dispatchers.Main) {
-                                model.addMensajeSistema(modelo(respuestaChat))
-                            }
-                        }
-                        return@setOnClickListener
-                    }
 
 
 
@@ -309,9 +300,8 @@ class chat_Tienda : AppCompatActivity() {
                             }else if (esAbono){
                                 procesarAbonos(mensaje)
                             }else if(esAgregar){
-                                operacionProducto.inicio = true
-                                operacionProducto.fase = 0
-                                model.addMensajeSistema(modelo("Por favor, di o escribe el producto con su presentación (ejemplo: arroz diana de libra)."))
+                                val intent = Intent(this@chat_Tienda, Agregar_Producto::class.java)
+                                startActivity(intent)
                             }
                         } else {
                             model.addMensajeSistema(modelo("No se pudo detectar la operación, por favor vuelve a intentarlo"))
