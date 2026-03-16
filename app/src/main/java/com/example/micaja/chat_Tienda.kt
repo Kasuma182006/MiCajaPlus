@@ -57,7 +57,7 @@ var i: Int = 1
 var procesoActivo = "ninguno"
 var estadoCredito = "ninguno"
 
-var montoCredito = 0
+var cliente = "ninguno"
 
 var cedulaCliente : String? = null
 
@@ -303,7 +303,7 @@ class chat_Tienda : AppCompatActivity() {
                             }else if(esAgregar && mensaje.contains("producto")){
                                 val intent = Intent(this@chat_Tienda, Agregar_Producto::class.java)
                                 startActivity(intent)
-                            }else if(esAgregar && mensaje.contains("cliente")){
+                            }else if(esAgregar && mensaje.contains("cliente") || estadoCredito=="nuevo_cliente"){
                                 nuevoCliente(mensaje)
                             }
                         } else {
@@ -356,16 +356,13 @@ class chat_Tienda : AppCompatActivity() {
         // limpieza elimina  puntos y comas
         val textoLimpio = texto.replace(Regex("""(\d)[.,](\d{3})\b"""), "$1$2")
         val textoMinuscula = textoLimpio.lowercase()
-
         val nuevoCliente = diccionario["agregar cliente"]?.any { frase ->
             textoMinuscula.contains(frase)
         }
         Log.i("nuevo cliente", nuevoCliente.toString())
-        if (nuevoCliente == true) {
             model.addMensajeSistema(modelo("Dicte el número de cédula del cliente por favor."))
             procesoActivo = "cliente_nuevo"
-            return
-        }
+
         if (procesoActivo == "cliente_nuevo") {
             val textoSinEspacios = textoMinuscula.replace(" ", "")
             val cedulaRegex = Regex("\\d{6,10}")
@@ -416,11 +413,9 @@ class chat_Tienda : AppCompatActivity() {
                     }
                 } else {
                     model.addMensajeSistema(modelo("Lo siento, no pude entenderte, por favor dicta de nuevo"))
-                    Log.i("entro a este else", "jajajaja")
                 }
             } else {
                 model.addMensajeSistema(modelo("Lo siento, no pude entenderte, por favor dicta de nuevo"))
-                Log.i("entre menor", "ñiñin")
             }
 
 
