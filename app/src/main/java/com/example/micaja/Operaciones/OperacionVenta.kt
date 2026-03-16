@@ -80,7 +80,7 @@ class OperacionVenta() {
                 val conexion = ConexionServiceTienda.create()
 
                 val tipoVenta =
-                    if (idCliente.isNotEmpty() && idCliente != idTendero) "credito" else "efectivo"
+                    if (idCliente.isNotEmpty() ) "credito" else "efectivo"
 
                 Log.i("idcliente", tipoVenta)
 
