@@ -478,7 +478,6 @@ class chat_Tienda : AppCompatActivity() {
         if (estadoCredito == "decision") {
 
             val si = palabras.any { diccionario["si"]?.contains(it) == true }
-            Log.i("Entrando a decision", "Entreeee menor")
 
             Log.i("si", si.toString())
             if (si) {
