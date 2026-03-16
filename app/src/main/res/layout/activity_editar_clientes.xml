@@ -223,6 +223,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_input_chat_tendero"
                     android:inputType="textPersonName"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZñÑ "
                     android:enabled="false"
                     android:textSize="15sp"
                     android:maxLength="40"

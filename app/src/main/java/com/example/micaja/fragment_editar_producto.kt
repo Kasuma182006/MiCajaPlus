@@ -148,9 +148,12 @@ class fragment_editar_producto : AppCompatActivity() {
         binding.etBuscarProducto.setText(seleccionado.nombreProducto)
         binding.etNombreProducto.setText(seleccionado.nombreProducto)
         binding.etDescripcionProducto.setText(seleccionado.presentacion)
-        binding.etCantidadProducto.setText(seleccionado.cantidad.toString())
-        binding.etPrecioProducto.setText(seleccionado.valorVenta.toString())
-        binding.etPrecioCompra.setText(seleccionado.valorCompra.toString())
+        val puntuacionCantidad = seleccionado.cantidad.toString().replace(Regex("""(\d)(?=(\d{3})+(?!\d))"""), "$1.")
+        val puntuacionPrecioProducto = seleccionado.valorVenta.toString().replace(Regex("""(\d)(?=(\d{3})+(?!\d))"""), "$1.")
+        val puntuacionPrecioCompra = seleccionado.valorCompra.toString().replace(Regex("""(\d)(?=(\d{3})+(?!\d))"""), "$1.")
+        binding.etCantidadProducto.setText(puntuacionCantidad)
+        binding.etPrecioProducto.setText(puntuacionPrecioProducto)
+        binding.etPrecioCompra.setText(puntuacionPrecioCompra)
         binding.etNombreProducto.isEnabled = true
         binding.etDescripcionProducto.isEnabled = true
         binding.etCantidadProducto.isEnabled = true
@@ -205,15 +208,18 @@ class fragment_editar_producto : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val conexion = ConexionServiceTienda.create()
+
+                fun String.toCleanInt(): Int {
+                    return this.replace(".", "").replace(",", "").toIntOrNull() ?: 0
+                }
                 val editado = EditarProducto(
-                    cantidad = binding.etCantidadProducto.text.toString().toIntOrNull() ?: 0,
+                    cantidad = binding.etCantidadProducto.text.toString().toCleanInt(),
                     idTendero = producto.idTendero,
                     idInventario = producto.idInventario,
                     nombreProducto = binding.etNombreProducto.text.toString().lowercase(),
                     presentacion = binding.etDescripcionProducto.text.toString(),
-                    valorVenta = binding.etPrecioProducto.text.toString().toIntOrNull() ?: 0,
-                    valorCompra= binding.etPrecioCompra.text.toString().toIntOrNull() ?:0
-                )
+                    valorVenta = binding.etPrecioProducto.text.toString().toCleanInt(),
+                    valorCompra = binding.etPrecioCompra.text.toString().toCleanInt()                )
                 val response = conexion.editarProducto(editado)
 
                 withContext(Dispatchers.Main) {

@@ -51,8 +51,11 @@ class Agregar_Producto : AppCompatActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, true)
         // Forzar ajuste del layout cuando aparece el teclado
 
+
         binding = ActivityAgregarProductoBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.btnRetroceso.setOnClickListener { finish() }
 
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -60,10 +63,14 @@ class Agregar_Producto : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+
         validaciones()
         categoriaLista()
         boton()
     }
+
+
 
     private fun boton() {
         binding.btnGuardarProducto.setOnClickListener {

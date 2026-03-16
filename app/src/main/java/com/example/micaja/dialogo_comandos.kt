@@ -24,7 +24,7 @@ class dialogo_comandos : BottomSheetDialogFragment() {
         ),
         "Registrar base inicial" to listOf(
             "base", "base inicial", "registrar base",
-            "Ej: 'Base' \$ 25000"
+            "Ej: 'Base' \$ 25.000"
         ),
         "Registrar venta" to listOf(
             "venta", "ventas", "vendí", "vendiendo", "vender", "vendido",
@@ -34,12 +34,12 @@ class dialogo_comandos : BottomSheetDialogFragment() {
         "Registrar gasto" to listOf(
             "gasto", "gasté", "gastando", "gastos", "gasta", "gastaron",
             "gastamos", "gastan", "gasten", "gastemos", "gastó",
-            "egresos", "Ej: 'gaste' \$ 30000"
+            "egresos", "Ej: 'gaste' \$ 30.000"
         ),
         "Registrar costo" to listOf(
             "costo", "costos", "pago", "pagos", "pagué", "pagando", "pagamos",
             "paguen", "pague", "compra", "compré", "proveedor", "proveedores",
-            "paguemos", "Ej: 'pague' \$ 70000 a alpina"
+            "paguemos", "Ej: 'pague' \$ 70.000 a alpina"
         ),
         "Cerrar tienda" to listOf(
             "cerrar", "cerrando", "final", "terminar", "finalizar", "fin",

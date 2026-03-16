@@ -136,7 +136,7 @@
                     android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZñÑ "
                     app:counterMaxLength="@integer/NombreProducto"
                     android:inputType="textMultiLine"
-                    android:maxLength="40"
+                    android:maxLength="50"
                     android:textSize="15sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -161,9 +161,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_input_chat_tendero"
-                    android:inputType="text"
+                    android:inputType="textMultiLine"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZñÑ "
                     android:textSize="15sp"
-                    android:maxLength="20"
+                    android:maxLength="30"
                     app:counterMaxLength="@integer/Presentacion"
                     />
             </com.google.android.material.textfield.TextInputLayout>
@@ -250,7 +251,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_input_chat_tendero"
-                    android:inputType="numberDecimal"
+                    android:inputType="number"
                     android:textSize="15sp"
                     android:maxLength="11"
                     app:counterMaxLength="11"/>

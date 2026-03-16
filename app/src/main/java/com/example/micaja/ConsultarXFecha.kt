@@ -91,14 +91,23 @@ class ConsultarXFecha : AppCompatActivity() {
 
                 val utilidad  = (ventas + valorCredito) - (gastos + costos)
 
-                binding.tvVentas.text   = "$$ventas"
-                binding.tvGastos.text   = "$$gastos"
-                binding.tvCostos.text   = "$$costos"
-                binding.tvFiados.text   = "$ncreditos"
+
+
+
+                val puntuacionVentas = ventas.toString().replace(Regex("""(\d)(?=(\d{3})+(?!\d))"""), "$1.")
+                val puntuacionGastos = gastos.toString().replace(Regex("""(\d)(?=(\d{3})+(?!\d))"""), "$1.")
+                val puntuacionCostos = costos.toString().replace(Regex("""(\d)(?=(\d{3})+(?!\d))"""), "$1.")
+                val puntuacionNcredito = ncreditos.toString().replace(Regex("""(\d)(?=(\d{3})+(?!\d))"""), "$1.")
+                val puntuacionUtilidad = utilidad.toString().replace(Regex("""(\d)(?=(\d{3})+(?!\d))"""), "$1.")
+
+                binding.tvVentas.text   = "$$puntuacionVentas"
+                binding.tvGastos.text   = "$$puntuacionGastos"
+                binding.tvCostos.text   = "$$puntuacionCostos"
+                binding.tvFiados.text   = "$$puntuacionNcredito"
 
 
                 // Formatear texto de utilidad (ejemplo simple)
-                val utilidadTexto = "$$utilidad"
+                val utilidadTexto = "$$puntuacionUtilidad"
                 binding.tvUtilidad.text = utilidadTexto
 
                 // Cambiar color según si es negativo o no

@@ -103,8 +103,10 @@ class BuscarProductoDialog(
                 slot.card.visibility = View.VISIBLE
                 slot.nombre.text = item.nombreProducto?.replaceFirstChar { it.uppercase() } ?: "Sin nombre"
                 slot.presentacion.text = "${item.presentacion ?: "Sin presentación"}"
-                slot.precio.text = "$ ${item.valorVenta}"
-                slot.stock.text = "Stock: ${item.cantidad}"
+                val puntuacionVentas = item.valorVenta.toString().replace(Regex("""(\d)(?=(\d{3})+(?!\d))"""), "$1.")
+                val puntuacionStock = item.cantidad.toString().replace(Regex("""(\d)(?=(\d{3})+(?!\d))"""), "$1.")
+                slot.precio.text = "$ ${puntuacionVentas}"
+                slot.stock.text = "Stock: ${puntuacionStock}"
                 slot.seleccionar.setOnClickListener {
                     onProductoSeleccionado(item)
                     dismiss()

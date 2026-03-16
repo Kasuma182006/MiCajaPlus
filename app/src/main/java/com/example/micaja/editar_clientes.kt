@@ -92,7 +92,8 @@ class editar_clientes : AppCompatActivity() {
                     binding.etNombreCliente.setText(c.nombre)
                     binding.etCedulaCliente.setText(c.cedula)
                     binding.etTelefonoCliente.setText(c.telefono)
-                    binding.etValorCredito.setText(c.saldo?.toString())
+                    val puntuacionSaldo = c.saldo.toString().replace(Regex("""(\d)(?=(\d{3})+(?!\d))"""), "$1.")
+                    binding.etValorCredito.setText(puntuacionSaldo)
                     binding.etNombreCliente.isEnabled = true
                     binding.etTelefonoCliente.isEnabled = true
                     binding.etValorCredito.isEnabled = true
@@ -111,12 +112,16 @@ class editar_clientes : AppCompatActivity() {
     }
 
     private fun guardarCambios(idTendero: String) {
+
+        fun String.toCleanInt(): Int {
+            return this.replace(".", "").replace(",", "").toIntOrNull() ?: 0
+        }
         val datos = ActualizarCliente(
             idTendero = idTendero,
             cedula = binding.etCedulaCliente.text.toString(),
             nombre = binding.etNombreCliente.text.toString(),
             telefono = binding.etTelefonoCliente.text.toString(),
-            saldo = binding.etValorCredito.text.toString().toIntOrNull() ?: 0
+            saldo = binding.etValorCredito.text.toString().toCleanInt()
         )
 
         lifecycleScope.launch {
