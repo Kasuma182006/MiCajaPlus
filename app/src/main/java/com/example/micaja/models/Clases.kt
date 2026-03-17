@@ -85,15 +85,6 @@ data class ModeloBase(
     val baseInicial: Int
 )
 
-data class Venta(
-    var nombreProducto: String ?= null,
-    val presentacion: String ?= null,
-    val cantidad: Int ?= null,
-    val idTendero: String ?= null,
-    val idcliente: String ?=null
-)
-
-
 
 data class ventaDetectada(
     val idTendero: String,

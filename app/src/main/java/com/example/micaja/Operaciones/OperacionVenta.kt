@@ -4,7 +4,6 @@ import android.util.Log
 import android.widget.Switch
 import com.example.micaja.ConexionService.ConexionServiceTienda
 import com.example.micaja.models.OperacionesInventario
-import com.example.micaja.models.Venta
 import com.example.micaja.models.cantidadIn
 import com.example.micaja.models.ventaDetectada
 import java.text.Normalizer
@@ -55,7 +54,7 @@ class OperacionVenta() {
         return resultado
     }
 
-    suspend fun procesarListaProductos(texto: String, cedula: String, fin_credito: Boolean, idCliente: String = "", idTendero: String): String {
+    suspend fun procesarListaProductos(texto: String, fin_credito: Boolean, idCliente: String = "", idTendero: String): String {
         // Paso fundamental: Limpiar la entrada de voz antes de procesar
         val textoLimpio = normalizarTexto(texto)
         if (textoLimpio.contains("fin") || fin_credito) {
@@ -76,24 +75,35 @@ class OperacionVenta() {
 
             Log.i("datos_procesados", "Nombre: $nombre, Pres: $pres, Cant: $cant")
 
-            return try {
+            try {
                 val conexion = ConexionServiceTienda.create()
 
                 val tipoVenta =
-                    if (idCliente.isNotEmpty() ) "credito" else "efectivo"
+                    if (idCliente.isNotEmpty()) "credito" else "efectivo"
 
                 Log.i("idcliente", tipoVenta)
+
+            if(tipoVenta == "efectivo") {
 
                 val modeloCantidad = cantidadIn(idTendero, cant, pres, nombre)
                 val respuestaCantidad = conexion.cantidadProducto(modeloCantidad)
 
                 return if (respuestaCantidad.isSuccessful) {
                     Log.i("cantidad suficiente", "hay cantidad")
-                    val modeloOperacion = OperacionesInventario(idTendero, nombre, pres, cant, "descontar")
+                    val modeloOperacion =
+                        OperacionesInventario(idTendero, nombre, pres, cant, "descontar")
                     val respuestaOperacion = conexion.operacionesInventario(modeloOperacion)
 
-                    return if(respuestaOperacion.isSuccessful) {
-                        val modeloVenta = ventaDetectada(idTendero, idCliente, texto, tipoVenta, nombre, cant, pres)
+                    return if (respuestaOperacion.isSuccessful) {
+                        val modeloVenta = ventaDetectada(
+                            idTendero,
+                            idCliente,
+                            texto,
+                            "efectivo",
+                            nombre,
+                            cant,
+                            pres
+                        )
                         val respuestaVenta = conexion.ventaDetectada(modeloVenta)
                         Log.i("respuestaOperacion", respuestaVenta.toString())
 
@@ -102,18 +112,27 @@ class OperacionVenta() {
                         } else {
                             "No pude registrar la venta"
                         }
-                    }else{
+                    } else {
                         "No se pudo descontar la cantidad"
                     }
                 } else {
                     "No pude registrar la cantidad"
                 }
+            }else if (tipoVenta == "credito") {
+                val cuerpo =
+                    ventaDetectada(idTendero, idCliente, texto, "credito", nombre, cant, pres)
+                val respuesta = conexion.registrarCredito(cuerpo)
+                if (respuesta.isSuccessful) {
+                    return respuesta.body()!!
+                } else {
+                    return "Error de conexion."
+                }
+            }
 
             } catch (e: Exception) {
-                "Fuera de conexion intentalo de nuevo"
+                return  "Fuera de conexion intentalo de nuevo"
             }
         }
-
         return "No entendí el producto, intenta decir algo como: '2 libras de arroz' o 'un aceite'"
     }
 

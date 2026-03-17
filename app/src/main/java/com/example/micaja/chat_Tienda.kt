@@ -73,7 +73,7 @@ val diccionario = mapOf(
     "efectivo" to listOf("efectivo","efectivos", "plata", "paga", "a la mano", "contado", "dinero", "efectivito"),
     "abono" to listOf ("abonar", "abono", "abonos", "cuota", "adelantar" ,"adelanto"),
     "agregar" to listOf ("agregar", "añadir" ,"nuevo", "producto"),
-    "agregar cliente" to listOf("agregar nombre", "añadir cliente", "cliente nuevo", "nuevo cliente"),
+    "cliente" to listOf("agregar nombre", "añadir cliente", "cliente nuevo", "nuevo cliente"),
     "si" to listOf("si", "sí"),
 )
 
@@ -248,7 +248,7 @@ class chat_Tienda : AppCompatActivity() {
                         lifecycleScope.launch(Dispatchers.IO) {
                             val clienteID = if (procesoActivo == "credito") (cedulaCliente ?: "") else ""
                             val respuestaChat =
-                                operacionVenta.procesarListaProductos(textoLimpio, cedulaGlobal, fin_credito = false, clienteID, cedulaGlobal)
+                                operacionVenta.procesarListaProductos(textoLimpio, false,cedulaGlobal, clienteID)
                             withContext(Dispatchers.Main) {
                                 model.addMensajeSistema(modelo(respuestaChat))
                             }
@@ -269,12 +269,17 @@ class chat_Tienda : AppCompatActivity() {
 
 
 
+
                     lifecycleScope.launch {
                         val ocupadoConAbono = abono.procesarRespuesta(mensaje, { msg ->
                             model.addMensajeSistema(msg)
                         },cedulaGlobal)
 
                         if (ocupadoConAbono) return@launch
+                        if (estadoCredito == "nuevo_cliente") {
+                            nuevoCliente(mensaje)
+                            return@launch
+                        }
 
 
                         val operaciones = filtarPalabras(mensaje)
@@ -285,7 +290,7 @@ class chat_Tienda : AppCompatActivity() {
                             val esAbono = diccionario["abono"]?.any { palabras.contains(it) } == true
                             val esCredito = diccionario["credito"]?.any { palabras.contains(it) } == true
                             val esAgregar = diccionario["agregar"]?.any { palabras.contains(it) } == true
-
+                            val esCliente = diccionario["cliente"]?.any { palabras.contains(it) } == true
 
                             if (esCredito){
                                 procesarCompra(mensaje)
@@ -303,9 +308,11 @@ class chat_Tienda : AppCompatActivity() {
                             }else if(esAgregar && mensaje.contains("producto")){
                                 val intent = Intent(this@chat_Tienda, Agregar_Producto::class.java)
                                 startActivity(intent)
-                            }else if(esAgregar && mensaje.contains("cliente") || estadoCredito=="nuevo_cliente"){
-                                nuevoCliente(mensaje)
                             }
+                            else if (esCliente && mensaje.contains("cliente")) {
+                            estadoCredito = "nuevo_cliente"
+                            nuevoCliente(mensaje)
+                        }
                         } else {
                             model.addMensajeSistema(modelo("No se pudo detectar la operación, por favor vuelve a intentarlo"))
                         }
@@ -345,7 +352,7 @@ class chat_Tienda : AppCompatActivity() {
         if (respuesta.body() == true) {
             return true
         } else{
-            model.addMensajeSistema(modelo("No pude insertar"))
+            model.addMensajeSistema(modelo("Lo siento, ocurrió un error,intentelo de nuevo."))
             return false
         }
     }
@@ -615,10 +622,8 @@ class chat_Tienda : AppCompatActivity() {
                 model.addMensajeSistema(
                     modelo(
                         operacionVenta.procesarListaProductos(
-                            textoLimpio, cedulaGlobal,
-                            fin_credito = true,
-                            cedulaCliente!!,
-                            cedulaGlobal
+                            textoLimpio, true,cedulaCliente!!,cedulaGlobal,
+
                         )
                     ))
             }else {
@@ -627,11 +632,7 @@ class chat_Tienda : AppCompatActivity() {
                 model.addMensajeSistema(
                     modelo(
                         operacionVenta.procesarListaProductos(
-                            textoLimpio, cedulaGlobal,
-                            fin_credito = false,
-                            cedulaCliente!!,
-                            cedulaGlobal
-
+                            textoLimpio, false,cedulaCliente!!,cedulaGlobal
                         )
                     )
                 )
