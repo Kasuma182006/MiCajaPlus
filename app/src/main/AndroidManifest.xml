@@ -15,7 +15,8 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".Agregar_Producto"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".BuscarProductoDialog"
             android:exported="false" />
@@ -28,7 +29,8 @@
         <activity
             android:name=".Login"
             android:exported="true"
-            android:windowSoftInputMode="adjustResize|stateHidden">
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,7 +39,8 @@
         </activity>
         <activity
             android:name=".fragments.FragmentAnadirProductos"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".categorias.Categorias"
             android:exported="false" />

@@ -23,11 +23,20 @@ class editar_clientes : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        // Forzar que la ventana deje que el sistema gestione insets (necesario para adjustResize)
+        // NO llames enableEdgeToEdge() si quieres que el teclado empuje el layout
         WindowCompat.setDecorFitsSystemWindows(window, true)
-        // Forzar ajuste del layout cuando aparece el teclado
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+
+        binding = ActivityEditarClientesBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        // Aplica el comportamiento del teclado
+        // binding.main     → el NestedScrollView raíz
+        // binding.logoApp  → el logo que se oculta para dar espacio
+        setupKeyboardBehavior(
+            rootView = binding.main,
+            viewToScroll = binding.main,
+            viewToHide = null
+        )
 
         binding = ActivityEditarClientesBinding.inflate(layoutInflater)
         setContentView(binding.root)
