@@ -125,7 +125,7 @@ interface ConexionServiceTienda {
     suspend fun actualizarCliente(@Body datos: ActualizarCliente): Response<Map<String, String>>
 
     companion object messi {
-        private const val BASE_URL = "http://10.6.124.141:4000"
+        private const val BASE_URL = "http://10.6.126.123:4000"
         fun create(): ConexionServiceTienda {
             val retrofit = Retrofit.Builder()
                 .baseUrl(BASE_URL)

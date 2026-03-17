@@ -2,6 +2,7 @@ package com.example.micaja
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -34,18 +35,33 @@ class Login : AppCompatActivity() {
             return
         }
 
-        enableEdgeToEdge()
-        // Forzar que la ventana deje que el sistema gestione insets (necesario para adjustResize)
+        // NO llames enableEdgeToEdge() si quieres que el teclado empuje el layout
         WindowCompat.setDecorFitsSystemWindows(window, true)
+        @Suppress("DEPRECATION")
+        window.setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE or
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN
+        )
         // Forzar ajuste del layout cuando aparece el teclado
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
         binding = LoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
+            val imeHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+
+            if (imeVisible) {
+                // Teclado abierto: ocultar logo para dar espacio
+                binding.logoApp.visibility = View.GONE
+            } else {
+                // Teclado cerrado: mostrar logo
+                binding.logoApp.visibility = View.VISIBLE
+            }
+
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, imeHeight)
             insets
         }
         binding.cedulaInput.addTextChangedListener {

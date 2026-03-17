@@ -324,7 +324,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_input_chat_tendero"
                     android:inputType="textMultiLine"
-                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZñÑ "
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZñÑ1234567890 "
                     android:enabled="false"
                     android:maxLength="30"
                     android:textSize="15sp"

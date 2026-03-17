@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.widget.addTextChangedListener
 import com.example.micaja.ConexionService.ConexionServiceTienda
 import com.example.micaja.databinding.ActivityAgregarProductoBinding
@@ -39,18 +40,25 @@ class Agregar_Producto : AppCompatActivity() {
         10 to "papelería",
         11 to "fármacos",
         12 to "mascotas"
+
     )
+
+
     private var idCategoriaSeleccionada: Int = -1
 
 
     private lateinit var binding: ActivityAgregarProductoBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        // Forzar que la ventana deje que el sistema gestione insets (necesario para adjustResize)
+        // NO llames enableEdgeToEdge() si quieres que el teclado empuje el layout
         WindowCompat.setDecorFitsSystemWindows(window, true)
+        @Suppress("DEPRECATION")
+        window.setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE or
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN
+        )
         // Forzar ajuste del layout cuando aparece el teclado
-
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
         binding = ActivityAgregarProductoBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -73,6 +81,12 @@ class Agregar_Producto : AppCompatActivity() {
 
 
     private fun boton() {
+
+        binding.etCatagoriaProducto.setOnClickListener {
+            WindowInsetsControllerCompat(window, binding.etCatagoriaProducto)
+                .hide(WindowInsetsCompat.Type.ime())
+        }
+
         binding.btnGuardarProducto.setOnClickListener {
             Log.d("MI_CAJA_DEBUG", "Botón presionado")
             val nombre = binding.etNombreProducto.text.toString().trim()

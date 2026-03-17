@@ -23,9 +23,13 @@ class editar_clientes : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        // Forzar que la ventana deje que el sistema gestione insets (necesario para adjustResize)
+        // NO llames enableEdgeToEdge() si quieres que el teclado empuje el layout
         WindowCompat.setDecorFitsSystemWindows(window, true)
+        @Suppress("DEPRECATION")
+        window.setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE or
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN
+        )
         // Forzar ajuste del layout cuando aparece el teclado
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
