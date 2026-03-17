@@ -141,36 +141,6 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilDescripcionProducto"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:hint="@string/Presentación"
-                app:boxStrokeWidth="1.5dp"
-                app:hintTextColor="@color/colorOnSecondary"
-                app:endIconMode="clear_text"
-                app:endIconTint="@color/colorOnSecondary"
-                app:counterEnabled="true"
-                app:boxStrokeWidthFocused="0dp"
-                app:counterMaxLength="@integer/Presentacion"
-
-                >
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etDescripcionProducto"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_input_chat_tendero"
-                    android:inputType="textMultiLine"
-                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZñÑ1234567890 "
-                    android:textSize="15sp"
-                    android:maxLength="30"
-                    app:counterMaxLength="@integer/Presentacion"
-                    />
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilCatategoriaProducto"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
@@ -201,12 +171,71 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilDescripcionProducto"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:hint="@string/Presentación"
+                app:boxStrokeWidth="1.5dp"
+                app:hintTextColor="@color/colorOnSecondary"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/colorOnSecondary"
+                app:counterEnabled="true"
+                app:boxStrokeWidthFocused="0dp"
+                app:counterMaxLength="@integer/Presentacion"
+
+                >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etDescripcionProducto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_input_chat_tendero"
+                    android:inputType="textMultiLine"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZñÑ1234567890 "
+                    android:textSize="15sp"
+                    android:maxLength="30"
+                    app:counterMaxLength="@integer/Presentacion"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilCantidadProducto"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="@string/Cantidad"
+                app:boxStrokeWidth="1.5dp"
+                app:hintTextColor="@color/colorOnSecondary"
+                app:endIconMode="clear_text"
+                app:endIconTint="@color/colorOnSecondary"
+                app:counterEnabled="true"
+                app:boxStrokeWidthFocused="0dp"
+                app:counterMaxLength="@integer/CantidadProducto"
+                >
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etCantidadProducto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_input_chat_tendero"
+                    android:inputType="number"
+                    android:textSize="15sp"
+                    android:maxLength="11"
+                    app:counterMaxLength="@integer/CantidadProducto"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilPrecioProductoCompra"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="8dp"
                 android:hint="@string/precioCompra"
                 app:boxStrokeWidth="1.5dp"
                 app:hintTextColor="@color/colorOnSecondary"
@@ -257,33 +286,9 @@
                     app:counterMaxLength="11"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilCantidadProducto"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:hint="@string/Cantidad"
-                app:boxStrokeWidth="1.5dp"
-                app:hintTextColor="@color/colorOnSecondary"
-                app:endIconMode="clear_text"
-                app:endIconTint="@color/colorOnSecondary"
-                app:counterEnabled="true"
-                app:boxStrokeWidthFocused="0dp"
-                app:counterMaxLength="@integer/CantidadProducto"
-                >
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etCantidadProducto"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_input_chat_tendero"
-                    android:inputType="number"
-                    android:textSize="15sp"
-                    android:maxLength="11"
-                    app:counterMaxLength="@integer/CantidadProducto"
-                    />
-            </com.google.android.material.textfield.TextInputLayout>
+
+
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton

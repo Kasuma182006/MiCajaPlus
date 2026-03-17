@@ -36,32 +36,24 @@ class Login : AppCompatActivity() {
         }
 
         // NO llames enableEdgeToEdge() si quieres que el teclado empuje el layout
-        WindowCompat.setDecorFitsSystemWindows(window, true)
-        @Suppress("DEPRECATION")
-        window.setSoftInputMode(
-            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE or
-                    WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN
-        )
-        // Forzar ajuste del layout cuando aparece el teclado
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         binding = LoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
-            val imeHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
+        // Aplica el comportamiento del teclado
+        // binding.main     → el NestedScrollView raíz
+        // binding.logoApp  → el logo que se oculta para dar espacio
+        setupKeyboardBehavior(
+            rootView = binding.main,
+            viewToScroll = binding.main,
+            viewToHide = binding.logoApp
+        )
+
+        // Insets normales para status bar
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-
-            if (imeVisible) {
-                // Teclado abierto: ocultar logo para dar espacio
-                binding.logoApp.visibility = View.GONE
-            } else {
-                // Teclado cerrado: mostrar logo
-                binding.logoApp.visibility = View.VISIBLE
-            }
-
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, imeHeight)
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
         binding.cedulaInput.addTextChangedListener {

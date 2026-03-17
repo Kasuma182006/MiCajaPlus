@@ -78,6 +78,9 @@ val diccionario = mapOf(
 )
 
 class chat_Tienda : AppCompatActivity() {
+
+    val abono=Abonos()
+
     lateinit var mensaje: String
     private lateinit var binding: ActivityChatTiendaBinding
     private val RQ_SPEECH_REC = 102
@@ -298,8 +301,7 @@ class chat_Tienda : AppCompatActivity() {
                             }else if (esVenta) {
                                 operacionVenta.inicio = true
                                 model.addMensajeSistema(modelo("¡Venta iniciada! Dicta los productos uno a uno o di 'fin'."))
-                            }else if (esAbono){
-                                procesarAbonos(mensaje)
+
                             }else if(esAgregar && mensaje.contains("producto")){
                                 val intent = Intent(this@chat_Tienda, Agregar_Producto::class.java)
                                 startActivity(intent)
@@ -360,8 +362,8 @@ class chat_Tienda : AppCompatActivity() {
             textoMinuscula.contains(frase)
         }
         Log.i("nuevo cliente", nuevoCliente.toString())
-            model.addMensajeSistema(modelo("Dicte el número de cédula del cliente por favor."))
-            procesoActivo = "cliente_nuevo"
+        model.addMensajeSistema(modelo("Dicte el número de cédula del cliente por favor."))
+        procesoActivo = "cliente_nuevo"
 
         if (procesoActivo == "cliente_nuevo") {
             val textoSinEspacios = textoMinuscula.replace(" ", "")
@@ -475,30 +477,8 @@ class chat_Tienda : AppCompatActivity() {
     )
 
 
-    //////////////////////////////ABONOS
-    val abono=Abonos()
-    fun procesarAbonos(texto: String) {
-        val preferencia = getSharedPreferences("SesionTendero", MODE_PRIVATE)
-        val idTendero = preferencia.getString("cedula", "") ?: ""
-        lifecycleScope.launch {
-            val fueAbono = abono.procesarRespuesta(texto, { msg ->
-                model.addMensajeSistema(msg)
-            }, idTendero)
 
-            if (fueAbono)
-                return@launch
 
-            val textoLimpio = texto.replace(Regex("""(\d)[.,](\d{3})\b"""), "$1$2")
-            val textoMinuscula = textoLimpio.lowercase()
-            val palabras = textoMinuscula.split(Regex("""[\s:]+"""))
-
-            val esAbono = palabras.any { diccionario["abono"]?.contains(it) == true }
-
-            if (esAbono) {
-                abono.iniciarFlujoAbono(model::addMensajeSistema)
-            }
-        }
-    }
 
 
     suspend fun procesarCompra(texto: String) {

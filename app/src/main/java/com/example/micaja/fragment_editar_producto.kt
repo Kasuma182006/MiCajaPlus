@@ -55,17 +55,21 @@ class fragment_editar_producto : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         // NO llames enableEdgeToEdge() si quieres que el teclado empuje el layout
         WindowCompat.setDecorFitsSystemWindows(window, true)
-        @Suppress("DEPRECATION")
-        window.setSoftInputMode(
-            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE or
-                    WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN
-        )
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
         binding = ActivityFragmentEditarProductoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+        // Aplica el comportamiento del teclado
+        // binding.main     → el NestedScrollView raíz
+        // binding.logoApp  → el logo que se oculta para dar espacio
+        setupKeyboardBehavior(
+            rootView = binding.main,
+            viewToScroll = binding.main,
+            viewToHide = null
+        )
+
+        // Insets normales para status bar
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
