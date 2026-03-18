@@ -1,6 +1,5 @@
 package com.example.micaja.Operaciones
 
-
 import android.util.Log
 import com.example.micaja.ConexionService.ConexionServiceTienda
 import com.example.micaja.models.gastoDetectado
@@ -24,8 +23,8 @@ class OperacionGasto {
     private fun normalizarTexto(texto: String): String {
         val temp = Normalizer.normalize(texto.lowercase(), Normalizer.Form.NFD)
         val sinTildes = Regex("\\p{InCombiningDiacriticalMarks}+").replace(temp, "")
-
         var resultado = sinTildes
+
         numerosMap.forEach { (palabra, numero) ->
             resultado = resultado.replace(Regex("\\b$palabra\\b"), numero)
         }
@@ -46,9 +45,7 @@ class OperacionGasto {
 
                 if (respuesta.isSuccessful) {
                     "¡Gasto registrado! $${precio} en $justificacion."
-                } else {
-                    "No pude guardar el gasto. Error en el servidor."
-                }
+                } else { "No pude guardar el gasto. Error en el servidor." }
             } catch (e: Exception) {
                 Log.e("ERROR_GASTO", "Error: ${e.message}")
                 "Sin conexión. Inténtalo de nuevo."
@@ -60,11 +57,10 @@ class OperacionGasto {
     private fun extraerDatosGasto(segmento: String): Pair<String, Int>? {
         var texto = segmento.trim()
         val cifras = Regex("""\b\d+\b""").findAll(texto).map { it.value }.toList()
-        if (cifras.isEmpty()) return null
 
+        if (cifras.isEmpty()) return null
         var precioFinal: Int? = null
         var textoPrecioDetectado = ""
-
         val regexDinero = Regex("""(?:por|de|\$)\s*(\d+)|(\d+)\s*(?:pesos|lucas)""")
         val matchDinero = regexDinero.find(texto)
 
@@ -79,9 +75,7 @@ class OperacionGasto {
 
             precioFinal = if (posiblesPrecios.isNotEmpty()) {
                 posiblesPrecios.maxOrNull()
-            } else {
-                numeros.maxOrNull()
-            }
+            } else { numeros.maxOrNull() }
             textoPrecioDetectado = precioFinal.toString()
         }
 
@@ -96,8 +90,6 @@ class OperacionGasto {
         val justificacionFinal = texto.replace(Regex("""\s+"""), " ").trim()
         return if (justificacionFinal.isNotEmpty()) {
             Pair(justificacionFinal.replaceFirstChar { it.uppercase() }, precioFinal)
-        } else {
-            Pair("Gasto general", precioFinal)
-        }
+        } else { Pair("Gasto general", precioFinal) }
     }
 }

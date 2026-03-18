@@ -126,7 +126,6 @@ data class costoDetectado(
     val proveedor: String
 )
 
-
 data class gastoDetectado(
     val idTendero: String,
     val mensaje: String,
@@ -141,9 +140,6 @@ data class compra_Mercancia(
     val precioCompra: Int,
     val proveedor: String
 )
-
-
-
 
 //Esta data class es para las operaciones de ventas de unidades o agregar unidades existentes en el inventario (ventas o gastos en operciones)
 data class OperacionesInventario(
@@ -197,5 +193,3 @@ data class Producto(
     val nombre: String,
     val presentacion: String
 )
-
-

@@ -2,10 +2,7 @@ package com.example.micaja
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import android.view.WindowManager
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -14,6 +11,7 @@ import androidx.core.widget.addTextChangedListener
 import com.example.micaja.ConexionService.ConexionServiceTienda
 import com.example.micaja.databinding.LoginBinding
 import com.example.micaja.models.Tendero
+import com.example.micaja.utils.SesionManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,33 +22,24 @@ class Login : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Verificar si ya está logueado
-        val prefs = getSharedPreferences("SesionTendero", MODE_PRIVATE)
-        val logueado = prefs.getBoolean("logueado", false)
-
-        if (logueado) {
-            // Ya está logueado, ir directamente a Principal
+        if (SesionManager.esSesionValida(this)) {
             startActivity(Intent(this, chat_Tienda::class.java))
             finish()
             return
+        } else {
+            val prefs = getSharedPreferences("SesionTendero", MODE_PRIVATE)
+            prefs.edit().clear().apply()
         }
-
-        // NO llames enableEdgeToEdge() si quieres que el teclado empuje el layout
         WindowCompat.setDecorFitsSystemWindows(window, false)
-
         binding = LoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Aplica el comportamiento del teclado
-        // binding.main     → el NestedScrollView raíz
-        // binding.logoApp  → el logo que se oculta para dar espacio
         setupKeyboardBehavior(
             rootView = binding.main,
             viewToScroll = binding.main,
             viewToHide = binding.logoApp
         )
 
-        // Insets normales para status bar
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -65,9 +54,7 @@ class Login : AppCompatActivity() {
                 binding.cedulaInput.error = null
                 if (texto.length>10){
                     binding.cedulaInput.error = "La cédula debe tener una longitud máxima de 10 dígitos."
-                }else{
-                    binding.cedulaInput.error = null
-                }
+                } else { binding.cedulaInput.error = null }
             }
         }
         binding.telefonoInput.addTextChangedListener{
@@ -75,13 +62,11 @@ class Login : AppCompatActivity() {
             val textoSoloNumeros = texto.replace(Regex("[^0-9]"), "")
             if (texto.isNotEmpty() && texto != textoSoloNumeros){
                 binding.telefonoInput.error = "El teléfono solo debe contener números"
-            }else{
+            } else {
                 binding.telefonoInput.error = null
                 if(texto.length>10){
                     binding.telefonoInput.error = "Longitud permitida: 10 dígitos"
-                }else{
-                    binding.telefonoInput.error = null
-                }
+                } else { binding.telefonoInput.error = null }
             }
         }
         configurarBotones()
@@ -89,11 +74,11 @@ class Login : AppCompatActivity() {
 
     private fun configurarBotones() {
         binding.tvRegistrate.setOnClickListener { irARegistro() }
-        binding.BtnRegistrar.setOnClickListener { iniciarSesion() }
+        binding.BtnRegistrar.setOnClickListener { logueadito() }
         binding.plus.setOnClickListener { irAChatTienda() }
     }
 
-    private fun iniciarSesion() {
+    private fun logueadito() {
         val cedula = binding.cedulaInput.text.toString().trim()
         val telefono = binding.telefonoInput.text.toString().trim()
 
@@ -117,8 +102,6 @@ class Login : AppCompatActivity() {
                     if (response.isSuccessful && response.body() != null) {
 
                         val tendero=response.body()!!
-
-                        //Guardar sesión
                         val prefs = getSharedPreferences("SesionTendero", MODE_PRIVATE)
                         val editor = prefs.edit()
                         editor.putBoolean("logueado", true)
@@ -126,6 +109,8 @@ class Login : AppCompatActivity() {
                         editor.putString("nombre", tendero.nombre)
                         editor.putString("telefono", tendero.telefono)
                         editor.apply()
+
+                        SesionManager.iniciarSesion(this@Login, cedula)
 
                         Toast.makeText(
                             this@Login,

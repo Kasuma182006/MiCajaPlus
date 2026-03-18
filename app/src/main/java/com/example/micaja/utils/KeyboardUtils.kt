@@ -108,8 +108,6 @@ fun setupKeyboardBehavior(
         }
     )
 
-    // Listener de foco: cuando el usuario toca un input distinto
-    // con el teclado ya abierto, hace scroll automáticamente
     scrollView?.let { sv ->
         sv.viewTreeObserver.addOnGlobalFocusChangeListener { _, newFocus ->
             if (newFocus == null) return@addOnGlobalFocusChangeListener

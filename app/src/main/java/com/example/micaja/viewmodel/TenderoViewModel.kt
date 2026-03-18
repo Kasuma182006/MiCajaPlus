@@ -9,16 +9,14 @@ class TenderoViewModel: ViewModel() {
     val mensajes = MutableLiveData<MutableList<modelo>>()
     val mensajesSistema = MutableLiveData<MutableList<modelo>>()
 
-    fun addMensaje(mensaje:modelo){
-
-        val list = mensajes.value?: mutableListOf()
+    fun addMensaje(mensaje: modelo) {
+        val list = mensajes.value?.toMutableList() ?: mutableListOf()
         list.add(mensaje)
         mensajes.postValue(list)
     }
 
     fun addMensajeSistema(mensaje:modelo){
-
-        val list = mensajesSistema.value?: mutableListOf()
+        val list = mensajesSistema.value?.toMutableList() ?: mutableListOf()
         list.add(mensaje)
         mensajesSistema.postValue(list)
     }

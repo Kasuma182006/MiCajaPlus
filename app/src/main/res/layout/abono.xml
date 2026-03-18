@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="800dp"
     android:background="@color/color_fondo"
-    android:layout_marginTop="10dp"
-    tools:context=".Opciones">
+    android:layout_marginTop="10dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraint"

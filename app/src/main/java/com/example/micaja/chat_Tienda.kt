@@ -21,6 +21,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.micaja.Adapter.Adapter
 import com.example.micaja.ConexionService.ConexionServiceTienda
+import com.example.micaja.Operaciones.OperacionCosto
+import com.example.micaja.Operaciones.OperacionGasto
 import com.example.micaja.Operaciones.OperacionProducto
 import com.example.micaja.Operaciones.OperacionVenta
 import com.example.micaja.databinding.ActivityChatTiendaBinding
@@ -67,14 +69,16 @@ val diccionario = mapOf(
     "abrir" to listOf("abierto","iniciar","inicio","open","abrir","abriendo","comenzar","comienzo","arrancar","empezar","empezemos","dia","día"),
     "cerrar" to listOf("acabar", "cerrar","cerrando","cierre", "end", "final", "finalizar", "terminar"),
     "venta" to listOf ("ingreso", "ingresos" ,"venta","ventas", "vende", "vendí", "vendido", "vendiendo", "vendieron", "vendimos", "vendo", "vendió", "vendidos"),
-    "compra" to listOf ("compra de mercancía", "comprar", "compras", "compré", "costo", "costos", "pagamos", "pago de", "pague" ,"pagué", "pedido"),
+    "compra" to listOf ("compra", "comprar", "compras", "compré", "costo", "costos", "pagamos", "pagué", "pedido"),
     "gasto" to listOf ("egreso", "egresos", "gastamos", "gastan", "gastando", "gastaron", "gasté", "gasto", "gastó", "gastos"),
     "credito" to listOf ("credito", "crédito", "créditos", "creditos", "fiado a", "fiado", "fiados", "fiar", "fié"),
-    "efectivo" to listOf("efectivo","efectivos", "plata", "paga", "a la mano", "contado", "dinero", "efectivito"),
+    "efectivo" to listOf("efectivo","efectivos", "plata", "paga", "contado", "dinero", "efectivito"),
     "abono" to listOf ("abonar", "abono", "abonos", "cuota", "adelantar" ,"adelanto"),
-    "agregar" to listOf ("agregar", "añadir" ,"nuevo", "producto"),
-    "cliente" to listOf("agregar nombre", "añadir cliente", "cliente nuevo", "nuevo cliente"),
+    "agregar" to listOf ("agregar", "añadir", "identificar", "nuevo", "producto"),
+    "cliente" to listOf("nombre", "cliente", "nuevo", "cliente"),
+    "consultar" to listOf("busca", "buscar", "consulta", "filtrar", "pregunta"),
     "si" to listOf("si", "sí"),
+    "cancelar" to listOf("cancela", "cancelalo", "cancelelo", "equivoqué", "equivocación", "salgase", "sálgase", "salir", "reiniciar")
 )
 
 class chat_Tienda : AppCompatActivity() {
@@ -93,6 +97,8 @@ class chat_Tienda : AppCompatActivity() {
     lateinit var estadoBase: SharedPreferences
 
     var operacionVenta = OperacionVenta()
+    var operacionGasto = OperacionGasto()
+    var operacionCosto = OperacionCosto()
     var operacionProducto = OperacionProducto()
 
 
@@ -155,6 +161,11 @@ class chat_Tienda : AppCompatActivity() {
         configuracionMenu()
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (!SesionManager.esSesionValida(this)) { SesionManager.cerrarSesion(this) }
+    }
+
     private fun configuracionMenu() {
         binding.btnMenu.setOnClickListener {
             val sheet = MenuBottomSheet(
@@ -203,13 +214,15 @@ class chat_Tienda : AppCompatActivity() {
     private fun observer() {
         model.mensajes.observe(this, Observer { newName ->
             Adapter.dataset = newName
-            Adapter.notifyDataSetChanged()
-        })
+            Adapter.notifyDataSetChanged() // 1. Le avisamos al adapter que repinte
 
+            if (Adapter.itemCount > 0) { binding.recyclerMensajes.scrollToPosition(Adapter.itemCount - 1) }
+        })
         model.mensajesSistema.observe(this, Observer { newName ->
             Adapter.sistemaData = newName
             Adapter.notifyDataSetChanged()
-            binding.recyclerMensajes.scrollToPosition(Adapter.itemCount - 1)
+
+            if (Adapter.itemCount > 0) { binding.recyclerMensajes.scrollToPosition(Adapter.itemCount - 1) }
         })
     }
     fun filtarPalabras(msj: String): Boolean {
@@ -223,15 +236,17 @@ class chat_Tienda : AppCompatActivity() {
                 }
             }
         }
-        if (operacionVenta.inicio){
-            return true
-        }
+        if (operacionVenta.inicio){ return true }
         return false
     }
 
     fun evento() {
         binding.sendBtn.setOnClickListener {
-            mensaje = binding.messageInput.text.toString()
+            mensaje = binding.messageInput.text.toString().trim()
+            if (mensaje.isEmpty()) {
+                return@setOnClickListener
+            }
+
             val tienda = estadoTienda.getBoolean("abierta", false)
             val base = estadoBase.getBoolean("base", false)
             binding.messageInput.setText("")
@@ -242,13 +257,44 @@ class chat_Tienda : AppCompatActivity() {
 
             val textoLimpio = mensaje.replace(Regex("""(\d)[.,](\d{3})\b"""), "$1$2").lowercase()
             val palabras = textoLimpio.split(Regex("""[\s,.:]+"""))
-            val palabrasDosEnDos = palabras.windowed(2).map { it.joinToString(" ") }
-            val esCliente = diccionario["cliente"]?.any { palabrasDosEnDos.contains(it) } == true
 
+            if (!SesionManager.esSesionValida(this@chat_Tienda)) {
+                SesionManager.cerrarSesion(this@chat_Tienda)
+                return@setOnClickListener // Cortamos la ejecución aquí mismo
+            }
 
+            val losQueSomos = listOf("venta", "compra", "gasto", "abono", "credito")
+
+            val quiereCambiarFlujo = losQueSomos.any { comando ->
+                diccionario[comando]?.any { palabras.contains(it) } == true
+            }
+
+            if (quiereCambiarFlujo) {
+                operacionCosto.cancelarFlujo()
+                abono.cancelarFlujo()
+                operacionVenta.inicio = false
+                procesoActivo = "ninguno"
+                estadoCredito = "ninguno"
+                cedulaCliente = null
+            }
 
             if (tienda) {
                 if (base) {
+
+                    val quiereCancelar = diccionario["cancelar"]?.any { palabras.contains(it) } == true
+
+                    if (quiereCancelar) {
+                        operacionVenta.inicio = false
+                        procesoActivo = "ninguno"
+                        estadoCredito = "ninguno"
+                        cedulaCliente = null
+                        operacionCosto.cancelarFlujo()
+                        abono.cancelarFlujo()
+
+                        model.addMensajeSistema(modelo("Operación cancelada."))
+                        return@setOnClickListener
+                    }
+
                     if (operacionVenta.inicio) {
                         lifecycleScope.launch(Dispatchers.IO) {
                             val clienteID = if (procesoActivo == "credito") (cedulaCliente ?: "") else ""
@@ -271,12 +317,6 @@ class chat_Tienda : AppCompatActivity() {
                         }
                         return@setOnClickListener
                     }
-                    if (esCliente || procesoActivo == "cliente_nuevo" || procesoActivo == "registro_cliente") {
-                        lifecycleScope.launch(Dispatchers.IO) {
-                            nuevoCliente(mensaje)
-                        }
-                        return@setOnClickListener
-                    }
 
 
 
@@ -288,7 +328,14 @@ class chat_Tienda : AppCompatActivity() {
 
                         if (ocupadoConAbono) return@launch
 
-
+                        if (estadoCredito == "nuevo_cliente") {
+                            nuevoCliente(mensaje)
+                            return@launch
+                        }
+                        val ocupadoConCosto = operacionCosto.procesarRespuesta(mensaje, { msg ->
+                            model.addMensajeSistema(msg)
+                        }, cedulaGlobal)
+                        if (ocupadoConCosto) return@launch
 
                         val operaciones = filtarPalabras(mensaje)
                         if (operaciones) {
@@ -298,26 +345,28 @@ class chat_Tienda : AppCompatActivity() {
                             val esAbono = diccionario["abono"]?.any { palabras.contains(it) } == true
                             val esCredito = diccionario["credito"]?.any { palabras.contains(it) } == true
                             val esAgregar = diccionario["agregar"]?.any { palabras.contains(it) } == true
-
-
+                            val esCliente = diccionario["cliente"]?.any { palabras.contains(it) } == true
 
                             if (esCredito){
                                 procesarCompra(mensaje)
-                            }
-                            else if (esAbono) {
+                            } else if (esAbono) {
                                 abono.iniciarFlujoAbono(model::addMensajeSistema)
                             } else if(esGasto){
-                                procesarGasto(mensaje)
-                            }else if(esCompra){
-                                procesarCosto(mensaje)
-                            }else if (esVenta) {
+                                val respuestaGasto = operacionGasto.procesarGasto(mensaje, cedulaGlobal)
+                                model.addMensajeSistema(modelo(respuestaGasto))
+                            } else if(esCompra) {
+                                operacionCosto.iniciarFlujoCosto { msg -> model.addMensajeSistema(msg) }
+                            } else if (esVenta) {
                                 operacionVenta.inicio = true
                                 model.addMensajeSistema(modelo("¡Venta iniciada! Dicta los productos uno a uno o di 'fin'."))
-
-                            }else if(esAgregar && mensaje.contains("producto")){
+                            } else if(esAgregar && mensaje.contains("producto")){
                                 val intent = Intent(this@chat_Tienda, Agregar_Producto::class.java)
                                 startActivity(intent)
-                                }
+                            }
+                            else if (esCliente && mensaje.contains("cliente")) {
+                            estadoCredito = "nuevo_cliente"
+                            nuevoCliente(mensaje)
+                        }
                         } else {
                             model.addMensajeSistema(modelo("No se pudo detectar la operación, por favor vuelve a intentarlo"))
                         }
@@ -368,15 +417,12 @@ class chat_Tienda : AppCompatActivity() {
         // limpieza elimina  puntos y comas
         val textoLimpio = texto.replace(Regex("""(\d)[.,](\d{3})\b"""), "$1$2")
         val textoMinuscula = textoLimpio.lowercase()
-
-
-        if (procesoActivo == "ninguno") {
-                model.addMensajeSistema(modelo("Dicte el número de cédula del cliente por favor."))
-                procesoActivo = "cliente_nuevo"
-                Log.i("proceso activo", procesoActivo)
-            return
-            }
-
+        val nuevoCliente = diccionario["agregar cliente"]?.any { frase ->
+            textoMinuscula.contains(frase)
+        }
+        Log.i("nuevo cliente", nuevoCliente.toString())
+        model.addMensajeSistema(modelo("Dicte el número de cédula del cliente por favor."))
+        procesoActivo = "cliente_nuevo"
 
         if (procesoActivo == "cliente_nuevo") {
             val textoSinEspacios = textoMinuscula.replace(" ", "")
@@ -391,7 +437,7 @@ class chat_Tienda : AppCompatActivity() {
                     model.addMensajeSistema(modelo("Dicte el nombre del cliente y su número télefonico."))
                     return
                 } else {
-                    model.addMensajeSistema(modelo("Cliente encontrado: ${respuesta.body()?.nombre}.\nSaldo total: ${respuesta.body()?.saldo}"))
+                    model.addMensajeSistema(modelo("Cliente encontrado: ${respuesta.body()?.nombre}.\nSaldo total: ${respuesta.body()?.saldo}\n"))
                     procesoActivo = "ninguno"
                     return
                 }
@@ -422,8 +468,8 @@ class chat_Tienda : AppCompatActivity() {
                         .joinToString(" ") { it.replaceFirstChar { char -> char.uppercase() } }
 
                     if (nuevo_cliente(cedulaCliente, cedula_tendero, nombreFormateado, telefonoLimpio)) {
-                        model.addMensajeSistema(modelo("El cliente $nombreFormateado con la cédula $cedulaCliente y número $telefonoLimpio registrado con éxito."))
-                        procesoActivo = "ninguno"
+                        model.addMensajeSistema(modelo("El cliente $nombreFormateado con la cédula $cedulaCliente y número $telefonoLimpio registrado con éxito. \nDicte el producto que vendío a crédito."))
+                        estadoCredito = "pedir_productos"
                         return
                     }
                 } else {
@@ -464,11 +510,7 @@ class chat_Tienda : AppCompatActivity() {
                 estado = "abierto"
             }
         }
-
-        if (estado == "abierto") {
-            return true
-        }
-
+        if (estado == "abierto") { return true }
         return false
     }
 

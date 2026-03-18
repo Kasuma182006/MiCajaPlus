@@ -2,9 +2,7 @@ package com.example.micaja
 
 import android.content.Context
 import android.os.Bundle
-import android.view.WindowManager
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -23,15 +21,11 @@ class editar_clientes : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // NO llames enableEdgeToEdge() si quieres que el teclado empuje el layout
         WindowCompat.setDecorFitsSystemWindows(window, true)
 
         binding = ActivityEditarClientesBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Aplica el comportamiento del teclado
-        // binding.main     → el NestedScrollView raíz
-        // binding.logoApp  → el logo que se oculta para dar espacio
         setupKeyboardBehavior(
             rootView = binding.main,
             viewToScroll = binding.main,
@@ -42,20 +36,13 @@ class editar_clientes : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.textBuscarCliente.setEndIconOnClickListener {
-            // Limpia el campo de busqueda principal
             binding.etBuscarCliente.setText("")
-
-            // Limpia los campos especificos del cliente
             binding.etNombreCliente.setText("")
             binding.etCedulaCliente.setText("")
             binding.etTelefonoCliente.setText("")
             binding.etValorCredito.setText("")
-
-            // Restaura el estado visual y deshabilitar el boton de guardado
             binding.cvFormulario.alpha = 0.5f
             binding.btnGuardarCliente.isEnabled = false
-
-            //Quita el foco y desactiva teclado
             binding.etBuscarCliente.clearFocus()
             WindowInsetsControllerCompat(window, binding.etBuscarCliente)
                 .hide(WindowInsetsCompat.Type.ime())
@@ -86,9 +73,7 @@ class editar_clientes : AppCompatActivity() {
             .hide(WindowInsetsCompat.Type.ime())
         }
 
-        binding.btnGuardarCliente.setOnClickListener {
-            guardarCambios(idTendero)
-        }
+        binding.btnGuardarCliente.setOnClickListener { guardarCambios(idTendero) }
     }
 
     private fun buscarCliente(cedula: String, idTendero: String) {
@@ -97,7 +82,6 @@ class editar_clientes : AppCompatActivity() {
                 val response = service.consultarClienteEdit(Identificacion(cedula, idTendero))
                 if (response.isSuccessful && response.body() != null) {
                     val c = response.body()!!
-                    // Llena el formulario
                     binding.etNombreCliente.setText(c.nombre)
                     binding.etCedulaCliente.setText(c.cedula)
                     binding.etTelefonoCliente.setText(c.telefono)
@@ -106,7 +90,6 @@ class editar_clientes : AppCompatActivity() {
                     binding.etNombreCliente.isEnabled = true
                     binding.etTelefonoCliente.isEnabled = true
                     binding.etValorCredito.isEnabled = true
-
 
                     // Habilita edicion visualmente
                     binding.cvFormulario.alpha = 1.0f

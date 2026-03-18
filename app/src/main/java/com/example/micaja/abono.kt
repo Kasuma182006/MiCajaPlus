@@ -1,4 +1,5 @@
 package com.example.micaja
+
 import com.example.micaja.ConexionService.ConexionServiceTienda
 import com.example.micaja.models.DatosAbono
 import com.example.micaja.models.Identificacion
@@ -7,9 +8,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class Abonos {
-    private enum class EstadoAbono {
-        INACTIVO, ESPERANDO_CEDULA, ESPERANDO_MONTO, ESPERANDO_CONFIRMACION
-    }
+    private enum class EstadoAbono { INACTIVO, ESPERANDO_CEDULA, ESPERANDO_MONTO, ESPERANDO_CONFIRMACION }
+
     private var estadoActual = EstadoAbono.INACTIVO
     private var cedulaGuardada = ""
     private var nombreCliente = ""
@@ -29,20 +29,15 @@ class Abonos {
         val textoLimpio = texto.lowercase().trim()
 
         when (estadoActual) {
-            EstadoAbono.ESPERANDO_CEDULA -> {
-                consultarCliente(textoLimpio, enviarMensajeSistema, idTendero)
-            }
-            EstadoAbono.ESPERANDO_MONTO -> {
-                validarMonto(textoLimpio, enviarMensajeSistema)
-            }
-            EstadoAbono.ESPERANDO_CONFIRMACION -> {
-                validarConfirmacion(textoLimpio, enviarMensajeSistema, idTendero)
-            }
+            EstadoAbono.ESPERANDO_CEDULA -> { consultarCliente(textoLimpio, enviarMensajeSistema, idTendero) }
+            EstadoAbono.ESPERANDO_MONTO -> { validarMonto(textoLimpio, enviarMensajeSistema) }
+            EstadoAbono.ESPERANDO_CONFIRMACION -> { validarConfirmacion(textoLimpio, enviarMensajeSistema, idTendero) }
             EstadoAbono.INACTIVO -> {
             }
         }
         return true
     }
+
     private suspend fun consultarCliente(
         texto: String,
         enviarMensajeSistema: (modelo) -> Unit,
@@ -68,12 +63,11 @@ class Abonos {
                     nombreCliente = cliente.nombre!!
                     this.saldoActualCliente = cliente.saldo ?: 0
                     estadoActual = EstadoAbono.ESPERANDO_MONTO
-
                     val mensaje = """
                         Cliente: $nombreCliente
                         Cédula: $cedulaGuardada
                         Saldo Pendiente: $$saldoActualCliente
-                        
+                       
                         ¿Cuánto desea abonar el cliente?
                     """.trimIndent()
                     enviarMensajeSistema(modelo(mensaje))
@@ -88,6 +82,7 @@ class Abonos {
             enviarMensajeSistema(modelo("La cédula debe ser numérica y tener al menos 7 dígitos."))
         }
     }
+
     private fun validarMonto(texto: String, enviarMensajeSistema: (modelo) -> Unit) {
         val monto = texto.replace(Regex("[^0-9]"), "").toIntOrNull()
         if (monto != null && monto > 0) {
@@ -104,6 +99,7 @@ class Abonos {
             enviarMensajeSistema(modelo("No entendí el valor. Por favor, diga el monto en números."))
         }
     }
+
     private suspend fun validarConfirmacion(
         texto: String,
         enviarMensajeSistema: (modelo) -> Unit,
@@ -148,11 +144,16 @@ class Abonos {
             }
         }
     }
+
     private fun finalizarFlujo() {
         estadoActual = EstadoAbono.INACTIVO
         cedulaGuardada = ""
         nombreCliente = ""
         montoAbono = 0
         saldoActualCliente = 0
+    }
+
+    fun cancelarFlujo() {
+        estadoActual = EstadoAbono.INACTIVO
     }
 }
