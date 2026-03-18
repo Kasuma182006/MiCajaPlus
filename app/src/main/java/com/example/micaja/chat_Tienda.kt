@@ -257,6 +257,7 @@ class chat_Tienda : AppCompatActivity() {
 
             val textoLimpio = mensaje.replace(Regex("""(\d)[.,](\d{3})\b"""), "$1$2").lowercase()
             val palabras = textoLimpio.split(Regex("""[\s,.:]+"""))
+            val esCliente = diccionario["cliente"]?.any { palabras.contains(it) } == true
 
             if (!SesionManager.esSesionValida(this@chat_Tienda)) {
                 SesionManager.cerrarSesion(this@chat_Tienda)
@@ -328,7 +329,7 @@ class chat_Tienda : AppCompatActivity() {
 
                         if (ocupadoConAbono) return@launch
 
-                        if (estadoCredito == "nuevo_cliente") {
+                        if (esCliente || procesoActivo == "cliente_nuevo" || procesoActivo == "registro_cliente") {
                             nuevoCliente(mensaje)
                             return@launch
                         }
@@ -345,7 +346,6 @@ class chat_Tienda : AppCompatActivity() {
                             val esAbono = diccionario["abono"]?.any { palabras.contains(it) } == true
                             val esCredito = diccionario["credito"]?.any { palabras.contains(it) } == true
                             val esAgregar = diccionario["agregar"]?.any { palabras.contains(it) } == true
-                            val esCliente = diccionario["cliente"]?.any { palabras.contains(it) } == true
 
                             if (esCredito){
                                 procesarCompra(mensaje)
@@ -363,10 +363,6 @@ class chat_Tienda : AppCompatActivity() {
                                 val intent = Intent(this@chat_Tienda, Agregar_Producto::class.java)
                                 startActivity(intent)
                             }
-                            else if (esCliente && mensaje.contains("cliente")) {
-                            estadoCredito = "nuevo_cliente"
-                            nuevoCliente(mensaje)
-                        }
                         } else {
                             model.addMensajeSistema(modelo("No se pudo detectar la operación, por favor vuelve a intentarlo"))
                         }
@@ -414,15 +410,13 @@ class chat_Tienda : AppCompatActivity() {
     private suspend fun nuevoCliente(texto: String) {
         val prefs = getSharedPreferences("SesionTendero", MODE_PRIVATE)
         val cedula_tendero = prefs.getString("cedula", null) ?: return
-        // limpieza elimina  puntos y comas
         val textoLimpio = texto.replace(Regex("""(\d)[.,](\d{3})\b"""), "$1$2")
         val textoMinuscula = textoLimpio.lowercase()
-        val nuevoCliente = diccionario["agregar cliente"]?.any { frase ->
-            textoMinuscula.contains(frase)
+        if (procesoActivo == "ninguno") {
+            model.addMensajeSistema(modelo("Dicte el número de cédula del cliente por favor."))
+            procesoActivo = "cliente_nuevo"
+            return
         }
-        Log.i("nuevo cliente", nuevoCliente.toString())
-        model.addMensajeSistema(modelo("Dicte el número de cédula del cliente por favor."))
-        procesoActivo = "cliente_nuevo"
 
         if (procesoActivo == "cliente_nuevo") {
             val textoSinEspacios = textoMinuscula.replace(" ", "")
