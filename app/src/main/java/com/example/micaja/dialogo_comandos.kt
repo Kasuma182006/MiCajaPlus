@@ -15,7 +15,6 @@ class dialogo_comandos : BottomSheetDialogFragment() {
 
     private var _binding: FragmentDialogoComandosBinding? = null
     private val binding get() = _binding!!
-
     private val comandosConVariantes = mapOf(
         "Abrir tienda" to listOf(
             "abierto", "iniciar", "inicio", "abrir", "abriendo",
@@ -74,7 +73,6 @@ class dialogo_comandos : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.cerrar.setOnClickListener { dismiss() }
-
         val comandos = comandosConVariantes.keys.toList()
 
         binding.listaComandos.layoutManager = GridLayoutManager(requireContext(), 2)
@@ -102,7 +100,6 @@ class dialogo_comandos : BottomSheetDialogFragment() {
             ViewHolder(ItemComandoBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
         override fun getItemCount() = items.size
-
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val comando   = items[position]
             val variantes = comandosConVariantes[comando] ?: emptyList()
@@ -116,9 +113,7 @@ class dialogo_comandos : BottomSheetDialogFragment() {
     }
 }
 
-
 class VariantesBottomSheet : BottomSheetDialogFragment() {
-
     companion object {
         private const val ARG_COMANDO   = "comando"
         private const val ARG_VARIANTES = "variantes"
@@ -143,13 +138,10 @@ class VariantesBottomSheet : BottomSheetDialogFragment() {
 
         val comando   = arguments?.getString(ARG_COMANDO) ?: ""
         val variantes = arguments?.getStringArrayList(ARG_VARIANTES) ?: arrayListOf()
-
         view.findViewById<TextView>(R.id.tvTituloVariantes).text = comando
 
         val palabras  = variantes.filter { !it.startsWith("Ej:") }
         val ejemplos  = variantes.filter {  it.startsWith("Ej:") }
-
-
         view.findViewById<TextView>(R.id.tvVariantes).text =
             palabras.joinToString(separator = "  ,  ")
 
@@ -159,7 +151,6 @@ class VariantesBottomSheet : BottomSheetDialogFragment() {
         if (ejemplos.isNotEmpty()) {
             labelEjemplos.visibility = View.VISIBLE
             tvEjemplos.visibility    = View.VISIBLE
-
             tvEjemplos.text = ejemplos.joinToString(separator = "\n")
         } else {
             labelEjemplos.visibility = View.GONE

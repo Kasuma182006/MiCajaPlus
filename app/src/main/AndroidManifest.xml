@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -18,12 +17,6 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize"/>
         <activity
-            android:name=".BuscarProductoDialog"
-            android:exported="false" />
-        <activity
-            android:name=".item_mensajes"
-            android:exported="false" />
-        <activity
             android:name=".Calendario.ConsultarXFecha"
             android:exported="false" />
         <activity
@@ -33,20 +26,9 @@
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".fragments.FragmentAnadirProductos"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize"/>
-        <activity
-            android:name=".categorias.Categorias"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="false" />
         <activity
             android:name=".Registro"
             android:exported="false"

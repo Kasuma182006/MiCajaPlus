@@ -5,9 +5,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import android.view.WindowManager
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -26,8 +24,6 @@ class fragment_editar_producto : AppCompatActivity() {
     private lateinit var binding: ActivityFragmentEditarProductoBinding
     private var debounceJob: Job? = null
     private var ultimaLista: List<EditarProducto> = emptyList()
-
-    // 1. Definimos el TextWatcher como variable para poder quitarlo y ponerlo
     private val buscadorTextWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -40,11 +36,7 @@ class fragment_editar_producto : AppCompatActivity() {
                 debounceJob?.cancel()
                 return
             }
-
-            // Cancelamos la búsqueda anterior (ahora sí cancelará la petición de red)
             debounceJob?.cancel()
-
-            // Lanzamos la búsqueda de inmediato en un hilo secundario
             debounceJob = CoroutineScope(Dispatchers.IO).launch {
                 buscarSugerencias(texto)
             }
@@ -53,28 +45,22 @@ class fragment_editar_producto : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // NO llames enableEdgeToEdge() si quieres que el teclado empuje el layout
         WindowCompat.setDecorFitsSystemWindows(window, true)
 
         binding = ActivityFragmentEditarProductoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Aplica el comportamiento del teclado
-        // binding.main     → el NestedScrollView raíz
-        // binding.logoApp  → el logo que se oculta para dar espacio
         setupKeyboardBehavior(
             rootView = binding.main,
             viewToScroll = binding.main,
             viewToHide = null
         )
 
-        // Insets normales para status bar
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
         setupListeners()
     }
 
@@ -87,18 +73,10 @@ class fragment_editar_producto : AppCompatActivity() {
                 .hide(WindowInsetsCompat.Type.ime())
         }
 
-        binding.textBuscarProducto.setEndIconOnClickListener {
-            inicializarEditarProducto()
-        }
-
-        // Asignamos el listener del buscador
+        binding.textBuscarProducto.setEndIconOnClickListener { inicializarEditarProducto() }
         binding.etBuscarProducto.addTextChangedListener(buscadorTextWatcher)
     }
 
-    /**
-     * Llama al API de forma suspendida.
-     * Al ser parte del debounceJob, si este se cancela, la petición se aborta.
-     */
     private suspend fun buscarSugerencias(query: String) {
         val preference = getSharedPreferences("SesionTendero", MODE_PRIVATE)
         val cedula = preference.getString("cedula", "") ?: return
@@ -111,12 +89,8 @@ class fragment_editar_producto : AppCompatActivity() {
                 val lista = response.body()!!
                 ultimaLista = lista
 
-                withContext(Dispatchers.Main) {
-                    mostrarSugerencias(lista.take(3))
-                }
-            } else {
-                withContext(Dispatchers.Main) { ocultarSugerencias() }
-            }
+                withContext(Dispatchers.Main) { mostrarSugerencias(lista.take(3)) }
+            } else { withContext(Dispatchers.Main) { ocultarSugerencias() } }
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {
                 Log.e("SearchError", "Error: ${e.message}")
@@ -137,23 +111,16 @@ class fragment_editar_producto : AppCompatActivity() {
                 }
                 chip.visibility = View.VISIBLE
                 chip.setOnClickListener { seleccionarProducto(item) }
-            } else {
-                chip.visibility = View.GONE
-            }
+            } else { chip.visibility = View.GONE }
         }
         binding.layoutSugerencias.visibility = View.VISIBLE
     }
 
-    private fun ocultarSugerencias() {
-        binding.layoutSugerencias.visibility = View.GONE
-    }
+    private fun ocultarSugerencias() { binding.layoutSugerencias.visibility = View.GONE }
 
-    private fun seleccionarProducto(seleccionado: EditarProducto) {
-        ocultarSugerencias()
+    private fun seleccionarProducto(seleccionado: EditarProducto) { ocultarSugerencias()
 
-        // Evitamos que el cambio de texto dispare otra búsqueda
         binding.etBuscarProducto.removeTextChangedListener(buscadorTextWatcher)
-
         binding.etBuscarProducto.setText(seleccionado.nombreProducto)
         binding.etNombreProducto.setText(seleccionado.nombreProducto)
         binding.etDescripcionProducto.setText(seleccionado.presentacion)
@@ -168,16 +135,10 @@ class fragment_editar_producto : AppCompatActivity() {
         binding.etCantidadProducto.isEnabled = true
         binding.etPrecioProducto.isEnabled = true
         binding.etPrecioCompra.isEnabled = true
-
-        // Restauramos el listener
         binding.etBuscarProducto.addTextChangedListener(buscadorTextWatcher)
-
         binding.btnGuardarProducto.isEnabled = true
         binding.cvFormulario.alpha = 1f
-        binding.btnGuardarProducto.setOnClickListener {
-            editarProducto(seleccionado)
-        }
-
+        binding.btnGuardarProducto.setOnClickListener { editarProducto(seleccionado) }
         WindowInsetsControllerCompat(window, binding.etBuscarProducto)
             .hide(WindowInsetsCompat.Type.ime())
     }
@@ -185,7 +146,6 @@ class fragment_editar_producto : AppCompatActivity() {
     fun buscarProducto() {
         val producto = binding.etBuscarProducto.text.toString().lowercase().trimEnd()
         if (producto.isEmpty()) return
-
         val cedula = getSharedPreferences("SesionTendero", MODE_PRIVATE)
             .getString("cedula", "") ?: return
 
@@ -236,7 +196,7 @@ class fragment_editar_producto : AppCompatActivity() {
                         Toast.makeText(this@fragment_editar_producto, "Producto editado con éxito", Toast.LENGTH_SHORT).show()
                         inicializarEditarProducto()
                     }
-                    else{
+                    else {
                         when (response.code()){
                             409 -> Toast.makeText(this@fragment_editar_producto, "Ya existe un producto con ese nombre y presentación", Toast.LENGTH_SHORT).show()
                             500 -> Toast.makeText(this@fragment_editar_producto, "Error en el servidor", Toast.LENGTH_SHORT).show()
@@ -256,11 +216,9 @@ class fragment_editar_producto : AppCompatActivity() {
         binding.etDescripcionProducto.setText("")
         binding.etCantidadProducto.setText("")
         binding.etPrecioCompra.setText("")
-
         binding.etBuscarProducto.removeTextChangedListener(buscadorTextWatcher)
         binding.etBuscarProducto.setText("")
         binding.etBuscarProducto.addTextChangedListener(buscadorTextWatcher)
-
         binding.btnGuardarProducto.isEnabled = false
         binding.cvFormulario.alpha = 0.5f
     }

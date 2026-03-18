@@ -20,8 +20,6 @@ class BuscarProductoDialog(
 
     private var _binding: DialogBuscarProductoBinding? = null
     private val binding get() = _binding!!
-
-    // Página actual (cada página muestra pageSize productos)
     private var paginaActual = 0
     private var pageSize = 2 // ahora agrupamos de a 2 en 2
 
@@ -48,20 +46,16 @@ class BuscarProductoDialog(
         super.onViewCreated(view, savedInstanceState)
         configurarHeader()
 
-        // Esperar a que el layout se haya medido para calcular alturas y aplicar maxHeight
         view.post {
             aplicarMaxHeightParaCards(visibleCards = 2) // mostrar 2 cards sin scroll
-            if (listaProductos.isEmpty()) {
-                mostrarVacio()
-            } else {
+            if (listaProductos.isEmpty()) { mostrarVacio() }
+            else {
                 binding.layoutCardsScroll.visibility = View.VISIBLE
                 renderizarPagina(paginaActual)
                 configurarNavegacion()
             }
         }
-
         binding.btnCancelar.setOnClickListener { dismiss() }
-
     }
 
     override fun onStart() {
@@ -75,21 +69,17 @@ class BuscarProductoDialog(
         }
     }
 
-    // ── Header ────────────────────────────────────────────────────────────
     private fun configurarHeader() {
         binding.tvQueryTitulo.text = "\"${query.replaceFirstChar { it.uppercase() }}\""
         binding.tvContador.text = "${listaProductos.size} presentación(es) encontrada(s)"
     }
 
-    // ── Estado vacío ──────────────────────────────────────────────────────
     private fun mostrarVacio() {
         binding.layoutVacio.visibility = View.VISIBLE
         binding.layoutCardsScroll.visibility = View.GONE
     }
 
-    // ── Renderiza los productos de la página actual ───────────────────────
     private fun renderizarPagina(pagina: Int) {
-        // Ocultar todas las cards primero para evitar residuos visuales
         val allCards = listOf(binding.card1, binding.card2, binding.card3)
         allCards.forEach { it.visibility = View.GONE }
 
@@ -111,9 +101,7 @@ class BuscarProductoDialog(
                     onProductoSeleccionado(item)
                     dismiss()
                 }
-            } else {
-                slot.card.visibility = View.GONE
-            }
+            } else { slot.card.visibility = View.GONE }
         }
 
         val desde = inicio + 1
@@ -121,10 +109,8 @@ class BuscarProductoDialog(
         binding.tvPosicion.text = "$desde–$hasta de ${listaProductos.size}"
     }
 
-    // ── Navegación (flechas) ──────────────────────────────────────────────
     private fun configurarNavegacion() {
         val totalPaginas = totalPaginas()
-
         if (totalPaginas > 1) {
             binding.layoutNavegacion.visibility = View.VISIBLE
             actualizarEstadoBotones()
@@ -144,9 +130,7 @@ class BuscarProductoDialog(
                     actualizarEstadoBotones()
                 }
             }
-        } else {
-            binding.layoutNavegacion.visibility = View.GONE
-        }
+        } else { binding.layoutNavegacion.visibility = View.GONE }
     }
 
     private fun actualizarEstadoBotones() {
@@ -154,10 +138,7 @@ class BuscarProductoDialog(
         binding.btnSiguiente.alpha = if (paginaActual == totalPaginas() - 1) 0.3f else 1f
     }
 
-    // ── Helpers ───────────────────────────────────────────────────────────
     private fun totalPaginas() = Math.ceil(listaProductos.size / pageSize.toDouble()).toInt()
-
-    /** Devuelve la lista completa de slots (3) para poder tomar dinámicamente los primeros N */
     private fun slots() = listOf(
         Slot(binding.card1, binding.tvNombre1, binding.tvPresentacion1,
             binding.tvPrecio1, binding.tvStock1, binding.tvSeleccionar1),
@@ -172,16 +153,10 @@ class BuscarProductoDialog(
         _binding = null
     }
 
-    /**
-     * Calcula y aplica un maxHeight al NestedScrollView (binding.layoutCardsScroll)
-     * para que quepan exactamente `visibleCards` sin necesidad de scroll.
-     * Si hay más items, el NestedScrollView permitirá desplazamiento interno.
-     */
     private fun aplicarMaxHeightParaCards(visibleCards: Int = 2) {
         val nested = binding.layoutCardsScroll
         val cardRef = binding.card1
 
-        // Forzar medida si aún no fue medida
         if (cardRef.measuredHeight == 0) {
             val widthSpec = if (nested.width > 0) {
                 View.MeasureSpec.makeMeasureSpec(nested.width, View.MeasureSpec.AT_MOST)
@@ -196,25 +171,15 @@ class BuscarProductoDialog(
 
         val cardHeight = cardRef.measuredHeight.takeIf { it > 0 }
             ?: (resources.displayMetrics.heightPixels * 0.18).toInt()
-
-        // Calcular paddings y márgenes internos del contenedor
         val verticalPadding = nested.paddingTop + nested.paddingBottom
         val inner = binding.layoutCardsInner
         val innerPadding = inner.paddingTop + inner.paddingBottom
         val extraSpacing = 16 // margen extra por seguridad
-
-        // Altura objetivo: N * cardHeight + paddings + espacio extra
         val targetHeight = (visibleCards * cardHeight) + verticalPadding + innerPadding + extraSpacing
-
-        // Aplicar como altura del NestedScrollView
         val lp = nested.layoutParams
         lp.height = targetHeight
         nested.layoutParams = lp
-
-        // No forzamos fillViewport; queremos que el contenido pueda scrollear si excede
         nested.isFillViewport = false
-
-        // Ajustar pageSize para la paginación lógica
         pageSize = visibleCards.coerceIn(1, 3)
     }
 }

@@ -2,15 +2,9 @@ package com.example.micaja
 
 import android.os.Bundle
 import android.util.Log
-import android.view.MotionEvent
-import android.view.View
 import android.view.WindowManager
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.PopupMenu
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -19,7 +13,6 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.widget.addTextChangedListener
 import com.example.micaja.ConexionService.ConexionServiceTienda
 import com.example.micaja.databinding.ActivityAgregarProductoBinding
-import com.example.micaja.databinding.RegistroBinding
 import com.example.micaja.models.AgregarProducto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -28,49 +21,30 @@ import kotlinx.coroutines.launch
 class Agregar_Producto : AppCompatActivity() {
 
     private val categorias = mapOf(
-        1 to "abarrotes",
-        2 to "bebidas",
-        3 to "dulcería",
-        4 to "licores",
-        5 to "fruver",
-        6 to "lácteos",
-        7 to "aseo personal",
-        8 to "aseo general",
-        9 to "cárnicos",
-        10 to "papelería",
-        11 to "fármacos",
-        12 to "mascotas"
-
+        1 to "abarrotes", 2 to "bebidas", 3 to "dulcería", 4 to "licores",
+        5 to "fruver", 6 to "lácteos", 7 to "aseo personal", 8 to "aseo general",
+        9 to "cárnicos", 10 to "papelería", 11 to "fármacos", 12 to "mascotas"
     )
-
-
     private var idCategoriaSeleccionada: Int = -1
-
 
     private lateinit var binding: ActivityAgregarProductoBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, true)
-
         binding = ActivityAgregarProductoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Aplica el comportamiento del teclado
-        // binding.main     → el NestedScrollView raíz
-        // binding.logoApp  → el logo que se oculta para dar espacio
         setupKeyboardBehavior(
             rootView = binding.main,
             viewToScroll = binding.main,
             viewToHide = null
         )
 
-        // Insets normales para status bar
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
         binding.btnRetroceso.setOnClickListener { finish() }
 
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
@@ -79,17 +53,12 @@ class Agregar_Producto : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-
         validaciones()
         categoriaLista()
         boton()
     }
 
-
-
     private fun boton() {
-
         binding.etCatagoriaProducto.setOnClickListener {
             WindowInsetsControllerCompat(window, binding.etCatagoriaProducto)
                 .hide(WindowInsetsCompat.Type.ime())
@@ -109,15 +78,12 @@ class Agregar_Producto : AppCompatActivity() {
 
                 Toast.makeText(this, "Por favor diligencie todos los campos.", Toast.LENGTH_SHORT).show()
             } else if (idCategoriaSeleccionada == -1) {
-                // Validación extra para asegurar que seleccionó algo de la lista
                 Toast.makeText(
                     this,
                     "Por favor seleccione una categoría de la lista.",
                     Toast.LENGTH_SHORT
                 ).show()
-            }else {
-                ejecutarGuardado(nombre, presentacion, cantidad, pVenta, pCompra)
-            }
+            } else { ejecutarGuardado(nombre, presentacion, cantidad, pVenta, pCompra) }
         }
     }
 
@@ -150,7 +116,6 @@ class Agregar_Producto : AppCompatActivity() {
 
     private fun categoriaLista() {
         val nombresCategorias = categorias.values.toList()
-
         val adapter = ArrayAdapter(
             this,
             android.R.layout.simple_dropdown_item_1line,
@@ -159,37 +124,27 @@ class Agregar_Producto : AppCompatActivity() {
 
         val autoComplete = binding.etCatagoriaProducto
         autoComplete.setAdapter(adapter)
-
-        // CAPTURAR LA LLAVE (KEY) AL SELECCIONAR
         autoComplete.setOnItemClickListener { parent, _, position, _ ->
             // Obtenemos el nombre que el usuario tocó
             val nombreSeleccionado = parent.getItemAtPosition(position).toString()
 
             // Buscamos la Key (ID) que corresponde a ese nombre
             idCategoriaSeleccionada = categorias.entries.find { it.value == nombreSeleccionado }?.key ?: -1
-
             Log.d("CategoriaSeleccionada: $nombreSeleccionado", "ID de la categoría seleccionada: $idCategoriaSeleccionada")
-
         }
-
-        autoComplete.setOnClickListener {
-            autoComplete.showDropDown()
-        }
+        autoComplete.setOnClickListener { autoComplete.showDropDown() }
     }
-
 
     private fun validaciones() {
         binding.etNombreProducto.addTextChangedListener { s ->
             val textoOriginal = s.toString()
-
             val textoFiltrado = textoOriginal.replace(Regex("[^a-zA-ZñÑ ]"), "")
 
             if (textoOriginal != textoFiltrado) {
                 binding.etNombreProducto.setText(textoFiltrado)
-                binding.etNombreProducto.setSelection(textoFiltrado.length) // Mantiene el cursor al final
+                binding.etNombreProducto.setSelection(textoFiltrado.length)
                 return@addTextChangedListener // Salimos para evitar doble validación
             }
         }
     }
 }
-

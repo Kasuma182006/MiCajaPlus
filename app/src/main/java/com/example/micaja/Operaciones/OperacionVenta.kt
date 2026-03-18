@@ -1,7 +1,6 @@
 package com.example.micaja.Operaciones
 
 import android.util.Log
-import android.widget.Switch
 import com.example.micaja.ConexionService.ConexionServiceTienda
 import com.example.micaja.models.OperacionesInventario
 import com.example.micaja.models.cantidadIn
@@ -12,7 +11,6 @@ class OperacionVenta() {
     var inicio = false
 
     companion object {
-        // Lista de unidades/presentaciones sin tildes (ya que normalizamos el texto)
         val unidades = listOf(
             "bolsa", "bolsita", "caja", "cajetilla", "canasta", "chuspa",
             "barra", "capsula", "cubeta", "tableta",
@@ -24,13 +22,11 @@ class OperacionVenta() {
             "kg","l","ml","sobre","tubo","spray","carta","hojas","g","cubo","lata","jumbo","mini","atado","unidades"
         )
 
-        // Palabras de acción que deben eliminarse para no ensuciar el nombre del producto
         val limpiarN = listOf(
             "vendi", "vende", "venta", "un", "una", "de", "del",
             "por", "el", "la", "los", "las", "me", "compraron", "salio", "pago","s","S", "es"
         )
 
-        // Mapa para convertir dictado de voz a números procesables
         val numerosMap = mapOf(
             "un" to "1", "uno" to "1", "dos" to "2", "tres" to "3",
             "cuatro" to "4", "cinco" to "5", "seis" to "6",
@@ -38,16 +34,11 @@ class OperacionVenta() {
         )
     }
 
-    /**
-     * Normaliza el texto: quita tildes y convierte palabras numéricas a dígitos.
-     */
     private fun normalizarTexto(texto: String): String {
-        // 1. Quitar tildes y caracteres especiales
         val temp = Normalizer.normalize(texto.lowercase(), Normalizer.Form.NFD)
         val sinTildes = Regex("\\p{InCombiningDiacriticalMarks}+").replace(temp, "")
-
-        // 2. Reemplazar palabras ("dos") por números ("2")
         var resultado = sinTildes
+
         numerosMap.forEach { (palabra, numero) ->
             resultado = resultado.replace(Regex("\\b$palabra\\b"), numero)
         }
@@ -55,37 +46,27 @@ class OperacionVenta() {
     }
 
     suspend fun procesarListaProductos(texto: String, fin_credito: Boolean, idCliente: String = "", idTendero: String): String {
-        // Paso fundamental: Limpiar la entrada de voz antes de procesar
         val textoLimpio = normalizarTexto(texto)
         if (textoLimpio.contains("fin") || fin_credito) {
             this.inicio = false
-
             return if (idCliente.isNotEmpty() && idCliente != idTendero) {
                 "¡Listo! El crédito se ha registrado con éxito para el cliente."
-            } else {
-                "Venta de contado finalizada correctamente."
-            }
+            } else { "Venta de contado finalizada correctamente." }
         }
-
-
         val datos = extraerDatosProducto(textoLimpio)
 
         if (datos != null) {
             val (nombre, pres, cant) = datos
-
             Log.i("datos_procesados", "Nombre: $nombre, Pres: $pres, Cant: $cant")
 
             try {
                 val conexion = ConexionServiceTienda.create()
-
                 val tipoVenta =
                     if (idCliente.isNotEmpty()) "credito" else "efectivo"
-
                 Log.i("tipoCliente", tipoVenta)
                 Log.i("idcliente", idCliente)
 
             if(tipoVenta == "efectivo") {
-
                 val modeloCantidad = cantidadIn(idTendero, cant, pres, nombre)
                 val respuestaCantidad = conexion.cantidadProducto(modeloCantidad)
 
@@ -110,51 +91,38 @@ class OperacionVenta() {
 
                         return if (respuestaVenta.isSuccessful) {
                             "• $cant  $nombre de $pres registrado. ¿Algo más? (o di 'fin')"
-                        } else {
-                            "No pude registrar la venta"
-                        }
-                    } else {
-                        "No se pudo descontar la cantidad"
-                    }
-                } else {
-                    "No pude registrar la cantidad"
-                }
-            }else if (tipoVenta == "credito") {
+
+                        } else { "No pude registrar la venta" }
+
+                    } else { "No se pudo descontar la cantidad" }
+
+                } else { "No pude registrar la cantidad" }
+            } else if (tipoVenta == "credito") {
                 val cuerpo =
                     ventaDetectada(idTendero, idCliente, texto, "credito", nombre, cant, pres)
                 val respuesta = conexion.registrarCredito(cuerpo)
+
                 if (respuesta.isSuccessful) {
                     return respuesta.body()!!
-                } else {
-                    return "Error de conexion."
-                }
-            }
-
-            } catch (e: Exception) {
-                return  "Fuera de conexion intentalo de nuevo"
-            }
+                } else { return "Error de conexion." }
+            }} catch (e: Exception) { return  "Fuera de conexion intentalo de nuevo" }
         }
         return "No entendí el producto, intenta decir algo como: '2 libras de arroz' o 'un aceite'"
     }
 
     private fun extraerDatosProducto(segmento: String): Triple<String, String, Int>? {
         var texto = segmento.trim()
-
-        // 1. LIMPIEZA DE ACCIONES: Quitamos "vendi", "venta", etc., al principio
         for (palabra in limpiarN) {
             texto = texto.replace(Regex("(?i)\\b$palabra\\b"), "").trim()
         }
 
-        // 2. EXTRAER CANTIDAD: Buscamos el primer número que aparezca
         val cifraCabtidad = Regex("""\b\d+\b""").find(texto)
         val cantidad = cifraCabtidad?.value?.toIntOrNull() ?: 1
 
-        // Removemos la cifra del texto para que no sea parte del nombre
         if (cifraCabtidad != null) {
             texto = texto.replaceFirst(cifraCabtidad.value, "").trim()
         }
 
-        // 3. DETECTAR UNIDAD/PRESENTACIÓN
         var unidadDetectada = "unidad"
         for (u in unidades) {
             val  presentacion = Regex("""\b\d+\s*$u\b""")
@@ -164,7 +132,7 @@ class OperacionVenta() {
                 unidadDetectada = concidencia.value.trim()
                 texto = texto.replaceFirst(concidencia.value, "").trim()
                  break
-            }else{
+            } else {
                 val unidad = Regex("""\b$u\b""")
                 val coincidenciaUnidad = unidad.find(texto)
                 if (coincidenciaUnidad != null) {
@@ -173,7 +141,6 @@ class OperacionVenta() {
                     break
                 }
             }
-
         }
 
         var nombreProducto = texto
@@ -183,11 +150,8 @@ class OperacionVenta() {
             .trim()
 
         nombreProducto = nombreProducto.removePrefix("de ").removeSuffix(" de").trim()
-
         return if (nombreProducto.isNotEmpty()) {
             Triple(nombreProducto, unidadDetectada, cantidad)
-        } else {
-            null
-        }
+        } else { null }
     }
 }

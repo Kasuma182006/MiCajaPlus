@@ -3,10 +3,7 @@ package com.example.micaja
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.view.WindowManager
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -28,20 +25,18 @@ class Registro : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
-
         binding = RegistroBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         // Aplica el comportamiento del teclado
-        // binding.main     → el NestedScrollView raíz
-        // binding.logoApp  → el logo que se oculta para dar espacio
+        // binding.main → el NestedScrollView raíz
+        // binding.logoApp → el logo que se oculta para dar espacio
         setupKeyboardBehavior(
             rootView = binding.main,
             viewToScroll = binding.main,
             viewToHide = binding.logoApp
         )
 
-        // Insets normales para status bar
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -52,33 +47,31 @@ class Registro : AppCompatActivity() {
             val textoSoloLetras = texto.replace(Regex("[^a-zA-ZñÑ ]"), "")
             if (texto.isNotEmpty() && texto != textoSoloLetras) {
                 binding.inputNombre.error = "El nombre solo debe contener letras"
-            } else {
-                binding.inputNombre.error = null
-                if(texto.length > 20){
-                    binding.inputNombre.error = "El nombre debe tener menos de 20 caracteres"
+            } else { binding.inputNombre.error = null
+                if(texto.length > 20){ binding.inputNombre.error = "El nombre debe tener menos de 20 caracteres"
                 }
             }
         }
+
         binding.inputCedula.addTextChangedListener {
             val texto = it.toString()
             val textoSoloNumeros = texto.replace(Regex("[^0-9]"), "")
             if (texto.isNotEmpty() && texto != textoSoloNumeros) {
                 binding.inputCedula.error = "La cédula solo debe contener números"
             } else {
-                if (texto.length > 10) {
-                    binding.inputCedula.error = "Longitud permitida: 7 a 10 dígitos"
+                if (texto.length > 10) { binding.inputCedula.error = "Longitud permitida: 7 a 10 dígitos"
                 }else if (texto.length == 10) {
                     validarExistenciaCedula(texto)
                 }
             }
         }
+
         binding.inputTelefono.addTextChangedListener {
             val texto = it.toString()
             val textoSoloNumeros = texto.replace(Regex("[^0-9]"), "")
             if (texto.isNotEmpty() && texto != textoSoloNumeros) {
                 binding.inputTelefono.error = "El teléfono solo debe contener números"
-            } else {
-                binding.inputTelefono.error = null
+            } else { binding.inputTelefono.error = null
                 if (texto.length > 10) {
                     binding.inputTelefono.error = "Longitud permitida: 10 dígitos"
                 }
@@ -114,7 +107,6 @@ class Registro : AppCompatActivity() {
                 val registrarNuevoTendero = Tendero(cedula = cedula, telefono = telefono , nombre = nombre, fechaCreacion = "")
                 val responset = apiServicer.login(registrarNuevoTendero)
 
-
                 if (responset.isSuccessful && responset.body() != null) {
                     withContext(Dispatchers.Main) {
                         Toast.makeText(
@@ -141,9 +133,7 @@ class Registro : AppCompatActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                }
-
-            } catch (e: Exception) {
+                } } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     Toast.makeText(this@Registro, "Error de conexión: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
                 }
@@ -171,7 +161,6 @@ class Registro : AppCompatActivity() {
             }
         }
     }
-
 
     private fun irALogin() {
         startActivity(Intent(this, Login::class.java))

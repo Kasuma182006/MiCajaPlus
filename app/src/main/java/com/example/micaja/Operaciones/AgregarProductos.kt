@@ -6,11 +6,9 @@ import com.example.micaja.models.OperacionesInventario
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-
 class OperacionProducto {
     var inicio = false
     var fase = 0
-
     var nombreExtraido = ""
     var presentacionExtraida = ""
     var cantidadExtraida = 0
@@ -22,7 +20,6 @@ class OperacionProducto {
         "caja", "libra", "kilo", "bolsita", "unidad", "paquete",
         "bolsa", "paca", "litro", "pequeña", "grande", "sobre", "mediana"
     )
-
 
     private val mapaNumeros = mapOf(
         "uno" to 1, "una" to 1, "dos" to 2, "tres" to 3, "cuatro" to 4,
@@ -68,10 +65,9 @@ class OperacionProducto {
                 if (mensaje.lowercase().contains("si") || mensaje.lowercase().contains("sí")) {
 
                     try {
-
                         val respuesta = withContext(Dispatchers.IO) {
                             val service = ConexionServiceTienda.create()
-                            val datos = OperacionesInventario(
+                            val datos = OperacionesInventario( //¿?
                                 idTendero, nombreExtraido, presentacionExtraida, cantidadExtraida, "agregar"
                             )
                             service.operacionesInventario(datos)
@@ -82,9 +78,8 @@ class OperacionProducto {
                             reiniciar()
                             inicio = false
                             "¡Listo! El producto $nombreFinal ha sido guardado exitosamente."
-                        } else {
-                            "El servidor respondió con un error inténtalo de nuevo."
-                        }
+
+                        } else { "El servidor respondió con un error inténtalo de nuevo." }
                     } catch (e: Exception) {
                         Log.e("ErrorDelProducto", "Error: ${e.message}")
                         "Lo siento, hubo un error al guardar en el servidor inténtalo de nuevo."
@@ -93,11 +88,9 @@ class OperacionProducto {
                     inicio = false
                     reiniciar()
                     "Registro cancelado."
-                } else {
-                    "Por favor responde 'Sí' o 'No'."
-                }
-            }
-            else -> "Error."
+
+                } else { "Por favor responde 'Sí' o 'No'." }
+            } else -> "Error."
         }
     }
 
@@ -105,27 +98,23 @@ class OperacionProducto {
         val palabras = texto.split(Regex("\\s+")).toMutableList()
 
         presentacionExtraida = palabras.find { unidades.contains(it) } ?: "unidad"
-
         val palabrasNombre = palabras.filter {
             it != presentacionExtraida && !conectores.contains(it)
         }
-
         nombreExtraido = palabrasNombre.joinToString(" ").trim().lowercase()
     }
 
     private fun extraerNumero(texto: String): Int? {
         val textoSinPuntos = texto.replace(".", "").replace(",", "")
         val soloDigitos = textoSinPuntos.filter { it.isDigit() }
-        if (soloDigitos.isNotEmpty()) return soloDigitos.toIntOrNull()
 
+        if (soloDigitos.isNotEmpty()) return soloDigitos.toIntOrNull()
         val palabras = texto.split(Regex("\\s+"))
+
         for (p in palabras) {
             if (mapaNumeros.containsKey(p)) return mapaNumeros[p]
         }
         return null
     }
-
-    private fun reiniciar() {
-        fase = 0
-    }
+    private fun reiniciar() { fase = 0 }
 }
