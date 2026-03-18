@@ -251,7 +251,7 @@ class chat_Tienda : AppCompatActivity() {
                         lifecycleScope.launch(Dispatchers.IO) {
                             val clienteID = if (procesoActivo == "credito") (cedulaCliente ?: "") else ""
                             val respuestaChat =
-                                operacionVenta.procesarListaProductos(textoLimpio, false,cedulaGlobal, clienteID)
+                                operacionVenta.procesarListaProductos(textoLimpio, false, clienteID,cedulaGlobal)
                             withContext(Dispatchers.Main) {
                                 model.addMensajeSistema(modelo(respuestaChat))
                             }
@@ -616,7 +616,7 @@ class chat_Tienda : AppCompatActivity() {
                         )
                     )
                 )
-                i++
+
             }
         }
 

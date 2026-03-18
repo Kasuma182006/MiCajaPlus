@@ -81,7 +81,8 @@ class OperacionVenta() {
                 val tipoVenta =
                     if (idCliente.isNotEmpty()) "credito" else "efectivo"
 
-                Log.i("idcliente", tipoVenta)
+                Log.i("tipoCliente", tipoVenta)
+                Log.i("idcliente", idCliente)
 
             if(tipoVenta == "efectivo") {
 
