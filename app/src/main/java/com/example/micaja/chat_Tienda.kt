@@ -242,6 +242,8 @@ class chat_Tienda : AppCompatActivity() {
 
             val textoLimpio = mensaje.replace(Regex("""(\d)[.,](\d{3})\b"""), "$1$2").lowercase()
             val palabras = textoLimpio.split(Regex("""[\s,.:]+"""))
+            val palabrasDosEnDos = palabras.windowed(2).map { it.joinToString(" ") }
+            val esCliente = diccionario["cliente"]?.any { palabrasDosEnDos.contains(it) } == true
 
 
 
