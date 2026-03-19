@@ -109,9 +109,9 @@
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/labelPaso2"
-            >
+            app:layout_constraintTop_toBottomOf="@id/labelPaso2">
 
+            <!-- Campo nombre del producto -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilNombreProducto"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -127,7 +127,6 @@
                 app:boxStrokeWidthFocused="0dp"
                 app:counterMaxLength="@integer/NombreProducto">
 
-
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etNombreProducto"
                     android:layout_width="match_parent"
@@ -138,7 +137,74 @@
                     android:inputType="textMultiLine"
                     android:maxLength="50"
                     android:textSize="15sp" />
+
             </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Sugerencias: debajo del campo nombre, fuera del TextInputLayout -->
+            <LinearLayout
+                android:id="@+id/layoutSugerencias"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="4dp"
+                android:background="@android:color/transparent"
+                android:visibility="gone">
+
+                <!-- Sugerencia 1 -->
+                <TextView
+                    android:id="@+id/suger1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="16dp"
+                    android:textSize="14sp"
+                    android:textColor="@color/colorSecondary"
+                    android:background="@drawable/bg_dialog_rounded"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:visibility="gone"
+                    android:minHeight="54dp"
+                    tools:text="Aceite fino"
+                    tools:visibility="visible" />
+
+                <!-- Sugerencia 2 -->
+                <TextView
+                    android:id="@+id/suger2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="16dp"
+                    android:textSize="14sp"
+                    android:textColor="@color/colorSecondary"
+                    android:background="@drawable/bg_dialog_rounded"
+                    android:layout_marginTop="6dp"
+                    android:maxLines="1"
+                    android:minHeight="54dp"
+                    android:ellipsize="end"
+                    android:visibility="gone"
+                    tools:text="Aceite de oliva" />
+
+                <!-- Sugerencia 3 -->
+                <TextView
+                    android:id="@+id/suger3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="16dp"
+                    android:textSize="14sp"
+                    android:textColor="@color/colorSecondary"
+                    android:background="@drawable/bg_dialog_rounded"
+                    android:layout_marginTop="6dp"
+                    android:maxLines="1"
+                    android:minHeight="54dp"
+                    android:ellipsize="end"
+                    android:visibility="gone"
+                    tools:text="Aceite vegetal" />
+
+            </LinearLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilCatategoriaProducto"
@@ -152,7 +218,6 @@
                 app:boxStrokeColor="@color/colorPrimary"
                 app:hintTextColor="@color/colorOnSecondary"
                 app:endIconTint="@color/colorOnSecondary">
-
 
                 <AutoCompleteTextView
                     android:id="@+id/etCatagoriaProducto"
@@ -185,9 +250,8 @@
                 app:endIconTint="@color/colorOnSecondary"
                 app:counterEnabled="true"
                 app:boxStrokeWidthFocused="0dp"
-                app:counterMaxLength="@integer/Presentacion"
+                app:counterMaxLength="@integer/Presentacion">
 
-                >
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etDescripcionProducto"
                     android:layout_width="match_parent"
@@ -197,8 +261,7 @@
                     android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZñÑ1234567890 "
                     android:textSize="15sp"
                     android:maxLength="30"
-                    app:counterMaxLength="@integer/Presentacion"
-                    />
+                    app:counterMaxLength="@integer/Presentacion" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -214,8 +277,7 @@
                 app:endIconTint="@color/colorOnSecondary"
                 app:counterEnabled="true"
                 app:boxStrokeWidthFocused="0dp"
-                app:counterMaxLength="@integer/CantidadProducto"
-                >
+                app:counterMaxLength="@integer/CantidadProducto">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etCantidadProducto"
@@ -225,10 +287,8 @@
                     android:inputType="number"
                     android:textSize="15sp"
                     android:maxLength="11"
-                    app:counterMaxLength="@integer/CantidadProducto"
-                    />
+                    app:counterMaxLength="@integer/CantidadProducto" />
             </com.google.android.material.textfield.TextInputLayout>
-
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilPrecioProductoCompra"
@@ -255,7 +315,7 @@
                     android:inputType="numberDecimal"
                     android:textSize="15sp"
                     android:maxLength="11"
-                    app:counterMaxLength="11"/>
+                    app:counterMaxLength="11" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -283,11 +343,8 @@
                     android:inputType="number"
                     android:textSize="15sp"
                     android:maxLength="11"
-                    app:counterMaxLength="11"/>
+                    app:counterMaxLength="11" />
             </com.google.android.material.textfield.TextInputLayout>
-
-
-
 
         </LinearLayout>
 

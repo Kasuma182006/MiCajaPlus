@@ -74,7 +74,7 @@ class ConsultarXFecha : AppCompatActivity() {
                 binding.tvVentas.text   = "$$puntuacionVentas"
                 binding.tvGastos.text   = "$$puntuacionGastos"
                 binding.tvCostos.text   = "$$puntuacionCostos"
-                binding.tvFiados.text   = "$$puntuacionNcredito"
+                binding.tvFiados.text   = "$puntuacionNcredito"
 
                 val utilidadTexto = "$$puntuacionUtilidad"
                 binding.tvUtilidad.text = utilidadTexto

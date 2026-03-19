@@ -148,7 +148,8 @@
             <EditText
                 android:id="@+id/messageInput"
                 android:layout_width="0dp"
-                android:layout_height="56dp"
+                android:layout_height="wrap_content"
+                android:minHeight="56dp"
                 android:background="@drawable/bg_input_chat_tendero"
                 android:imeOptions="actionSend"
                 android:maxLines="4"

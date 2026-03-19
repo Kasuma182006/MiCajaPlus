@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -84,7 +85,24 @@ val diccionario = mapOf(
 class chat_Tienda : AppCompatActivity() {
 
     val abono=Abonos()
+    private val agregarProductoLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        // Esta parte se ejecuta SOLAMENTE cuando regresas de Agregar_Producto
+        if (result.resultCode == RESULT_OK) {
+            // 1. Extraemos el mensaje que enviamos desde la otra pantalla
+            val mensajeConfirmacion = result.data?.getStringExtra("mensaje_confirmacion")
+                ?: "Producto agregado exitosamente"
 
+            // 2. Lo mandamos al sistema del chat para que el tendero lo vea
+            model.addMensajeSistema(modelo(mensajeConfirmacion))
+
+            // 3. Scroll automático al último mensaje
+            binding.recyclerMensajes.post {
+                binding.recyclerMensajes.smoothScrollToPosition(Adapter.itemCount - 1)
+            }
+        }
+    }
     lateinit var mensaje: String
     private lateinit var binding: ActivityChatTiendaBinding
     private val RQ_SPEECH_REC = 102
@@ -361,7 +379,7 @@ class chat_Tienda : AppCompatActivity() {
                                 model.addMensajeSistema(modelo("¡Venta iniciada! Dicta los productos uno a uno o di 'fin'."))
                             } else if(esAgregar && mensaje.contains("producto")){
                                 val intent = Intent(this@chat_Tienda, Agregar_Producto::class.java)
-                                startActivity(intent)
+                                agregarProductoLauncher.launch(intent)
                             }
                         } else {
                             model.addMensajeSistema(modelo("No se pudo detectar la operación, por favor vuelve a intentarlo"))

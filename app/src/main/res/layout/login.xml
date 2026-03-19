@@ -76,7 +76,8 @@
     <EditText
         android:id="@+id/cedulaInput"
         android:layout_width="300dp"
-        android:layout_height="53dp"
+        android:layout_height="wrap_content"
+        android:minHeight="53dp"
         android:background="@drawable/bg_input_rounded"
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -119,7 +120,8 @@
     <EditText
         android:id="@+id/telefonoInput"
         android:layout_width="300dp"
-        android:layout_height="58dp"
+        android:layout_height="wrap_content"
+        android:minHeight="53dp"
         android:background="@drawable/bg_input_rounded"
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
