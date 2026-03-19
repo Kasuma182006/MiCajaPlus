@@ -63,7 +63,7 @@ val diccionario = mapOf(
     "abono" to listOf ("abonar", "abono", "abonos", "cuota", "adelantar" ,"adelanto"),
     "agregar" to listOf ("agregar", "añadir", "identificar", "nuevo", "producto"),
     "cliente" to listOf("nombre", "cliente", "nuevo", "cliente"),
-    "consultar" to listOf("busca", "buscar", "consulta", "filtrar", "pregunta"),
+    "consultar" to listOf("busca", "buscar", "consulta", "filtrar", "pregunta"), // Por si lo va a usar ñiñin
     "si" to listOf("si", "sí"),
     "cancelar" to listOf("cancela", "cancelalo", "cancelelo", "equivoqué", "equivocación", "salgase", "sálgase", "salir", "reiniciar")
 )
