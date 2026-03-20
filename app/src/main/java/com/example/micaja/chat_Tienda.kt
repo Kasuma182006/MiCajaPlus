@@ -75,8 +75,8 @@ val diccionario = mapOf(
     "credito" to listOf ("credito", "crédito", "créditos", "creditos", "fiado a", "fiado", "fiados", "fiar", "fié"),
     "efectivo" to listOf("efectivo","efectivos", "plata", "paga", "contado", "dinero", "efectivito"),
     "abono" to listOf ("abonar", "abono", "abonos", "cuota", "adelantar" ,"adelanto"),
-    "agregar" to listOf ("agregar", "añadir", "identificar", "nuevo", "producto"),
-    "cliente" to listOf("nombre", "cliente", "nuevo", "cliente"),
+    "agregar" to listOf ("agregar", "añadir", "identificar", "producto"),
+    "cliente" to listOf("nombre", "cliente", "cliente"),
     "consultar" to listOf("busca", "buscar", "consulta", "filtrar", "pregunta"),
     "si" to listOf("si", "sí"),
     "cancelar" to listOf("cancela", "cancelalo", "cancelelo", "equivoqué", "equivocación", "salgase", "sálgase", "salir", "reiniciar")
@@ -98,6 +98,14 @@ class chat_Tienda : AppCompatActivity() {
             model.addMensajeSistema(modelo(mensajeConfirmacion))
 
             // 3. Scroll automático al último mensaje
+            binding.recyclerMensajes.post {
+                binding.recyclerMensajes.smoothScrollToPosition(Adapter.itemCount - 1)
+            }
+        }
+        else{
+            val mensajeCierre = result.data?.getStringExtra("mensaje_cierre")?: "Cancelacion agregar producto"
+
+            model.addMensajeSistema(modelo(mensajeCierre))
             binding.recyclerMensajes.post {
                 binding.recyclerMensajes.smoothScrollToPosition(Adapter.itemCount - 1)
             }
