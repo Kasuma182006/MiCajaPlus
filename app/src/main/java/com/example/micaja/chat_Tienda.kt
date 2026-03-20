@@ -47,7 +47,7 @@ var baseInicial = 0
 var cantidad: String = ""
 var i: Int = 1
 var procesoActivo = "ninguno"
-var estadoCredito = "ninguno"
+var estado = "ninguno"
 var cliente = "ninguno"
 var cedulaCliente : String? = null
 var cedulaGlobal = ""
@@ -75,7 +75,6 @@ class chat_Tienda : AppCompatActivity() {
     private lateinit var binding: ActivityChatTiendaBinding
     private val RQ_SPEECH_REC = 102
 
-    var indicador: Boolean? = false
     var dataset = mutableListOf<modelo>()
     var sistemaData = mutableListOf<modelo>()
     lateinit var Adapter: Adapter
@@ -221,7 +220,18 @@ class chat_Tienda : AppCompatActivity() {
 
             val textoLimpio = mensaje.replace(Regex("""(\d)[.,](\d{3})\b"""), "$1$2").lowercase()
             val palabras = textoLimpio.split(Regex("""[\s,.:]+"""))
+            val esCliente = diccionario["cliente"]?.any { palabras.contains(it) } == true
+            val consultarCliente = diccionario["consultar"]?.any { palabras.contains(it) } == true
+            val esCredito = diccionario["credito"]?.any { palabras.contains(it) } == true
 
+            if(consultarCliente){
+                procesoActivo = "consultar"
+            }else if (esCliente){
+                procesoActivo = "nuevo_cliente"
+            }
+            if (esCredito){
+                procesoActivo = "credito"
+            }
             if (!SesionManager.esSesionValida(this@chat_Tienda)) {
                 SesionManager.cerrarSesion(this@chat_Tienda)
                 return@setOnClickListener // Cortamos la ejecución aquí mismo
@@ -229,18 +239,18 @@ class chat_Tienda : AppCompatActivity() {
 
             val losQueSomos = listOf("venta", "compra", "gasto", "abono", "credito")
 
-            val quiereCambiarFlujo = losQueSomos.any { comando ->
-                diccionario[comando]?.any { palabras.contains(it) } == true
-            }
-
-            if (quiereCambiarFlujo) {
-                operacionCosto.cancelarFlujo()
-                abono.cancelarFlujo()
-                operacionVenta.inicio = false
-                procesoActivo = "ninguno"
-                estadoCredito = "ninguno"
-                cedulaCliente = null
-            }
+//            val quiereCambiarFlujo = losQueSomos.any { comando ->
+//                diccionario[comando]?.any { palabras.contains(it) } == true
+//            }
+//
+//            if (quiereCambiarFlujo) {
+//                operacionCosto.cancelarFlujo()
+//                abono.cancelarFlujo()
+//                operacionVenta.inicio = false
+//                procesoActivo = "ninguno"
+//                estado = "ninguno"
+//                cedulaCliente = null
+//            }
 
             if (tienda) {
                 if (base) {
@@ -250,7 +260,7 @@ class chat_Tienda : AppCompatActivity() {
                     if (quiereCancelar) {
                         operacionVenta.inicio = false
                         procesoActivo = "ninguno"
-                        estadoCredito = "ninguno"
+                        estado = "ninguno"
                         cedulaCliente = null
                         operacionCosto.cancelarFlujo()
                         abono.cancelarFlujo()
@@ -259,25 +269,33 @@ class chat_Tienda : AppCompatActivity() {
                         return@setOnClickListener
                     }
 
-                    if (operacionVenta.inicio) {
-                        lifecycleScope.launch(Dispatchers.IO) {
-                            val clienteID = if (procesoActivo == "credito") (cedulaCliente ?: "") else ""
-                            val respuestaChat =
-                                operacionVenta.procesarListaProductos(textoLimpio, false, clienteID,cedulaGlobal)
-                            withContext(Dispatchers.Main) {
-                                model.addMensajeSistema(modelo(respuestaChat))
-                            }
-                        }
-                        return@setOnClickListener
-                    }
 
                     if (procesoActivo == "credito") {
                         lifecycleScope.launch {
-                            procesarCompra(mensaje)
+                            procesarCredito(mensaje)
+                            return@launch
                         }
                         if (textoLimpio.contains("fin") || textoLimpio.contains("finalizar")) {
+
                             procesoActivo = "ninguno"
-                            estadoCredito = "ninguno"
+                            estado = "ninguno"
+                        }
+                        return@setOnClickListener
+                    }
+                    if (operacionVenta.inicio) {
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            val clienteID =
+                                if (procesoActivo == "credito") (cedulaCliente ?: "") else ""
+                            val respuestaChat =
+                                operacionVenta.procesarListaProductos(
+                                    textoLimpio,
+                                    false,
+                                    clienteID,
+                                    cedulaGlobal
+                                )
+                            withContext(Dispatchers.Main) {
+                                model.addMensajeSistema(modelo(respuestaChat))
+                            }
                         }
                         return@setOnClickListener
                     }
@@ -286,10 +304,14 @@ class chat_Tienda : AppCompatActivity() {
                         val ocupadoConAbono = abono.procesarRespuesta(mensaje, { msg ->
                             model.addMensajeSistema(msg)
                         },cedulaGlobal)
+
                         if (ocupadoConAbono) return@launch
 
-                        if (estadoCredito == "nuevo_cliente") {
-                            nuevoCliente(mensaje)
+                        if (procesoActivo == "nuevo_cliente" ) {
+                            cliente(mensaje, true)
+                            return@launch
+                        }else if (procesoActivo == "consultar"){
+                            cliente(mensaje, false)
                             return@launch
                         }
                         val ocupadoConCosto = operacionCosto.procesarRespuesta(mensaje, { msg ->
@@ -303,13 +325,10 @@ class chat_Tienda : AppCompatActivity() {
                             val esGasto = diccionario["gasto"]?.any { palabras.contains(it) } == true
                             val esCompra = diccionario["compra"]?.any { palabras.contains(it) } == true
                             val esAbono = diccionario["abono"]?.any { palabras.contains(it) } == true
-                            val esCredito = diccionario["credito"]?.any { palabras.contains(it) } == true
-                            val esAgregar = diccionario["agregar"]?.any { palabras.contains(it) } == true
-                            val esCliente = diccionario["cliente"]?.any { palabras.contains(it) } == true
 
-                            if (esCredito){
-                                procesarCompra(mensaje)
-                            } else if (esAbono) {
+                            val esAgregar = diccionario["agregar"]?.any { palabras.contains(it) } == true
+
+                            if (esAbono) {
                                 abono.iniciarFlujoAbono(model::addMensajeSistema)
                             } else if(esGasto){
                                 val respuestaGasto = operacionGasto.procesarGasto(mensaje, cedulaGlobal)
@@ -322,10 +341,8 @@ class chat_Tienda : AppCompatActivity() {
                             } else if(esAgregar && mensaje.contains("producto")){
                                 val intent = Intent(this@chat_Tienda, Agregar_Producto::class.java)
                                 startActivity(intent)
-                            } else if (esCliente && mensaje.contains("cliente")) {
-                            estadoCredito = "nuevo_cliente"
-                            nuevoCliente(mensaje)
-                        }} else {
+                            }
+                        } else {
                             model.addMensajeSistema(modelo("No se pudo detectar la operación, por favor vuelve a intentarlo"))
                         }
                     }
@@ -369,19 +386,19 @@ class chat_Tienda : AppCompatActivity() {
         }
     }
 
-    private suspend fun nuevoCliente(texto: String) {
+    private suspend fun cliente(texto: String, nuevoCliente: Boolean) {
         val prefs = getSharedPreferences("SesionTendero", MODE_PRIVATE)
         val cedula_tendero = prefs.getString("cedula", null) ?: return
         val textoLimpio = texto.replace(Regex("""(\d)[.,](\d{3})\b"""), "$1$2")
         val textoMinuscula = textoLimpio.lowercase()
-        val nuevoCliente = diccionario["agregar cliente"]?.any { frase ->
-            textoMinuscula.contains(frase)
+        val palabras = textoMinuscula.split(Regex("""[\s:]+"""))
+        if (estado == "ninguno") {
+            model.addMensajeSistema(modelo("Dicte el número de cédula del cliente por favor."))
+            estado = "cliente"
+            return
         }
-        Log.i("nuevo cliente", nuevoCliente.toString())
-        model.addMensajeSistema(modelo("Dicte el número de cédula del cliente por favor."))
-        procesoActivo = "cliente_nuevo"
 
-        if (procesoActivo == "cliente_nuevo") {
+        if (estado == "cliente") {
             val textoSinEspacios = textoMinuscula.replace(" ", "")
             val cedulaRegex = Regex("\\d{6,10}")
             val cedula = cedulaRegex.find(textoSinEspacios)?.value
@@ -390,11 +407,18 @@ class chat_Tienda : AppCompatActivity() {
                 val respuesta = buscarCliente(cedula, cedula_tendero)
                 if (respuesta.body()?.nombre == null) {
                     cedulaCliente = cedula
-                    procesoActivo = "registro_cliente"
-                    model.addMensajeSistema(modelo("Dicte el nombre del cliente y su número télefonico."))
-                    return
+                    if (nuevoCliente == true) {
+                        estado = "registro_cliente"
+                        model.addMensajeSistema(modelo("Dicte el nombre del cliente y su número télefonico."))
+                        return
+                    }else{
+                        estado = "decision"
+                        model.addMensajeSistema(modelo("El cliente no está registrado ¿Le gustaría registrarlo?"))
+                        return
+                    }
                 } else {
-                    model.addMensajeSistema(modelo("Cliente encontrado: ${respuesta.body()?.nombre}.\nSaldo total: ${respuesta.body()?.saldo}\n"))
+                    model.addMensajeSistema(modelo("Cliente encontrado: ${respuesta.body()?.nombre}.\nSaldo total: ${respuesta.body()?.saldo}"))
+                    estado = "ninguno"
                     procesoActivo = "ninguno"
                     return
                 }
@@ -403,23 +427,49 @@ class chat_Tienda : AppCompatActivity() {
                 return
             }
         }
-        if (procesoActivo == "registro_cliente") {
-            val textoSinEspacios = textoMinuscula.replace(" ", "")
-            val regexTelefono = Regex("3[\\d\\s]{9,}")
-            val telefono = regexTelefono.find(textoSinEspacios)
+        if (estado == "decision"){
+            val si = palabras.any { diccionario["si"]?.contains(it) == true }
 
+            Log.i("si", si.toString())
+            if (si) {
+                model.addMensajeSistema(modelo("Dicte el nombre del cliente y su número télefonico."))
+                estado = "registro_cliente"
+                return
+            }
+            if (textoMinuscula == "no") {
+                procesoActivo = "ninguno"
+                estado = "ninguno"
+                model.addMensajeSistema(modelo("Ok, saliendo..."))
+            } else {
+                model.addMensajeSistema(modelo("Lo siento, no pude entenderte, por favor dicta de nuevo"))
+            }
+
+
+        }
+        if (estado == "registro_cliente") {
+            val regexTelefono = Regex("3[\\d\\s]{9,}")
+            val telefono = regexTelefono.find(textoMinuscula)
+
+            // 2. Obtenemos el texto que está antes del número
             if (telefono != null) {
+                // 2. CORTAMOS EL NOMBRE (Índices exactos)
+                // Cortamos desde el inicio hasta donde empezó el primer '3'
                 val nombreFinal = textoMinuscula.substring(0, telefono.range.first).trim()
+
+                // 3. LIMPIAMOS EL TELÉFONO
+                // Tomamos desde el '3' hasta el final y le quitamos los espacios
                 val telefonoLimpio = telefono.value.replace(" ", "").trim()
 
+                // 4. VALIDACIÓN Y REGISTRO
                 if (nombreFinal.length >= 3 && nombreFinal.length <= 40) {
                     val nombreFormateado = nombreFinal.split(" ")
                         .filter { it.isNotBlank() }
                         .joinToString(" ") { it.replaceFirstChar { char -> char.uppercase() } }
 
                     if (nuevo_cliente(cedulaCliente, cedula_tendero, nombreFormateado, telefonoLimpio)) {
-                        model.addMensajeSistema(modelo("El cliente $nombreFormateado con la cédula $cedulaCliente y número $telefonoLimpio registrado con éxito. \nDicte el producto que vendío a crédito."))
-                        estadoCredito = "pedir_productos"
+                        model.addMensajeSistema(modelo("El cliente $nombreFormateado con la cédula $cedulaCliente y número $telefonoLimpio registrado con éxito."))
+                        procesoActivo = "ninguno"
+                        estado = "ninguno"
                         return
                     }
                 } else {
@@ -428,8 +478,15 @@ class chat_Tienda : AppCompatActivity() {
             } else {
                 model.addMensajeSistema(modelo("Lo siento, no pude entenderte, por favor dicta de nuevo"))
             }
+
+
         }
     }
+
+
+
+
+
 
     private suspend fun buscarCliente(cedula: String?, cedula_tendero: String?): Response<cliente1> {
         val conexion = ConexionServiceTienda.create()
@@ -439,6 +496,7 @@ class chat_Tienda : AppCompatActivity() {
         }
         return respuesta
     }
+
 
     private fun tienda(mensaje: String): Boolean {
         val palabras = mensaje.lowercase().split(Regex("""[\s,.:]+"""))
@@ -456,68 +514,74 @@ class chat_Tienda : AppCompatActivity() {
         return false
     }
 
-    suspend fun procesarCompra(texto: String) {
+    suspend fun procesarCredito(texto: String) {
         val prefs = getSharedPreferences("SesionTendero", MODE_PRIVATE)
         val cedula_tendero = prefs.getString("cedula", null) ?: return
         val textoLimpio = texto.replace(Regex("""(\d)[.,](\d{3})\b"""), "$1$2")
         val textoMinuscula = textoLimpio.lowercase()
         val palabras = textoMinuscula.split(Regex("""[\s:]+"""))
-        Log.i("palabra12122", palabras.toString())
-        val esCredito = palabras.any { diccionario["credito"]?.contains(it) == true }
 
-        if (esCredito) {
-            procesoActivo = "credito"
-            Log.i("entro a credito", procesoActivo.toString())
-            Log.i("entro a credito", estadoCredito.toString())
+        if(estado == "ninguno"){
+            model.addMensajeSistema(modelo("Por favor dicte el número de cédula del cliente."))
+            estado = "cedula"
+            return
+
         }
-
-
         //---------------CREDITO---------------------------------------------------------------------------------
-        if (procesoActivo == "credito" && estadoCredito == "ninguno") {
+        if ( estado == "cedula") {
+
             val textoSinEspacios = textoMinuscula.replace(" ", "")
-            val cedulaRegex = Regex("\\d{6,10}")
+            val cedulaRegex = Regex("\\d{6,}")
             val cedula = cedulaRegex.find(textoSinEspacios)?.value
             Log.i("cedula", cedula.toString())
 
             if (cedula != null) {
+                if (cedula.length > 10 || cedula.length < 6){
+                    model.addMensajeSistema(modelo("El número de cédula no puede tener mas de 10 digitos, ni menos de 6. Por favor dicte de nuevo."))
+                    return
+                }
                 val respuesta = buscarCliente(cedula, cedula_tendero)
                 Log.i("respuesta de cedula", respuesta.toString())
                 if (respuesta.body()?.nombre == null) {
-                    estadoCredito = "decision"
+                    Log.i("Entre1", "No encontre cedula y devuelvo null")
+                    estado = "decision"
                     cedulaCliente = cedula
                     model.addMensajeSistema(modelo("El cliente no está registrado. ¿Le gustaría registrarlo?"))
-                } else{
+                }else{
+                    Log.i("entre", "Encontre cedula y devuelvo mensajes")
                     model.addMensajeSistema(modelo("Cliente encontrado: ${respuesta.body()?.nombre}.\nSaldo total: ${respuesta.body()?.saldo}.\nDicte el producto que vendío a crédito."))
-                    estadoCredito = "pedir_productos"
+                    estado = "pedir_productos"
                     cedulaCliente = cedula
                 }
                 return
             } else {
-                model.addMensajeSistema(modelo("Hubo un problema con la operación. Por favor dicte de nuevo la operación."))
+                model.addMensajeSistema(modelo("No pude entender. Por favor dicte de nuevo"))
                 return
             }
         }
-        if (estadoCredito == "decision") {
+        if (estado == "decision") {
 
             val si = palabras.any { diccionario["si"]?.contains(it) == true }
+
             Log.i("si", si.toString())
             if (si) {
                 model.addMensajeSistema(modelo("Dicte el nombre del cliente y el número télefonico."))
-                estadoCredito = "cliente_nuevo"
+                estado = "cliente_nuevo"
                 return
             }
             if (textoMinuscula == "no") {
                 procesoActivo = "ninguno"
-                estadoCredito = "ninguno"
+                estado = "ninguno"
                 model.addMensajeSistema(modelo("Ok, saliendo de crédito"))
             } else {
                 model.addMensajeSistema(modelo("Lo siento, no pude entenderte, por favor dicta de nuevo"))
             }
+
         }
-        if (estadoCredito == "cliente_nuevo") {
+        if (estado == "cliente_nuevo") {
             val textoSinEspacios = textoMinuscula.replace(" ", "")
             val regexTelefono = Regex("3[\\d\\s]{9,}")
-            val telefono = regexTelefono.find(textoSinEspacios)
+            val telefono = regexTelefono.find(textoMinuscula)
 
             if (telefono != null) {
                 val nombreFinal = textoMinuscula.substring(0, telefono.range.first).trim()
@@ -529,29 +593,33 @@ class chat_Tienda : AppCompatActivity() {
                         .joinToString(" ") { it.replaceFirstChar { char -> char.uppercase() } }
 
                     if (nuevo_cliente(cedulaCliente, cedula_tendero, nombreFormateado, telefonoLimpio)) {
-                        model.addMensajeSistema(modelo("El cliente $nombreFormateado con la cédula $cedulaCliente y número $telefonoLimpio registrado con éxito. \nDicte el producto que vendío a crédito."))
-                        estadoCredito = "pedir_productos"
+                        model.addMensajeSistema(modelo("El cliente $nombreFormateado con la cédula $cedulaCliente y número $telefonoLimpio ha sido registrado con éxito. \nDicte el producto que vendío a crédito."))
+                        estado = "pedir_productos"
                         return
-                    }} else {
+                    }
+                } else {
                     model.addMensajeSistema(modelo("Lo siento, no pude entenderte, por favor dicta de nuevo"))
                     return
-                }} else {
+                }
+            } else {
                 model.addMensajeSistema(modelo("Lo siento, no pude entenderte, por favor dicta de nuevo"))
                 return
             }
+
         }
 
-        if (estadoCredito == "pedir_productos"){
+        if (estado == "pedir_productos"){
             var operacionVenta = OperacionVenta()
             val fin_credito = diccionario["fin credito"]?.any { frase ->
                 textoMinuscula.contains(frase) }
             if (fin_credito == true ){
-                estadoCredito = "ninguno"
+                estado = "ninguno"
                 procesoActivo = "ninguno"
                 model.addMensajeSistema(
                     modelo(
                         operacionVenta.procesarListaProductos(
                             textoLimpio, true,cedulaCliente!!,cedulaGlobal,
+
                         )
                     ))
             } else {

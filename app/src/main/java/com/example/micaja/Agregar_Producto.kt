@@ -1,7 +1,11 @@
 package com.example.micaja
 
+import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
+import android.view.View
 import android.view.WindowManager
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -14,12 +18,54 @@ import androidx.core.widget.addTextChangedListener
 import com.example.micaja.ConexionService.ConexionServiceTienda
 import com.example.micaja.databinding.ActivityAgregarProductoBinding
 import com.example.micaja.models.AgregarProducto
+import com.example.micaja.models.BuscarProductos
+import com.example.micaja.models.EditarProducto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class Agregar_Producto : AppCompatActivity() {
 
+    /**
+     * Mapa de unidades reconocidas por la app.
+     * Cada clave es el nombre canónico de la unidad y su valor es una lista
+     * de sinónimos/abreviaturas que el tendero puede escribir.
+     * Se usa en [presentacionLista] para validar el campo presentación.
+     */
+    val unidades = mapOf(
+        // Peso
+        "gramo"      to listOf("gramo", "gramos", "g", "gr"),
+        "libra"      to listOf("libra", "libras", "lb"),
+        "kilogramo"  to listOf("kilo", "kilogramos", "kg", "kilos"),
+        "onza"       to listOf("onza", "onzas"),
+
+        // Líquidos
+        "Litro"      to listOf("litro", "litron", "l", "litros"),
+        "militro"    to listOf("ml", "mililitros"),
+        "garrafa"    to listOf("garrafa", "gal"),
+
+        // Empaques y Agrupaciones
+        "bolsa"      to listOf("bolsa", "bolsita", "chuspa"),
+        "caja"       to listOf("caja", "cajetilla"),
+        "paquete"    to listOf("paquete", "paca", "sixpack", "sobre"),
+        "envase"     to listOf("envase", "frasco", "botella", "tubo", "spray", "rollo"),
+        "unidad"     to listOf("unidad", "unidades", "barra", "capsula", "tableta", "docena", "panal", "atado", "hojas", "carta"),
+        "recipiente" to listOf("cubeta", "canasta", "cubo", "vaso", "vasito", "lata", "laton"),
+
+        // Tamaños y Medidas
+        "pequeño"    to listOf("pequeña", "pequeño", "mini"),
+        "mediano"    to listOf("mediana", "mediano", "media"),
+        "grande"     to listOf("grande", "jumbo")
+    )
+
+    /**
+     * Mapa de categorías disponibles en el inventario.
+     * La clave es el ID que se envía al servidor y el valor es el nombre visible.
+     * Se usa en [categoriaLista] para cargar el AutoComplete y en [boton] para
+     * validar que el tendero haya seleccionado una opción válida.
+     */
     private val categorias = mapOf(
         1 to "abarrotes", 2 to "bebidas", 3 to "dulcería", 4 to "licores",
         5 to "fruver", 6 to "lácteos", 7 to "aseo personal", 8 to "aseo general",
