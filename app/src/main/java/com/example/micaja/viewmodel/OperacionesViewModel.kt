@@ -10,13 +10,10 @@ import com.example.micaja.models.TipoOperacionXFecha
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-
 class OperacionesViewModel : ViewModel() {
 
-    // Estadísticas generales (ventas, gastos, costos)
     private val _estadisticas = MutableLiveData<TipoOperacionXFecha?>()
     val estadisticas: LiveData<TipoOperacionXFecha?> get() = _estadisticas
-    // Número de créditos como entero
     private val _numeroCreditos = MutableLiveData<Int?>()
     val numeroCreditos: LiveData<Int?> get() = _numeroCreditos
     val mensajeError = MutableLiveData<String>()
@@ -25,39 +22,15 @@ class OperacionesViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val api = ConexionServiceTienda.create()
-                val request = ConsultarOperaXFecha(idTendero, fechaInicial, fechaFin, precio = null)
+                val request = ConsultarOperaXFecha(idTendero, fechaInicial, fechaFin)
                 val responseEstadisticas = api.consultarXFecha(request)
                 if (responseEstadisticas.isSuccessful) {
                     val lista = responseEstadisticas.body()
-                    if (!lista.isNullOrEmpty()) {
-                        _estadisticas.postValue(lista.first())
-                    } else {
-                        mensajeError.postValue("No existen datos en ese rango de fechas")
-                    }
-                } else {
-                    mensajeError.postValue("Error en estadísticas: ${responseEstadisticas.code()}")
-                }
-            } catch (e: Exception) {
-                mensajeError.postValue("Error: ${e.message}")
-            }
-        }
-    }
 
-    fun consultarNumeroCreditos(idTendero: String, fechaInicial: String, fechaFin: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val api = ConexionServiceTienda.create()
-                val request = ConsultarOperaXFecha(idTendero, fechaInicial, fechaFin, precio = null)
-                val responseCreditos = api.numeroCredito(request)
-                if (responseCreditos.isSuccessful) {
-                    val cantidad = responseCreditos.body()?.Ncredito?.toIntOrNull()
-                    _numeroCreditos.postValue(cantidad)
-                } else {
-                    mensajeError.postValue("Error en número de créditos: ${responseCreditos.code()}")
+                    if (!lista.isNullOrEmpty()) { _estadisticas.postValue(lista.first()) }
+                    else { mensajeError.postValue("No existen datos en ese rango de fechas") }
                 }
-            } catch (e: Exception) {
-                mensajeError.postValue("Error: ${e.message}")
-            }
+            } catch (e: Exception) { mensajeError.postValue("Error de conexion intenta mas tarde") }
         }
     }
 }

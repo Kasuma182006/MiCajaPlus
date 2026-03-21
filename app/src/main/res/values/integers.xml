@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="Cedula">10</integer>
-    <integer name="NombreCliente">60</integer>
+    <integer name="NombreCliente">40</integer>
     <integer name="Telefono">10</integer>
-    <integer name="valorCredito">12</integer>
+    <integer name="valorCredito">11</integer>
 
 
-    <integer name="NombreProducto">60</integer>
-    <integer name="Presentacion">80</integer>
+    <integer name="NombreProducto">50</integer>
+    <integer name="Presentacion">30</integer>
     <integer name="Proveedor">60</integer>
-    <integer name="PrecioProducto">10</integer>
-    <integer name="CantidadProducto">10</integer>
+    <integer name="PrecioProducto">11</integer>
+    <integer name="CantidadProducto">11</integer>
+    <integer name="CategoriaProducto">20</integer>
 </resources>

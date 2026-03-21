@@ -9,19 +9,33 @@
     android:padding="15dp"
     tools:context=".dialogfragment">
 
+    <ImageView
+        android:id="@+id/Logo_app"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:contentDescription="@string/logo_App"
+        android:src="@drawable/logo_app"
+        android:layout_marginTop="52dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+
     <TextView
         android:id="@+id/text_Title_resumen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/Logo_app"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="14dp"
+        android:fontFamily="sans-serif-black"
         android:textStyle="bold"
-        android:textSize="30dp"
+        android:textSize="34dp"
         android:textAlignment="center"
         android:text="@string/ResumenDia"
-        android:textColor="@color/color_txt_app"/>
+        android:textColor="@color/ic_principal"/>
 
     <ImageButton
         android:id="@+id/cerrar"
@@ -43,16 +57,16 @@
         android:textAlignment="center"
         android:textSize="20sp"
         android:background="@drawable/bordes_acciones"
-        android:backgroundTint="#6DD0CCDB"
+        android:backgroundTint="@color/Azul_venta_targeta"
         android:text="@string/ventas"
-        android:textColor="#000000"
+        android:textStyle="bold"
+        android:textColor="#2F1313"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="40dp"
         app:layout_constraintTop_toBottomOf="@id/text_Title_resumen"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/gastos"
@@ -61,16 +75,16 @@
         android:textAlignment="center"
         android:textSize="20sp"
         android:background="@drawable/bordes_acciones"
-        android:backgroundTint="#F4DBFA"
+        android:backgroundTint="@color/rojo_gastos_targeta"
         android:text="@string/gastos"
+        android:textStyle="bold"
         android:textColor="#000000"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
         android:layout_marginTop="20dp"
         app:layout_constraintTop_toBottomOf="@id/ventas"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/costos"
@@ -79,8 +93,9 @@
         android:textAlignment="center"
         android:textSize="20sp"
         android:background="@drawable/bordes_acciones"
-        android:backgroundTint="#DBDCFF"
+        android:backgroundTint="@color/azul_logo"
         android:text="@string/costos"
+        android:textStyle="bold"
         android:textColor="#000000"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
@@ -95,11 +110,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="26dp"
         android:text="¿Te gustaria ver la utilidad?"
         android:textAlignment="center"
         android:textColor="@color/color_campos"
-        android:textSize="16sp"
+        android:textStyle="normal"
+        android:textSize="17sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.425"
         app:layout_constraintStart_toStartOf="parent"
@@ -107,15 +123,16 @@
 
     <Button
         android:id="@+id/ver"
-        android:layout_width="80dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="5dp"
+        android:layout_marginTop="26dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:backgroundTint="@color/btn_registrarse"
-        android:text="ver"
+        android:text="VER"
         android:textAlignment="center"
         android:textColor="@color/color_fondo"
-        android:textSize="18sp"
+        android:textSize="21sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/pregunta"

@@ -1,60 +1,57 @@
 package com.example.micaja.Calendario
 
-import android.content.Intent
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.example.micaja.Principal
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.example.micaja.R
 import com.example.micaja.databinding.ConsultarXFechaBinding
 import com.example.micaja.viewmodel.OperacionesViewModel
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.CompositeDateValidator
+import com.google.android.material.datepicker.DateValidatorPointBackward
+import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
-import java.time.Instant
-import java.time.ZoneId
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 
 class ConsultarXFecha : AppCompatActivity() {
-
     private var fechaInicial: String? = null
     private var fechaFinal: String? = null
-
-
     private lateinit var binding: ConsultarXFechaBinding
     private val operacionesViewModel: OperacionesViewModel by viewModels()
-//    private val creditoViewModel: CreditoViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ConsultarXFechaBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        ViewCompat.setOnApplyWindowInsetsListener(binding.header) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(view.paddingLeft, systemBars.top, view.paddingRight, view.paddingBottom)
+            insets
+        }
         configurarBotones()
         observarDatos()
     }
 
     private fun configurarBotones() {
-        binding.btnCalendarioStar.setOnClickListener { mostrarCalendario(true) }
-
-        binding.btnCalendarioEnd.setOnClickListener { mostrarCalendario(false) }
-
-        binding.btnCerrar.setOnClickListener { cancelar() }
-    }
-
-    private fun cancelar() {
-        Toast.makeText(this, "Cancelaste la operación", Toast.LENGTH_SHORT).show()
-        startActivity(Intent(this, Principal::class.java))
-        finish()
+        binding.cvBtnInicio.setOnClickListener { mostrarCalendario(true) }
+        binding.cvBtnFin.setOnClickListener { mostrarCalendario(false) }
+        binding.btnCerrar.setOnClickListener { finish() }
     }
 
     private fun consultarBalance(idTendero: String, fechaInicial: String, fechaFin: String) {
         operacionesViewModel.consultarEstadisticas(idTendero, fechaInicial, fechaFin)
-        operacionesViewModel.consultarNumeroCreditos(idTendero, fechaInicial, fechaFin)
     }
 
     fun observarDatos() {
@@ -63,24 +60,27 @@ class ConsultarXFecha : AppCompatActivity() {
                 val ventas = datos.ventas?.toIntOrNull() ?: 0
                 val gastos = datos.gastos?.toIntOrNull() ?: 0
                 val costos = datos.costos?.toIntOrNull() ?: 0
+                val ncreditos = datos.ncreditos?.toIntOrNull() ?: 0
+                val valorCredito = datos.valorCredito?.toIntOrNull() ?: 0
 
-                val respuesta = ventas - gastos - costos
-                val utilidad  = respuesta
+                val utilidad  = (ventas + valorCredito) - (gastos + costos) // Abonos ¿?
 
-                binding.tvVentas.text   = "$$ventas"
-                binding.tvGastos.text   = "$$gastos"
-                binding.tvCostos.text   = "$$costos"
+                val puntuacionVentas = ventas.toString().replace(Regex("""(\d)(?=(\d{3})+(?!\d))"""), "$1.")
+                val puntuacionGastos = gastos.toString().replace(Regex("""(\d)(?=(\d{3})+(?!\d))"""), "$1.")
+                val puntuacionCostos = costos.toString().replace(Regex("""(\d)(?=(\d{3})+(?!\d))"""), "$1.")
+                val puntuacionNcredito = ncreditos.toString().replace(Regex("""(\d)(?=(\d{3})+(?!\d))"""), "$1.")
+                val puntuacionUtilidad = utilidad.toString().replace(Regex("""(\d)(?=(\d{3})+(?!\d))"""), "$1.")
 
-                // Formatear texto de utilidad (ejemplo simple)
-                val utilidadTexto = "$$utilidad"
+                binding.tvVentas.text   = "$$puntuacionVentas"
+                binding.tvGastos.text   = "$$puntuacionGastos"
+                binding.tvCostos.text   = "$$puntuacionCostos"
+                binding.tvFiados.text   = "$$puntuacionNcredito"
+
+                val utilidadTexto = "$$puntuacionUtilidad"
                 binding.tvUtilidad.text = utilidadTexto
 
-                // Cambiar color según si es negativo o no
                 if (utilidad < 0) {
-                    // Usando color definido en colors.xml
                     binding.tvUtilidad.setTextColor(ContextCompat.getColor(this, R.color.utilidad_negative))
-                    // O con Color.RED:
-                    // binding.tvUtilidad.setTextColor(Color.RED)
                 } else {
                     binding.tvUtilidad.setTextColor(ContextCompat.getColor(this, R.color.utilidad_positive))
                 }
@@ -98,68 +98,62 @@ class ConsultarXFecha : AppCompatActivity() {
             binding.tvFiados.text = texto
         }
 
-
         operacionesViewModel.mensajeError.observe(this) { error ->
             Toast.makeText(this, error, Toast.LENGTH_LONG).show()
         }
     }
 
     private fun mostrarCalendario(esFechaInicial: Boolean) {
+        val prefs = getSharedPreferences("SesionTendero", Context.MODE_PRIVATE)
+        val hoyMs = MaterialDatePicker.todayInUtcMilliseconds()
+        val fechaRegistroStr = prefs.getString("fecha", null)
+        Log.d("fecha", fechaRegistroStr.toString())
+        val fechaMinimaMs: Long = if (fechaRegistroStr != null) {
+            try {
+                val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                sdf.timeZone = TimeZone.getTimeZone("UTC")
+                sdf.parse(fechaRegistroStr)?.time ?: hoyMs //convertidor de string a Date
+            } catch (e: Exception) { hoyMs }
+        } else { hoyMs }
+
+        val constraints = CalendarConstraints.Builder()
+            .setStart(fechaMinimaMs) // Mes donde empieza el calendario
+            .setEnd(hoyMs)           // Mes donde termina
+            .setValidator(CompositeDateValidator.allOf(listOf(
+                DateValidatorPointForward.from(fechaMinimaMs), // Bloquea antes del registro
+                DateValidatorPointBackward.before(hoyMs)       // Bloquea después de hoy
+            )))
+            .build()
+
+        // 4. Construir el Picker usando las restricciones
         val dateRangePicker = MaterialDatePicker.Builder.datePicker()
             .setTitleText("Selecciona la fecha")
+            .setCalendarConstraints(constraints) // Aplicamos los bloqueos aquí
             .build()
 
         dateRangePicker.addOnPositiveButtonClickListener { selection ->
-            val formato = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            formato.timeZone = TimeZone.getTimeZone("UTC")
+            val formatoEnvio = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            formatoEnvio.timeZone = TimeZone.getTimeZone("UTC")
 
-            val fechaSeleccionada = formato.format(Date(selection))
+            val fechaSeleccionada = formatoEnvio.format(Date(selection))
 
-
-            if (esFechaInicial) {
-                fechaInicial = "$fechaSeleccionada 00:00:00"
-            } else {
-                fechaFinal = "$fechaSeleccionada 23:59:59"
-            }
+            if (esFechaInicial) { fechaInicial = "$fechaSeleccionada 00:00:00" }
+            else { fechaFinal = "$fechaSeleccionada 23:59:59" }
 
             if (fechaInicial != null && fechaFinal == null) {
                 fechaFinal = fechaInicial!!.replace("00:00:00", "23:59:59")
-            }
-
-            if (fechaFinal != null && fechaInicial == null) {
+            } else if (fechaFinal != null && fechaInicial == null) {
                 fechaInicial = fechaFinal!!.replace("23:59:59", "00:00:00")
-            }else{
-                fechaInicial = fechaInicial
-                fechaFinal = fechaFinal
             }
 
-            val fechaInicioSoloDia = fechaInicial!!.substring(0, 10)
-            val fechaFinSoloDia = fechaFinal!!.substring(0, 10)
+            Log.d("fecha", fechaInicial.toString())
+            Log.d("fecha", fechaFinal.toString())
 
-            binding.tvRangoFecha.text =
-                if (fechaInicioSoloDia == fechaFinSoloDia) {
-                    fechaInicioSoloDia
-                }else{
-                    "$fechaInicioSoloDia - $fechaFinSoloDia"
-                }
-
-
-
-            val prefs = getSharedPreferences("SesionTendero", MODE_PRIVATE)
             val tendero = prefs.getString("cedula", null)
-
-
-            if (tendero.isNullOrEmpty()) {
-                Toast.makeText(this, "Error: No se encontró la sesión del tendero", Toast.LENGTH_LONG).show()
-                return@addOnPositiveButtonClickListener
+            if (!tendero.isNullOrEmpty()) {
+                consultarBalance(tendero, fechaInicial!!, fechaFinal!!)
             }
-
-            val idTendero = tendero
-
-
-            consultarBalance(idTendero, fechaInicial.toString(), fechaFinal.toString())
         }
-
         dateRangePicker.show(supportFragmentManager, "DATE_RANGE_PICKER")
     }
 }

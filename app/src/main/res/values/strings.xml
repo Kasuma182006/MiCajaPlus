@@ -60,7 +60,7 @@
     <string name="hint_BuscarCliente">Buscar Cedula</string>
     <string name="label_Paso1">① Seleccionar cliente</string>
     <string name="cd_btnBuscar">boton buscar cliente</string>
-    <string name="label_Paso2">② Editar cliente</string>
+    <string name="label_Paso2">② Editar datos</string>
     <string name="hint_NombreCliente">Nombre del Cliente</string>
     <string name="hint_CedulaCliente">Cedula del Cliente</string>
     <string name="hint_TelefonoCliente">Telefono del Cliente</string>
@@ -72,7 +72,7 @@
     <string name="valor_0">$ 0</string>
     <string name="Ej12">Ej. 12</string>
     <string name="GUARDARPRODUCTO">Editar Producto</string>
-    <string name="hint_BuscarProducto">Buscar producto...</string>
+    <string name="hint_BuscarProducto">Buscar por nombre...</string>
     <string name="cd_AgregarProducto">btn Agregar producto</string>
     <string name="titulo_Inventario">Mis Productos</string>
     <string name="NombredelProducto">Nombre de Producto</string>
@@ -84,10 +84,17 @@
     <string name="editarProducto">Editar Producto</string>
     <string name="subtitulo_EditarProducto">Busca y modifica los datos de producto</string>
 
-    <string name="label_Paso1_Producto">① Seleccionar producto</string>
+    <string name="label_Paso1_Producto">① Buscar producto</string>
     <string name="label_Paso2_Producto">② Editar datos</string>
     <string name="cd_btnBuscarProducto">buscar_producto</string>
-    <string name="hint_BuscarPresentacion">Buscar Presentación...</string>
+    <string name="hint_BuscarPresentacion">Buscar por precentacion...</string>
+    <string name="precioCompra">Precio Compra ($)</string>
+    <string name="CategoriaProducto">Categoria</string>
+    <string name="label_Paso1_Producto_Añadir">Datos del Producto</string>
+    <string name="hint_AñadirProductoNombre">Nombre del Producto</string>
+    <string name="Añadir_Inventario">Agregar Producto</string>
+    <string name="subtitulo_Agregar_Producto">Agrega un nuevo producto al inventario</string>
+    <string name="GUARDARPRODUCTONUEVO">Guardar Producto</string>
 
 
 </resources>

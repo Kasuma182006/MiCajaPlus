@@ -5,7 +5,13 @@ import com.google.gson.annotations.SerializedName
 data class Tendero(
     @SerializedName("cedula") val cedula: String,
     @SerializedName("telefono") val telefono: String,
-    @SerializedName("nombre") val nombre: String
+    @SerializedName("nombre") val nombre: String,
+    @SerializedName("fechaCreacion") val fechaCreacion: String
+)
+
+
+data class ConsultaCedulaTendero(
+    val cedula: String
 )
 
 data class cliente(
@@ -16,17 +22,41 @@ data class cliente(
     val total: Int?=null
 )
 
+////ABONOS
+data class clienteAbono(
+    val nombre: String?,
+    val cedula: String?,
+    val saldo: Int?
+)
+
+/////ABONOS
+data class DatosAbono(
+    val cedula: String,
+    val idTendero:String,
+    val abono: Int
+)
+//////ABONOS
+data class RespuestaAbono(
+    val nuevoSaldo: Int
+)
+
+
+data class cliente1(
+    val nombre: String?=null,
+    val saldo: Int?=null,
+)
+
 data class clienteNuevo(
     val cedulaCliente: String,
     val cedulaTendero:String,
     val nombre: String,
     val celular: String,
-    val monto: Int
+
 )
 
 data class Identificacion(
     val cedula: String,
-    val tendero: String
+    val idTendero: String
 )
 
 data class Credito(
@@ -34,45 +64,53 @@ data class Credito(
     val monto: Int,
     val cedulaTendero: String
 )
-
-data class Datos_Abono(
-    val cedulaCliente: String,
-    val cedulaTendero:String,
-    val monto: Int
-)
 data class ConsultarOperaXFecha(
     val idTendero: String,
     val fechaInicial: String? = null,
-    val fechaFin: String? = null,
-    val precio: Int? = null
+    val fechaFin: String? = null
 )
 
 data class TipoOperacionXFecha(
     val ventas: String,
+    val valorCredito: String,
+    val ncreditos: String,
     val costos: String,
     val gastos: String
 )
 
-data class NumeroCreditosResponse(
-    val Ncredito: String
-)
+
 
 data class ModeloBase(
     val idTendero: String,
     val baseInicial: Int
 )
 
-data class venta(
-    val idTendero: String,
-    val tipo: String,
-    val monto: Int,
-    val mensaje: String
-)
 
 data class ventaDetectada(
-    var nombreProducto: String,
+    val idTendero: String,
+    val cedula: String? = null,
     val mensaje: String,
-    val total_Venta: Int
+    val tipoPago: String,
+    val nombre: String,
+    val cantidad: Int,
+    val presentacion: String
+)
+
+data class cantidadIn (
+    val idTendero: String,
+    val cantidad: Int,
+    val presentacion: String,
+    val nombre: String
+)
+
+data class AgregarProducto(
+    val idTendero: String,
+    val nombre: String,
+    val presentacion: String,
+    val cantidad: Int,
+    val valorVenta: Int,
+    val idCategoria: Int,
+    val valorCompra: Int
 )
 
 data class Gasto(
@@ -81,42 +119,77 @@ data class Gasto(
     var valor: Int
 )
 
+data class costoDetectado(
+    val idTendero: String,
+    val mensaje: String,
+    val precioCompra: Int,
+    val proveedor: String
+)
+
 data class gastoDetectado(
+    val idTendero: String,
     val mensaje: String,
     val precio: Int
 )
 
-data class Costo(
-    val idTendero: String,
-    val mensaje: String,
-    var precioCompra: Int
-)
-
 data class compra_Mercancia(
-    val idTendero: String,
-    var mensaje: String,
-    var monto: Int,
-    val categoria: String,
-    val proveedor: String
-)
-
-data class listaProductos (
-    val idTendero: String,
-    val nombreProducto: String,
-    val cantidad: Int,
+    val idTendero: String = "",
+    val nombre: String,
+    val presentacion: String,
+    val cantidadStock: Int,
     val precioCompra: Int,
-    val precioVenta: Int,
     val proveedor: String
 )
 
-data class inventario (
-
-    val idInventario: Int,
-    val idProductos: Int,
+//Esta data class es para las operaciones de ventas de unidades o agregar unidades existentes en el inventario (ventas o gastos en operciones)
+data class OperacionesInventario(
+    val idTendero: String,
+    val nombre: String,
+    val presentacion: String,
     val cantidad: Int,
+    val operacion: String // en operacion se agrega la palabra "descontar" en caso de que sea una venta o "agregar" en caso de ser un costo
+)
+
+
+
+
+
+// No toquen esto, estas data class son para el modulo de editar Productos
+
+data class BuscarProductos(
+    val idTendero: String,
+    val nombre: String
+)
+
+data class EditarProducto(
+    val cantidad: Int,
+    val idTendero: String,
+    val idInventario: Int,
+    val nombreProducto: String,
+    val presentacion: String,
     val valorVenta: Int,
-    val valorCompra: Int,
-    val idCategorias: Int,
+    val valorCompra:Int
+)
+
+//data clas para traer datos del cliente
+data class ClienteCompleto(
+    val nombre: String?,
+    val cedula: String?,
+    val telefono: String?,
+    val saldo: Int?
+)
+//data clas para actualizar datos del cliente
+data class ActualizarCliente(
+    val idTendero: String,
+    val cedula: String,
+    val nombre: String,
+    val telefono: String,
+    val saldo: Int
+)
+
+data class Producto(
+    val idTendero: String,
+    val categoria: String,
     val nombre: String,
     val presentacion: String
 )

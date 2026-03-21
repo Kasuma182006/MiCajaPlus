@@ -29,38 +29,27 @@ class MenuBottomSheet(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //Balance
         binding.menuBtnBalance.setOnClickListener {
             dismiss()
-            // TODO: reemplaza BalanceActivity::class.java por tu Activity real
             startActivity(Intent(requireContext(), ConsultarXFecha::class.java))
         }
 
-        //Editar Cliente
         binding.menuBtnEditarCliente.setOnClickListener {
             dismiss()
-            // TODO: reemplaza editar_clientes::class.java por tu Activity real
-            startActivity(Intent(requireContext(), editar_clientes::class.java))
+          startActivity(Intent(requireContext(), editar_clientes::class.java))
         }
 
-        //Editar Producto
         binding.menuBtnEditarProducto.setOnClickListener {
             dismiss()
-            // TODO: reemplaza fragment_editar_producto::class.java por tu Activity real
             startActivity(Intent(requireContext(), fragment_editar_producto::class.java))
         }
 
-        // Comandos
         binding.menuBtnComandos.setOnClickListener {
             dismiss()
-            if (onComandos != null) {
-                onComandos.invoke()
-            } else {
-                dialogo_comandos().show(parentFragmentManager, "Comandos")
-            }
+            if (onComandos != null) { onComandos.invoke() }
+            else { dialogo_comandos().show(parentFragmentManager, "Comandos") }
         }
 
-        //Cerrar sesion
         binding.icCerrarSeccion.setOnClickListener {
             dismiss()
             onCerrarSesion?.invoke()
