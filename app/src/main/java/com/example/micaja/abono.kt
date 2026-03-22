@@ -15,6 +15,8 @@ class Abonos {
     private var nombreCliente = ""
     private var montoAbono = 0
     private var saldoActualCliente= 0
+    val afirmativo = listOf("si", "sí", "confirmar", "confirmo", "claro", "aceptar", "vale")
+    val negativo = listOf("no", "cancelar", "incorrecto", "parar","fin")
 
     fun iniciarFlujoAbono(enviarMensajeSistema: (modelo) -> Unit) {
         estadoActual = EstadoAbono.ESPERANDO_CEDULA
@@ -42,6 +44,12 @@ class Abonos {
         texto: String,
         enviarMensajeSistema: (modelo) -> Unit,
         idTendero: String){
+        if(negativo.any{texto.contains(it)}){
+            enviarMensajeSistema(modelo("Operación cancelada. No se realizó ningún cargo."))
+            finalizarFlujo()
+            return
+        }
+
         val cedulaLimpia = texto.replace(Regex("[^0-9]"), "")
 
         if (cedulaLimpia.length >= 7) {
@@ -63,10 +71,11 @@ class Abonos {
                     nombreCliente = cliente.nombre!!
                     this.saldoActualCliente = cliente.saldo ?: 0
                     estadoActual = EstadoAbono.ESPERANDO_MONTO
+                    val puntuacionSaldoActual = saldoActualCliente.toString().replace(Regex("""(\d)(?=(\d{3})+(?!\d))"""), "$1.")
                     val mensaje = """
                         Cliente: $nombreCliente
                         Cédula: $cedulaGuardada
-                        Saldo Pendiente: $$saldoActualCliente
+                        Saldo Pendiente: $$puntuacionSaldoActual
                        
                         ¿Cuánto desea abonar el cliente?
                     """.trimIndent()
@@ -84,16 +93,23 @@ class Abonos {
     }
 
     private fun validarMonto(texto: String, enviarMensajeSistema: (modelo) -> Unit) {
+        if (negativo.any{texto.contains(it)}){
+            enviarMensajeSistema(modelo("Operación cancelada. No se realizó ningún cargo."))
+            finalizarFlujo()
+            return
+        }
         val monto = texto.replace(Regex("[^0-9]"), "").toIntOrNull()
+        val puntuacionMonto = monto.toString().replace(Regex("""(\d)(?=(\d{3})+(?!\d))"""), "$1.")
         if (monto != null && monto > 0) {
             if (monto > saldoActualCliente) {
                 enviarMensajeSistema(
-                    modelo("El cliente solo debe $$saldoActualCliente. No puede abonar $$monto. Por favor dicte un valor válido."))
+                    modelo("El cliente solo debe $$saldoActualCliente. No puede abonar $$puntuacionMonto. Por favor dicte un valor válido."))
             } else {
                 montoAbono = monto
+                val puntuacionMontoAbono = montoAbono.toString().replace(Regex("""(\d)(?=(\d{3})+(?!\d))"""), "$1.")
                 estadoActual = EstadoAbono.ESPERANDO_CONFIRMACION
                 enviarMensajeSistema(
-                    modelo("¿Confirma el abono de $$montoAbono para $nombreCliente? (Responda Sí o No)"))
+                    modelo("¿Confirma el abono de $$puntuacionMontoAbono para $nombreCliente? (Responda Sí o No)"))
             }
         } else {
             enviarMensajeSistema(modelo("No entendí el valor. Por favor, diga el monto en números."))
@@ -105,8 +121,6 @@ class Abonos {
         enviarMensajeSistema: (modelo) -> Unit,
         idTendero: String
     ) {
-        val afirmativo = listOf("si", "sí", "confirmar", "confirmo", "claro", "aceptar", "vale")
-        val negativo = listOf("no", "cancelar", "incorrecto", "parar")
         when {
             afirmativo.any { texto.contains(it) } -> {
                 try {
@@ -118,13 +132,17 @@ class Abonos {
                     val respuesta = withContext(Dispatchers.IO) {
                         ConexionServiceTienda.create().registrarAbono(solicitud)
                     }
+
+                    val puntuacionAbono = montoAbono.toString().replace(Regex("""(\d)(?=(\d{3})+(?!\d))"""), "$1.")
                     if (respuesta.isSuccessful && respuesta.body() != null) {
                         val body = respuesta.body()!!
+                        val nuevoSaldo = body.nuevoSaldo
+                        val puntuacionSaldo = nuevoSaldo.toString().replace(Regex("""(\d)(?=(\d{3})+(?!\d))"""),"$1.")
                         val mensajeExito = """
                             Abono registrado con exito.
                             Cliente: $nombreCliente
-                            Monto: $$montoAbono
-                            Nuevo Saldo: ${body.nuevoSaldo}
+                            Monto: $$puntuacionAbono
+                            Nuevo Saldo: $$puntuacionSaldo
                         """.trimIndent()
                         enviarMensajeSistema(modelo(mensajeExito))
                         finalizarFlujo()
