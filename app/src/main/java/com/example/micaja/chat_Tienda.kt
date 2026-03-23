@@ -392,6 +392,16 @@ class chat_Tienda : AppCompatActivity() {
         val textoLimpio = texto.replace(Regex("""(\d)[.,](\d{3})\b"""), "$1$2")
         val textoMinuscula = textoLimpio.lowercase()
         val palabras = textoMinuscula.split(Regex("""[\s:]+"""))
+        if (palabras.contains("fin") ) {
+            estado = "ninguno"
+            procesoActivo = "niguno"
+            if (nuevoCliente){
+                model.addMensajeSistema(modelo("El proceso para registrar un nuevo cliente ha finalizado correctamente."))
+            }else{
+                model.addMensajeSistema(modelo("El proceso para buscar un nuevo cliente ha finalizado correctamente."))
+            }
+            return
+        }
         if (estado == "ninguno") {
             model.addMensajeSistema(modelo("Dicte el número de cédula del cliente por favor."))
             estado = "cliente"
@@ -400,10 +410,20 @@ class chat_Tienda : AppCompatActivity() {
 
         if (estado == "cliente") {
             val textoSinEspacios = textoMinuscula.replace(" ", "")
-            val cedulaRegex = Regex("\\d{6,10}")
+            val cedulaRegex = Regex("\\d{6,}")
             val cedula = cedulaRegex.find(textoSinEspacios)?.value
             Log.i("cedula", cedula.toString() )
             if (cedula != null) {
+                if (cedula.length > 10 || cedula.length < 6){
+                    Log.i("primer if", "entre a estado cedula")
+                    model.addMensajeSistema(modelo("El número de cédula no puede tener mas de 10 digitos, ni menos de 6. Por favor dicte de nuevo."))
+                    return
+                }
+                if ( cedula == cedula_tendero){
+                    Log.i("segundo if", "entre a estado cedula")
+                    model.addMensajeSistema(modelo("La cédula del cliente no puede ser igual a la del tendero. Por favor dicte de nuevo." ))
+                    return
+                }
                 val respuesta = buscarCliente(cedula, cedula_tendero)
                 if (respuesta.body()?.nombre == null) {
                     cedulaCliente = cedula
@@ -417,7 +437,7 @@ class chat_Tienda : AppCompatActivity() {
                         return
                     }
                 } else {
-                    model.addMensajeSistema(modelo("Cliente encontrado: ${respuesta.body()?.nombre}.\nSaldo total: ${respuesta.body()?.saldo}"))
+                    model.addMensajeSistema(modelo("Cliente encontrado: ${respuesta.body()?.nombre}.\nSaldo total: $${respuesta.body()?.saldo}"))
                     estado = "ninguno"
                     procesoActivo = "ninguno"
                     return
@@ -521,6 +541,13 @@ class chat_Tienda : AppCompatActivity() {
         val textoMinuscula = textoLimpio.lowercase()
         val palabras = textoMinuscula.split(Regex("""[\s:]+"""))
 
+        if (palabras.contains("fin") ) {
+            estado = "ninguno"
+            procesoActivo = "niguno"
+            model.addMensajeSistema(modelo("El crédito ha finalizado correctamente."))
+            return
+        }
+
         if(estado == "ninguno"){
             model.addMensajeSistema(modelo("Por favor dicte el número de cédula del cliente."))
             estado = "cedula"
@@ -530,26 +557,35 @@ class chat_Tienda : AppCompatActivity() {
         //---------------CREDITO---------------------------------------------------------------------------------
         if ( estado == "cedula") {
 
+
             val textoSinEspacios = textoMinuscula.replace(" ", "")
             val cedulaRegex = Regex("\\d{6,}")
             val cedula = cedulaRegex.find(textoSinEspacios)?.value
-            Log.i("cedula", cedula.toString())
+            Log.i("cedula", cedulaCliente.toString())
 
             if (cedula != null) {
+
                 if (cedula.length > 10 || cedula.length < 6){
+                    Log.i("primer if", "entre a estado cedula")
                     model.addMensajeSistema(modelo("El número de cédula no puede tener mas de 10 digitos, ni menos de 6. Por favor dicte de nuevo."))
                     return
                 }
+                if ( cedula == cedula_tendero){
+                    Log.i("segundo if", "entre a estado cedula")
+                    model.addMensajeSistema(modelo("La cédula del cliente no puede ser igual a la del tendero. Por favor dicte de nuevo." ))
+                    return
+                }
                 val respuesta = buscarCliente(cedula, cedula_tendero)
-                Log.i("respuesta de cedula", respuesta.toString())
                 if (respuesta.body()?.nombre == null) {
+                    Log.i("tercer if", "entre a estado cedula")
                     Log.i("Entre1", "No encontre cedula y devuelvo null")
+                    model.addMensajeSistema(modelo("El cliente no está registrado. ¿Le gustaría registrarlo?." ))
                     estado = "decision"
                     cedulaCliente = cedula
-                    model.addMensajeSistema(modelo("El cliente no está registrado. ¿Le gustaría registrarlo?"))
+
                 }else{
                     Log.i("entre", "Encontre cedula y devuelvo mensajes")
-                    model.addMensajeSistema(modelo("Cliente encontrado: ${respuesta.body()?.nombre}.\nSaldo total: ${respuesta.body()?.saldo}.\nDicte el producto que vendío a crédito."))
+                    model.addMensajeSistema(modelo("Cliente encontrado: ${respuesta.body()?.nombre}.\nSaldo total: $${respuesta.body()?.saldo}.\nDicte el producto que vendío a crédito."))
                     estado = "pedir_productos"
                     cedulaCliente = cedula
                 }

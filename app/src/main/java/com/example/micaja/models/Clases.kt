@@ -43,7 +43,7 @@ data class RespuestaAbono(
 
 data class cliente1(
     val nombre: String?=null,
-    val saldo: Int?=null,
+    val saldo: String?=null,
 )
 
 data class clienteNuevo(

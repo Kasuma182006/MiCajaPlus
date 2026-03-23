@@ -49,8 +49,8 @@ class OperacionVenta() {
         val textoLimpio = normalizarTexto(texto)
         if (textoLimpio.contains("fin") || fin_credito) {
             this.inicio = false
-            return if (idCliente.isNotEmpty() && idCliente != idTendero) {
-                "¡Listo! El crédito se ha registrado con éxito para el cliente."
+            return if (idCliente.isNotEmpty() ) {
+                "¡Listo! El crédito ha finalizado correctamente."
             } else { "Venta de contado finalizada correctamente." }
         }
         val datos = extraerDatosProducto(textoLimpio)
