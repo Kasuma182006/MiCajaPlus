@@ -14,8 +14,6 @@ class OperacionesViewModel : ViewModel() {
 
     private val _estadisticas = MutableLiveData<TipoOperacionXFecha?>()
     val estadisticas: LiveData<TipoOperacionXFecha?> get() = _estadisticas
-    private val _numeroCreditos = MutableLiveData<Int?>()
-    val numeroCreditos: LiveData<Int?> get() = _numeroCreditos
     val mensajeError = MutableLiveData<String>()
 
     fun consultarEstadisticas(idTendero: String, fechaInicial: String, fechaFin: String) {
@@ -24,13 +22,22 @@ class OperacionesViewModel : ViewModel() {
                 val api = ConexionServiceTienda.create()
                 val request = ConsultarOperaXFecha(idTendero, fechaInicial, fechaFin)
                 val responseEstadisticas = api.consultarXFecha(request)
-                if (responseEstadisticas.isSuccessful) {
-                    val lista = responseEstadisticas.body()
 
-                    if (!lista.isNullOrEmpty()) { _estadisticas.postValue(lista.first()) }
-                    else { mensajeError.postValue("No existen datos en ese rango de fechas") }
+                if (responseEstadisticas.isSuccessful) {
+                    val datos = responseEstadisticas.body()
+
+                    if (datos != null) {
+                        _estadisticas.postValue(datos)
+                    } else {
+                        mensajeError.postValue("No existen datos en ese rango de fechas")
+                    }
+                } else {
+                    mensajeError.postValue("Error en la respuesta del servidor")
                 }
-            } catch (e: Exception) { mensajeError.postValue("Error de conexion intenta mas tarde") }
+
+            } catch (e: Exception) {
+                mensajeError.postValue("Error de conexion intenta mas tarde")
+            }
         }
     }
 }

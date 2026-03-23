@@ -57,11 +57,11 @@ class ConsultarXFecha : AppCompatActivity() {
     fun observarDatos() {
         operacionesViewModel.estadisticas.observe(this) { datos ->
             if (datos != null) {
-                val ventas = datos.ventas?.toIntOrNull() ?: 0
-                val gastos = datos.gastos?.toIntOrNull() ?: 0
-                val costos = datos.costos?.toIntOrNull() ?: 0
-                val ncreditos = datos.ncreditos?.toIntOrNull() ?: 0
-                val valorCredito = datos.valorCredito?.toIntOrNull() ?: 0
+                val ventas = datos.ventas.toIntOrNull() ?: 0
+                val gastos = datos.gastos.toIntOrNull() ?: 0
+                val costos = datos.costos.toIntOrNull() ?: 0
+                val ncreditos = datos.ncreditos.toIntOrNull() ?: 0
+                val valorCredito = datos.valorCredito.toIntOrNull() ?: 0
 
                 val utilidad  = (ventas + valorCredito) - (gastos + costos) // Abonos ¿?
 
@@ -71,6 +71,9 @@ class ConsultarXFecha : AppCompatActivity() {
                 val puntuacionNcredito = ncreditos.toString().replace(Regex("""(\d)(?=(\d{3})+(?!\d))"""), "$1.")
                 val puntuacionUtilidad = utilidad.toString().replace(Regex("""(\d)(?=(\d{3})+(?!\d))"""), "$1.")
 
+                if (ventas == 0 && costos == 0 && gastos == 0) {
+                    Toast.makeText(this, "No existen datos en ese rango de fechas", Toast.LENGTH_LONG).show()
+                }
                 binding.tvVentas.text   = "$$puntuacionVentas"
                 binding.tvGastos.text   = "$$puntuacionGastos"
                 binding.tvCostos.text   = "$$puntuacionCostos"
@@ -91,15 +94,6 @@ class ConsultarXFecha : AppCompatActivity() {
                 binding.tvUtilidad.text = "Utilidad: 0"
                 binding.tvUtilidad.setTextColor(ContextCompat.getColor(this, R.color.utilidad_positive))
             }
-        }
-
-        operacionesViewModel.numeroCreditos.observe(this) { cantidad ->
-            val texto = "Clientes con crédito: ${cantidad ?: 0}"
-            binding.tvFiados.text = texto
-        }
-
-        operacionesViewModel.mensajeError.observe(this) { error ->
-            Toast.makeText(this, error, Toast.LENGTH_LONG).show()
         }
     }
 

@@ -41,19 +41,19 @@ import retrofit2.http.Query
 
 interface ConexionServiceTienda {
 
-    @POST("login")
+    @POST("/login")
     @Headers("Content-Type: application/json")
     suspend fun login(@Body body: Tendero): Response<Tendero>
-    @POST("addtendero")
+    @POST("/addtendero")
     @Headers("Content-Type: application/json")
     suspend fun addTendero(@Body tendero: Tendero): Response<Tendero>
 
     /////ABONOS
-    @POST("consultarcliente")
+    @POST("/consultarcliente")
     suspend fun consultarCliente(@Body datos: Identificacion): Response<clienteAbono>
 
     /////ABONOS
-    @POST("abonos")
+    @POST("/abonos")
     suspend fun registrarAbono(@Body datos: DatosAbono): Response<RespuestaAbono>
 
     @POST("/buscar_cliente")
@@ -67,7 +67,7 @@ interface ConexionServiceTienda {
     suspend fun insertar_credito(@Body credito: Credito): Response<Void>
 
     @POST("/consultarEstadisticas")
-    suspend fun consultarXFecha(@Body request: ConsultarOperaXFecha): Response<List<TipoOperacionXFecha>>
+    suspend fun consultarXFecha(@Body request: ConsultarOperaXFecha): Response<TipoOperacionXFecha>
 
 
     @POST ("/crearcosto")
@@ -124,7 +124,7 @@ interface ConexionServiceTienda {
     suspend fun actualizarCliente(@Body datos: ActualizarCliente): Response<Map<String, String>>
 
     companion object messi {
-        private const val BASE_URL = "http://192.168.18.162:4000"
+        private const val BASE_URL = "http://10.212.201.9:4000"
         fun create(): ConexionServiceTienda {
             val retrofit = Retrofit.Builder()
                 .baseUrl(BASE_URL)
