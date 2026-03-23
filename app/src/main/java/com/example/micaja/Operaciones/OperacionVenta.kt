@@ -15,7 +15,7 @@ class OperacionVenta() {
         val unidades = mapOf(
             // Peso
             "gramo" to listOf("gramo", "gramos", "g", "gr"),
-            "libras" to listOf("libra", "libras", "lb"),
+            "libra" to listOf("libra", "libras", "lb", "libra"),
             "kilogramo" to listOf("kilo", "kilogramos", "kg", "kilos"),
             "onza" to listOf("onza", "onzas"),
 
@@ -154,15 +154,21 @@ class OperacionVenta() {
 
         var unidadDetectada = "unidad"
         var encontrado = false
+
         for ((keyOficial, sinonimos) in unidades) {
-            // Buscamos los sinónimos más largos
             for (s in sinonimos.sortedByDescending { it.length }) {
-                val regexPresentacion = Regex("""\b\d+\s*$s\b""")
-                val coincidencia = regexPresentacion.find(texto)
+                val regexUnidad = Regex("""\b(\d+)?\s*$s\b""")
+                val coincidencia = regexUnidad.find(texto)
 
                 if (coincidencia != null) {
-                    val numeroEncontrado = coincidencia.value.filter { it.isDigit() }
-                    unidadDetectada = "$numeroEncontrado $keyOficial"
+                    val numeroEncontrado = coincidencia.groups[1]?.value
+
+                    unidadDetectada = if (numeroEncontrado != null) {
+                        "$numeroEncontrado $keyOficial"
+                    } else {
+                        keyOficial //"libra", "bolsa", etc.
+                    }
+
                     texto = texto.replaceFirst(coincidencia.value, "").trim()
                     encontrado = true
                     break

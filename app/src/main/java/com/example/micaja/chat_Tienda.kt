@@ -64,6 +64,7 @@ val diccionario = mapOf(
     "abono" to listOf ("abonar", "abono", "abonos", "cuota", "adelantar" ,"adelanto"),
     "cliente" to listOf("nombre", "cliente", "nuevo", "cliente"),
     "consultar" to listOf("busca", "buscar", "consulta", "filtrar", "pregunta"), // Por si lo va a usar ñiñin
+    "agregar" to listOf("nuevo", "añadir", "añadir","agregar", "añadi"),
     "si" to listOf("si", "sí"),
     "cancelar" to listOf("cancela", "cancelalo", "cancelelo", "equivoqué", "equivocación", "salgase", "sálgase", "salir", "reiniciar")
 )
@@ -396,6 +397,8 @@ class chat_Tienda : AppCompatActivity() {
                             val esGasto = diccionario["gasto"]?.any { palabras.contains(it) } == true
                             val esCompra = diccionario["compra"]?.any { palabras.contains(it) } == true
                             val esAbono = diccionario["abono"]?.any { palabras.contains(it) } == true
+                            val esAgregar = diccionario["agregar"]?.any { palabras.contains(it) } == true
+
 
 
                             if (esAbono) {
@@ -408,7 +411,7 @@ class chat_Tienda : AppCompatActivity() {
                             } else if (esVenta) {
                                 operacionVenta.inicio = true
                                 model.addMensajeSistema(modelo("¡Venta iniciada! Dicta los productos uno a uno o di 'fin'."))
-                            } else if(mensaje.contains("agregar") && mensaje.contains("producto")){
+                            } else if(esAgregar && mensaje.contains("producto")){
                                 val intent = Intent(this@chat_Tienda, Agregar_Producto::class.java)
                                 agregarProductoLauncher.launch(intent)
                             }
