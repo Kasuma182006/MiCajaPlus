@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -61,7 +62,6 @@ val diccionario = mapOf(
     "credito" to listOf ("credito", "crédito", "créditos", "creditos", "fiado a", "fiado", "fiados", "fiar", "fié"),
     "efectivo" to listOf("efectivo","efectivos", "plata", "paga", "contado", "dinero", "efectivito"),
     "abono" to listOf ("abonar", "abono", "abonos", "cuota", "adelantar" ,"adelanto"),
-    "agregar" to listOf ("agregar", "añadir", "identificar", "nuevo", "producto"),
     "cliente" to listOf("nombre", "cliente", "nuevo", "cliente"),
     "consultar" to listOf("busca", "buscar", "consulta", "filtrar", "pregunta"), // Por si lo va a usar ñiñin
     "si" to listOf("si", "sí"),
@@ -71,6 +71,32 @@ val diccionario = mapOf(
 class chat_Tienda : AppCompatActivity() {
 
     val abono=Abonos()
+
+    private val agregarProductoLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            // Usamos ?: para dar un mensaje por defecto si por alguna razón llega nulo
+            val mensajeConfirmacion = result.data?.getStringExtra("mensaje_confirmacion")
+                ?: "Producto guardado correctamente"
+
+            model.addMensajeSistema(modelo(mensajeConfirmacion))
+
+            binding.recyclerMensajes.post {
+                binding.recyclerMensajes.smoothScrollToPosition(Adapter.itemCount - 1)
+            }
+        } else {
+            // IMPORTANTE: Aquí es donde fallaba. Si cancelas, result.data suele ser null.
+            val mensajeCierre = result.data?.getStringExtra("mensaje_cierre")
+                ?: "Registro de producto cancelado"
+
+            model.addMensajeSistema(modelo(mensajeCierre))
+
+            binding.recyclerMensajes.post {
+                binding.recyclerMensajes.smoothScrollToPosition(Adapter.itemCount - 1)
+            }
+        }
+    }
     lateinit var mensaje: String
     private lateinit var binding: ActivityChatTiendaBinding
     private val RQ_SPEECH_REC = 102
@@ -203,6 +229,26 @@ class chat_Tienda : AppCompatActivity() {
         return false
     }
 
+    private fun tiendaTendero(mensaje: String): Boolean {
+        val palabras = mensaje.lowercase().split(Regex("""[\s,.:]+"""))
+        val tiendaYaAbierta = estadoTienda.getBoolean("abierta", false)
+
+        val quiereAbrir = diccionario["abrir"]?.any { palabra -> palabras.contains(palabra) } ?: false
+
+        if (quiereAbrir) {
+            if (tiendaYaAbierta) {
+                model.addMensajeSistema(modelo("La tienda ya está abierta. ¿En qué puedo ayudarte?"))
+                return false
+            } else {
+                val editor = estadoTienda.edit()
+                editor.putBoolean("abierta", true)
+                editor.apply()
+                return true
+            }
+        }
+        return false
+    }
+
     fun evento() {
         binding.sendBtn.setOnClickListener {
             mensaje = binding.messageInput.text.toString().trim()
@@ -218,8 +264,11 @@ class chat_Tienda : AppCompatActivity() {
             WindowInsetsControllerCompat(window, binding.messageInput)
                 .hide(WindowInsetsCompat.Type.ime())
 
+
+
             val textoLimpio = mensaje.replace(Regex("""(\d)[.,](\d{3})\b"""), "$1$2").lowercase()
             val palabras = textoLimpio.split(Regex("""[\s,.:]+"""))
+
             val esCliente = diccionario["cliente"]?.any { palabras.contains(it) } == true
             val consultarCliente = diccionario["consultar"]?.any { palabras.contains(it) } == true
             val esCredito = diccionario["credito"]?.any { palabras.contains(it) } == true
@@ -251,6 +300,28 @@ class chat_Tienda : AppCompatActivity() {
 //                estado = "ninguno"
 //                cedulaCliente = null
 //            }
+
+            val intentoAbrir = diccionario["abrir"]?.any { palabras.contains(it) } == true
+            if (intentoAbrir) {
+                val seAbrioAhora = tiendaTendero(mensaje)
+                if (seAbrioAhora) {
+                    model.addMensajeSistema(modelo("¡Tienda Abierta! ¿Cuál es la base del día de hoy?"))
+                }
+                return@setOnClickListener
+            }
+
+            val CerrarTienda = diccionario["cerrar"]?.any { palabras.contains(it) } == true
+
+            if (CerrarTienda && mensaje.contains("tienda")) {
+                val editor = estadoTienda.edit()
+                editor.putBoolean("abierta", false)
+                editor.apply()
+
+                estadoBase.edit().clear().apply()
+
+                model.addMensajeSistema(modelo("Tienda cerrada correctamente. ¡Buen descanso!"))
+                return@setOnClickListener
+            }
 
             if (tienda) {
                 if (base) {
@@ -326,7 +397,6 @@ class chat_Tienda : AppCompatActivity() {
                             val esCompra = diccionario["compra"]?.any { palabras.contains(it) } == true
                             val esAbono = diccionario["abono"]?.any { palabras.contains(it) } == true
 
-                            val esAgregar = diccionario["agregar"]?.any { palabras.contains(it) } == true
 
                             if (esAbono) {
                                 abono.iniciarFlujoAbono(model::addMensajeSistema)
@@ -338,9 +408,9 @@ class chat_Tienda : AppCompatActivity() {
                             } else if (esVenta) {
                                 operacionVenta.inicio = true
                                 model.addMensajeSistema(modelo("¡Venta iniciada! Dicta los productos uno a uno o di 'fin'."))
-                            } else if(esAgregar && mensaje.contains("producto")){
+                            } else if(mensaje.contains("agregar") && mensaje.contains("producto")){
                                 val intent = Intent(this@chat_Tienda, Agregar_Producto::class.java)
-                                startActivity(intent)
+                                agregarProductoLauncher.launch(intent)
                             }
                         } else {
                             model.addMensajeSistema(modelo("No se pudo detectar la operación, por favor vuelve a intentarlo"))
@@ -353,11 +423,7 @@ class chat_Tienda : AppCompatActivity() {
                     return@setOnClickListener
                 }
             } else {
-                if (tienda(mensaje)) {
-                    model.addMensajeSistema(modelo("Tienda Abierta ¿Cuál es la base del día de hoy?"))
-                } else {
-                    model.addMensajeSistema(modelo("Tienda Cerrada. Reintente nuevamente."))
-                }
+                model.addMensajeSistema(modelo("La tienda se encuentra cerrada. Di 'Abrir tienda' para comenzar."))
             }
         }
     }

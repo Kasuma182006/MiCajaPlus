@@ -15,7 +15,7 @@ class OperacionVenta() {
         val unidades = mapOf(
             // Peso
             "gramo" to listOf("gramo", "gramos", "g", "gr"),
-            "libra" to listOf("libra", "libras", "lb"),
+            "libras" to listOf("libra", "libras", "lb"),
             "kilogramo" to listOf("kilo", "kilogramos", "kg", "kilos"),
             "onza" to listOf("onza", "onzas"),
 
