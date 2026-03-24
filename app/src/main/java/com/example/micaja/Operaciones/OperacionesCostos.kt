@@ -1,46 +1,33 @@
 package com.example.micaja.Operaciones
 
 import com.example.micaja.ConexionService.ConexionServiceTienda
+import com.example.micaja.Operaciones.OperacionVenta.Companion.limpiarN
 import com.example.micaja.models.compra_Mercancia
 import com.example.micaja.models.modelo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class OperacionCosto {
-    private enum class EstadoCosto { INACTIVO, ESPERANDO_NOMBRE, ESPERANDO_CANTIDAD, ESPERANDO_PRECIO, ESPERANDO_CONFIRMACION, ESPERANDO_PROVEEDOR }
+    private enum class EstadoCosto { INACTIVO, ESPERANDO_NOMBRE, ESPERANDO_CANTIDAD, ESPERANDO_PROVEEDOR, ESPERANDO_CONFIRMACION }
 
     private var estadoActual = EstadoCosto.INACTIVO
     private var nombreProducto = ""
     private var cantidadProducto = 1
-    private var precioCompraTotal = 0
-    private var presentacionProducto = "presentación"
+    private var presentacionProducto = "Presentación"
     private var proveedor = ""
 
     companion object {
         val unidades = listOf(
-            "arroba", "bolsa", "bolsita", "bulto", "bultos",
-            "caja", "cajetilla", "canasta", "chuspa", "barra",
-            "capsula", "cubeta", "tableta", "docena", "gramo",
-            "lb", "libra", "kilo", "kg", "kilogramos", "litro", "lt",
-            "litron", "mililitro", "mililitros", "ml",
-            "envase", "frasco", "onza", "plastico", "paquete", "vidrio",
-            "media", "mediana", "mediano", "grande", "pequeña", "pequeño",
-            "pet", "personal", "canasta", "retornable", "retornables",
-            "garrafa", "lata", "laton", "paca", "sixpack", "six-pack",
-            "panal", "sobre", "rollo", "tubo", "unidad", "vasito", "vaso"
-        )
-
-        val limpiarN = listOf(
-            "compra de mercancía", "comprar", "compras", "compré",
-            "costo", "costos", "pagamos", "pagado",
-            "pague" ,"pagué", "pedido", "factura", "de", "del",
-            "por", "el", "la", "los", "las", "me"
+            "arroba", "bolsa", "bolsita", "bulto", "bultos", "caja", "cajetilla", "canasta", "chuspa", "barra",
+            "capsula", "cubeta", "tableta", "docena", "gramo", "lb", "libra", "kilo", "kg", "kilogramos", "litro", "lt",
+            "litron", "mililitro", "mililitros", "ml", "envase", "frasco", "onza", "plastico", "paquete", "vidrio",
+            "media", "mediana", "mediano", "grande", "pequeña", "pequeño", "pet", "personal", "canasta", "retornable", "retornables",
+            "garrafa", "lata", "laton", "paca", "sixpack", "six-pack", "panal", "sobre", "rollo", "tubo", "unidad", "vasito", "vaso"
         )
 
         val numerosMap = mapOf(
-            "un" to "1", "uno" to "1", "dos" to "2", "tres" to "3",
-            "cuatro" to "4", "cinco" to "5", "seis" to "6",
-            "siete" to "7", "ocho" to "8", "nueve" to "9", "diez" to "10"
+            "un" to "1", "uno" to "1", "dos" to "2", "tres" to "3", "cuatro" to "4", "cinco" to "5",
+            "seis" to "6", "siete" to "7", "ocho" to "8", "nueve" to "9", "diez" to "10"
         )
     }
 
@@ -57,20 +44,28 @@ class OperacionCosto {
         if (estadoActual == EstadoCosto.INACTIVO) return false
         val textoLimpio = texto.trim()
 
+        if (textoLimpio.lowercase().contains("fin")) {
+            cancelarFlujo()
+            enviarMensajeSistema(modelo("Registro de compra cancelado correctamente."))
+            return true
+        }
+
         when (estadoActual) {
             EstadoCosto.ESPERANDO_NOMBRE -> {
                 var nombreLimpio = textoLimpio.lowercase()
                 limpiarN.forEach { ruido ->
                     nombreLimpio = nombreLimpio.replace(Regex("\\b$ruido\\b"), "").trim()
                 }
-                nombreProducto = nombreLimpio.replace(Regex("""\s+"""), " ").replaceFirstChar { it.uppercase() } ?: ""
+                // Corregido: Se quitó el ?: "" innecesario
+                nombreProducto = nombreLimpio.replace(Regex("""\s+"""), " ").replaceFirstChar { it.uppercase() }
 
                 if (nombreProducto.isBlank() || nombreProducto.length < 2) {
                     enviarMensajeSistema(modelo("No pude entender el nombre del producto. ¿Qué producto compraste?"))
                     return true
                 }
+
                 estadoActual = EstadoCosto.ESPERANDO_CANTIDAD
-                enviarMensajeSistema(modelo("¿Qué cantidad y presentación de '$nombreProducto' compraste? (Ej: 10 libras, 2 litros)"))
+                enviarMensajeSistema(modelo("¿Qué cantidad y presentación de '$nombreProducto' compraste? (Ej: 10 libras, 2 cajas)"))
             }
 
             EstadoCosto.ESPERANDO_CANTIDAD -> {
@@ -82,13 +77,12 @@ class OperacionCosto {
                 presentacionProducto = "Unidad"
                 for (u in unidades) {
                     if (procesado.contains(u)) {
-                        presentacionProducto = u
+                        presentacionProducto = u.replaceFirstChar { it.uppercase() } // Capitalizado desde aquí
                         break
                     }
                 }
 
                 val numero = Regex("""\b\d+\b""").find(procesado)?.value?.toIntOrNull()
-                // VALIDACIÓN: Exigir un número. Si no hay número, pero dictó una presentación válida (ej: "compré cajas"), asumimos 1.
                 if (numero != null && numero > 0) {
                     cantidadProducto = numero
                 } else if (presentacionProducto != "Unidad") {
@@ -98,19 +92,8 @@ class OperacionCosto {
                     return true
                 }
 
-                estadoActual = EstadoCosto.ESPERANDO_PRECIO
-                enviarMensajeSistema(modelo("¿Cuál fue el precio total de la compra por $cantidadProducto $presentacionProducto(s)?"))
-            }
-
-            EstadoCosto.ESPERANDO_PRECIO -> {
-                val precio = textoLimpio.replace(Regex("[^0-9]"), "").toIntOrNull()
-                if (precio != null && precio >= 50) {
-                    precioCompraTotal = precio
-                    estadoActual = EstadoCosto.ESPERANDO_PROVEEDOR
-                    enviarMensajeSistema(modelo("¿A qué proveedor le compraste la mercancía?"))
-                } else {
-                    enviarMensajeSistema(modelo("El precio dictado no parece válido. Por favor dicte nuevamente el valor total de la factura en números."))
-                }
+                estadoActual = EstadoCosto.ESPERANDO_PROVEEDOR
+                enviarMensajeSistema(modelo("¿A qué proveedor le compraste la mercancía?"))
             }
 
             EstadoCosto.ESPERANDO_PROVEEDOR -> {
@@ -118,14 +101,19 @@ class OperacionCosto {
                 limpiarN.forEach { ruido ->
                     nombreProveedor = nombreProveedor.replace(Regex("\\b$ruido\\b"), "").trim()
                 }
-                proveedor = nombreProveedor.replace(Regex("""\s+"""), " ").replaceFirstChar { it.uppercase() } ?: ""
+
+                // Corregido: Se quitó el ?: "" innecesario
+                proveedor = nombreProveedor.replace(Regex("""\s+"""), " ").replaceFirstChar { it.uppercase() }
+
                 if (proveedor.isBlank() || proveedor.length < 2) {
                     enviarMensajeSistema(modelo("No pude registrar el proveedor correctamente. ¿A quién le compraste la mercancía?"))
                     return true
                 }
+
                 estadoActual = EstadoCosto.ESPERANDO_CONFIRMACION
-                enviarMensajeSistema(modelo("¿Confirma la compra de $cantidadProducto $presentacionProducto(s) de $nombreProducto por $$precioCompraTotal al proveedor $proveedor? (Sí/No)"))
+                enviarMensajeSistema(modelo("¿Confirma la entrada de $cantidadProducto $presentacionProducto(s) de $nombreProducto al proveedor $proveedor? (Sí/No)"))
             }
+
             EstadoCosto.ESPERANDO_CONFIRMACION -> {
                 validarConfirmacion(textoLimpio.lowercase(), enviarMensajeSistema, idTendero)
             }
@@ -150,9 +138,8 @@ class OperacionCosto {
                     val factura = compra_Mercancia(
                         idTendero = idTendero,
                         cantidadStock = cantidadProducto,
-                        presentacion = presentacionProducto.replaceFirstChar { it.uppercase() },
+                        presentacion = presentacionProducto,
                         nombre = nombreProducto,
-                        precioCompra = precioCompraTotal,
                         proveedor = proveedor
                     )
 
@@ -164,11 +151,15 @@ class OperacionCosto {
                         enviarMensajeSistema(modelo("¡Compra registrada! Se han sumado $cantidadProducto $presentacionProducto(s) de $nombreProducto al inventario."))
                         finalizarFlujo()
                     } else {
-                        enviarMensajeSistema(modelo("Error al guardar en el servidor. ¿Deseas intentar registrarlo de nuevo? (Sí/No)"))
+                        if (respuesta.code() == 404) {
+                            enviarMensajeSistema(modelo("El producto '$nombreProducto' no existe en tu inventario. Por favor, cancela esta operación y agrégalo primero en la sección de productos."))
+                            cancelarFlujo() // Buena lógica aquí
+                        } else {
+                            enviarMensajeSistema(modelo("Error al guardar en el servidor (Código: ${respuesta.code()}). ¿Deseas intentar registrarlo de nuevo? (Sí/No)"))
+                        }
                     }
                 } catch (e: Exception) {
-                    enviarMensajeSistema(modelo("Error de conexión. No pude registrar la compra de tu mercancía\n. ¿Deseas intentar enviarlo de nuevo? (Sí/No)"))
-                    // Omitimos finalizarFlujo() para permitir el reintento de red
+                    enviarMensajeSistema(modelo("Error de conexión. No pude registrar la compra de tu mercancía. ¿Deseas intentar enviarlo de nuevo? (Sí/No)"))
                 }
             }
 
@@ -187,14 +178,11 @@ class OperacionCosto {
         estadoActual = EstadoCosto.INACTIVO
         nombreProducto = ""
         cantidadProducto = 1
-        precioCompraTotal = 0
+        presentacionProducto = "Presentación"
+        proveedor = ""
     }
 
     fun cancelarFlujo() {
-        estadoActual = EstadoCosto.INACTIVO
-        nombreProducto = ""
-        cantidadProducto = 1
-        precioCompraTotal = 0
-        proveedor = ""
+        finalizarFlujo()
     }
 }

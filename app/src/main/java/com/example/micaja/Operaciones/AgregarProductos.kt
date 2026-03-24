@@ -12,6 +12,7 @@ class OperacionProducto {
     var nombreExtraido = ""
     var presentacionExtraida = ""
     var cantidadExtraida = 0
+    var valorCompraExtraido = 0
     var valorVentaExtraido = 0
 
     private val conectores = listOf("de", "un", "una", "por", "la", "el", "con")
@@ -116,5 +117,13 @@ class OperacionProducto {
         }
         return null
     }
-    private fun reiniciar() { fase = 0 }
+
+    private fun reiniciar() {
+        fase = 0
+        nombreExtraido = ""
+        presentacionExtraida = ""
+        cantidadExtraida = 0
+        valorCompraExtraido = 0
+        valorVentaExtraido = 0
+    }
 }

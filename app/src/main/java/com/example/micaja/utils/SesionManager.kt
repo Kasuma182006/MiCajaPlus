@@ -37,8 +37,6 @@ object SesionManager {
 
         val estadoTienda = context.getSharedPreferences("EstadoTienda", Context.MODE_PRIVATE)
         estadoTienda.edit().putBoolean("abierta", false).apply()
-
-        // Reiniciamos la base
         val estadoBase = context.getSharedPreferences("EstadoBase", Context.MODE_PRIVATE)
         estadoBase.edit().putBoolean("base", false).apply()
 

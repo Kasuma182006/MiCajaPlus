@@ -86,15 +86,6 @@ data class ModeloBase(
 )
 
 
-data class ventaDetectada(
-    val idTendero: String,
-    val cedula: String? = null,
-    val mensaje: String,
-    val tipoPago: String,
-    val nombre: String,
-    val cantidad: Int,
-    val presentacion: String
-)
 
 data class cantidadIn (
     val idTendero: String,
@@ -113,17 +104,14 @@ data class AgregarProducto(
     val valorCompra: Int
 )
 
-data class Gasto(
+data class ventaDetectada(
     val idTendero: String,
+    val cedula: String? = null,
     val mensaje: String,
-    var valor: Int
-)
-
-data class costoDetectado(
-    val idTendero: String,
-    val mensaje: String,
-    val precioCompra: Int,
-    val proveedor: String
+    val tipoPago: String,
+    val nombre: String,
+    val cantidad: Int,
+    val presentacion: String
 )
 
 data class gastoDetectado(
@@ -137,7 +125,6 @@ data class compra_Mercancia(
     val nombre: String,
     val presentacion: String,
     val cantidadStock: Int,
-    val precioCompra: Int,
     val proveedor: String
 )
 
@@ -149,10 +136,6 @@ data class OperacionesInventario(
     val cantidad: Int,
     val operacion: String // en operacion se agrega la palabra "descontar" en caso de que sea una venta o "agregar" en caso de ser un costo
 )
-
-
-
-
 
 // No toquen esto, estas data class son para el modulo de editar Productos
 

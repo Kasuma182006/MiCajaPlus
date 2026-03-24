@@ -4,5 +4,3 @@ package com.example.micaja.models
         val mensaje: String,
         val timestamp: String = "" // ← agrega esto
     )
-
-
