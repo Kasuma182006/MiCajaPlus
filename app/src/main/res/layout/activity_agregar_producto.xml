@@ -208,7 +208,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilCatategoriaProducto"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -217,16 +217,17 @@
                 app:boxStrokeWidthFocused="1.5dp"
                 app:boxStrokeColor="@color/colorPrimary"
                 app:hintTextColor="@color/colorOnSecondary"
+                app:endIconMode="custom"
                 app:endIconTint="@color/colorOnSecondary">
 
-                <AutoCompleteTextView
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etCatagoriaProducto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_input_chat_tendero"
                     android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:inputType="none"
+                    android:clickable="true"
+                    android:cursorVisible="false"
                     android:textSize="15sp"
                     android:textColor="@color/colorOnSecondary"
                     android:paddingStart="16dp"

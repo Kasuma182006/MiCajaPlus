@@ -97,5 +97,33 @@
     <string name="GUARDARPRODUCTONUEVO">Guardar Producto</string>
 
 
+    <string name="identificacion">Número de identificación</string>
+    <string name="vivas">Andrés Felipe Vivas Erazo</string>
+    <string name="sin_coincidencias">No se ha encontrado el Producto</string>
+    <string name="seleccionar">Seleccionar</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="busqueda">BUSQUEDA</string>
+    <string name="menu">MENÚ</string>
+    <string name="buendia">BUEN DÍA</string>
+    <string name="enviar">Enviar.</string>
+    <string name="microfono">Micrófono</string>
+    <string name="mensajillo">Escribe un mensaje...</string>
+    <string name="user">Mensaje del usuario.</string>
+    <string name="respuesta">Respuesta del sistema.</string>
+    <string name="ir_chat">IR A CHAT</string>
+    <string name="ejemplos">Ejemplos</string>
+    <string name="nombre_ejemplos">Nombre del Ejemplo</string>
+    <string name="ej_venta">Ej: Venta $ 50000</string>
+    <string name="variantes">Toca un ejemplo para ver sus variantes</string>
+    <string name="seleccione">Seleccionar →</string>
+    <string name="puedes">Puedes decir cualquiera de estas palabras: →</string>
+    <string name="ejemplos_de_uso">Ejemplo de uso:</string>
+    <string name="comandos">Comandos</string>
+    <string name="comousar">Como usar el chat</string>
+    <string name="vercomandos">Ver comandos</string>
+    <string name="gestion">Gestión</string>
+    <string name="cerrarsesion">Cerrar sesión</string>
+    <string name="utilidad">¿Te gustaria ver la utilidad?</string>
+
 </resources>
 

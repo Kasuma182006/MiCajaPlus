@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -30,7 +28,7 @@
             android:id="@+id/tvNombreComando"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Nombre del Ejemplo"
+            android:text="@string/nombre_ejemplos"
             android:textAlignment="center"
             android:textColor="@color/colorSecondary"
             android:textSize="16sp"
@@ -49,7 +47,7 @@
             android:paddingEnd="8dp"
             android:paddingTop="3dp"
             android:paddingBottom="3dp"
-            android:text="Ej: 'Venta' $ 50000"
+            android:text="@string/ej_venta"
             android:textColor="@color/colorOnSecondary"
             android:textSize="15sp"
             android:maxLines="1"

@@ -94,7 +94,8 @@ interface ConexionServiceTienda {
 
 
     companion object messi {
-        private const val BASE_URL = "http://192.168.1.27:4000"
+        //private const val BASE_URL = "http://192.168.1.27:4000" local
+        private const val BASE_URL = "http://10.6.126.90:4000"
         fun create(): ConexionServiceTienda {
             val retrofit = Retrofit.Builder()
                 .baseUrl(BASE_URL)

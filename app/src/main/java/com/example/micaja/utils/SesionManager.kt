@@ -31,7 +31,7 @@ object SesionManager {
         return tiempoTranscurrido <= TIEMPO_MAXIMO_SESION
     }
 
-    fun cerrarSesion(context: Context) {
+    fun cerrarSesion(context: Context, mensaje: String? = null) {
         val prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
         prefs.edit().clear().apply()
 
@@ -40,7 +40,10 @@ object SesionManager {
         val estadoBase = context.getSharedPreferences("EstadoBase", Context.MODE_PRIVATE)
         estadoBase.edit().putBoolean("base", false).apply()
 
-        Toast.makeText(context, "Han pasado 12 horas desde que iniciaste sesión, tu tienda se cerró por seguridad", Toast.LENGTH_SHORT).show()
+        // Si pasamos un mensaje, mostramos ese. Si no, el de seguridad por defecto.
+        val textoMostrar = mensaje ?: "Tu sesión ha expirado por seguridad (12 horas)."
+        Toast.makeText(context, textoMostrar, Toast.LENGTH_SHORT).show()
+
         val intent = Intent(context, Login::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }

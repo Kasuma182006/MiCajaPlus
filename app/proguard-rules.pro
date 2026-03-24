@@ -19,3 +19,23 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# -----------------------------------------------------------------------
+# REGLAS PARA MICAJAPLUS
+# -----------------------------------------------------------------------
+
+# 1. Mantener intactas todas las clases dentro del paquete 'models'
+-keep class com.example.micaja.models.** { *; }
+
+# 2. Mantener los nombres de las variables exactos para que hagan match con el JSON de Python
+-keepclassmembers class com.example.micaja.models.** {
+    <fields>;
+}
+
+# 3. (Opcional pero recomendado) Reglas básicas si usas Retrofit y Gson
+-keep class retrofit2.** { *; }
+-keepattributes Signature
+-keepattributes Exceptions
+-keepclasseswithmembers class * {
+    @retrofit2.http.* <methods>;
+}

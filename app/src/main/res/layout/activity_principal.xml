@@ -27,7 +27,7 @@
         android:layout_width="143dp"
         android:layout_height="178dp"
         android:layout_marginTop="50dp"
-        android:contentDescription="Logo MICAJA+"
+        android:contentDescription="@string/mi_Caja"
         android:src="@drawable/logo_app"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,7 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:text="MICAJA"
+        android:text="@string/mi_Caja"
         android:textColor="@color/colorOnSecondary"
         android:textSize="32sp"
         android:textStyle="bold"
@@ -51,7 +51,7 @@
         android:id="@+id/appPlus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="+"
+        android:text="@string/plus"
         android:textSize="32sp"
         android:textStyle="bold"
         android:textColor="@color/plus"
@@ -108,14 +108,12 @@
                     android:layout_width="28dp"
                     android:layout_height="28dp"
                     android:layout_gravity="center"
-                    android:contentDescription="Tienda"
+                    android:contentDescription="@string/txtTienda"
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_chat_vz"
                     app:tint="@color/colorSecondary" />
 
-
             </androidx.cardview.widget.CardView>
-
             <TextView
                 android:id="@+id/txtTienda"
                 android:layout_width="0dp"
@@ -134,7 +132,7 @@
                 android:id="@+id/ivChevronTienda"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:contentDescription="Ir a Chat"
+                android:contentDescription="@string/ir_chat"
                 android:src="@drawable/retroceso"
                 android:rotation="180"
                 android:alpha="0.8"
@@ -184,7 +182,7 @@
                     android:layout_width="28dp"
                     android:layout_height="28dp"
                     android:layout_gravity="center"
-                    android:contentDescription="Balance"
+                    android:contentDescription="@string/txtBalance"
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_balance"
                     app:tint="@color/colorSecondary" />
@@ -209,7 +207,7 @@
                 android:id="@+id/ivChevronBalance"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:contentDescription="Ir a Balance"
+                android:contentDescription="@string/txtBalance"
                 android:src="@drawable/retroceso"
                 android:rotation="180"
                 android:alpha="0.8"
@@ -259,7 +257,7 @@
                     android:layout_width="28dp"
                     android:layout_height="28dp"
                     android:layout_gravity="center"
-                    android:contentDescription="Editar Cliente"
+                    android:contentDescription="@string/hint_NombreCliente"
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_edit_user"
                     app:tint="@color/colorSecondary" />
@@ -284,7 +282,7 @@
                 android:id="@+id/ivChevronEditar"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:contentDescription="Ir a Editar Cliente"
+                android:contentDescription="@string/editarCliente"
                 android:src="@drawable/retroceso"
                 android:rotation="180"
                 android:alpha="0.8"
@@ -334,7 +332,7 @@
                     android:layout_width="28dp"
                     android:layout_height="28dp"
                     android:layout_gravity="center"
-                    android:contentDescription="Editar Producto"
+                    android:contentDescription="@string/editarProducto"
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_productos"
                     app:tint="@color/colorSecondary" />
@@ -359,7 +357,7 @@
                 android:id="@+id/ivChevronEditarProducto"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:contentDescription="Ir a Editar Producto"
+                android:contentDescription="@string/editarProducto"
                 android:src="@drawable/retroceso"
                 android:rotation="180"
                 android:alpha="0.8"
@@ -370,6 +368,5 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

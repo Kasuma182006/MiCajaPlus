@@ -30,12 +30,12 @@
             android:textStyle="bold"
             android:textColor="@color/colorOnSecondary"
             android:layout_marginBottom="4dp"
-            android:text="Ejemplo"/>
+            android:text="@string/ejemplos"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Puedes decir cualquiera de estas palabras:"
+            android:text="@string/puedes"
             android:textSize="20sp"
             android:textColor="@color/gris"
             android:layout_marginBottom="16dp" />
@@ -61,7 +61,7 @@
             android:id="@+id/labelEjemplos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Ejemplo de uso:"
+            android:text="@string/ejemplos_de_uso"
             android:textSize="16sp"
             android:textStyle="bold"
             android:letterSpacing="0.04"

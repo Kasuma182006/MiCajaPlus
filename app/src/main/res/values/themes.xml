@@ -10,4 +10,8 @@
         <item name="colorOnSurface">@color/colorOnSurface</item>
     </style>
     <style name="Theme.MiCaja" parent="Base.Theme.MiCaja" />
+
+    <style name="TemaDialogoMiCaja" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/btn_registrarse</item>
+    </style>
 </resources>

@@ -141,11 +141,11 @@ class chat_Tienda : AppCompatActivity() {
     private fun configuracionMenu() {
         binding.btnMenu.setOnClickListener {
             val sheet = MenuBottomSheet(
-                onComandos = { dialogo_comandos().show(supportFragmentManager, "DialogoComandos") }
-                , onCerrarSesion = {
-                    Toast.makeText(this, "Cerrando sesión...", Toast.LENGTH_SHORT).show()
-                    SesionManager.cerrarSesion(this)
-                })
+                onComandos = { dialogo_comandos().show(supportFragmentManager, "DialogoComandos") },
+                onCerrarSesion = {
+                    SesionManager.cerrarSesion(this, "Has cerrado sesión exitosamente.")
+                }
+            )
             sheet.show(supportFragmentManager, "MenuBottomSheet")
         }
     }

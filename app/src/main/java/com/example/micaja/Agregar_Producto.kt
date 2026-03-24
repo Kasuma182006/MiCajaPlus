@@ -54,7 +54,10 @@ class Agregar_Producto : AppCompatActivity() {
     )
     private var idCategoriaSeleccionada: Int = -1
 
+
+
     private lateinit var binding: ActivityAgregarProductoBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, true)
@@ -83,14 +86,55 @@ class Agregar_Producto : AppCompatActivity() {
             insets
         }
         validaciones()
-        categoriaLista()
         boton()
+    }
+
+    private fun categoria() {
+        val nombresCategorias = categorias.values.toTypedArray()
+        var seleccionTemporal = -1
+
+        val builder = androidx.appcompat.app.AlertDialog.Builder(this, R.style.TemaDialogoMiCaja)
+
+        builder
+            .setTitle("Selecciona una categoría")
+            .setSingleChoiceItems(nombresCategorias, -1) { _, which ->
+                // Se ejecuta cada vez que el usuario toca un radio button
+                seleccionTemporal = which
+            }
+            .setPositiveButton("Aceptar") { dialog, _ ->
+                if (seleccionTemporal != -1) {
+                    val nombreSeleccionado = nombresCategorias[seleccionTemporal]
+
+                    binding.etCatagoriaProducto.setText(nombreSeleccionado)
+
+                    idCategoriaSeleccionada = categorias.entries.find { it.value == nombreSeleccionado }?.key ?: -1
+
+                    Log.d("DialogCategoria", "Categoría: $nombreSeleccionado, ID: $idCategoriaSeleccionada")
+                }
+                dialog.dismiss()
+            }
+            .setNegativeButton("Cancelar") { dialog, _ ->
+                dialog.dismiss()
+            }
+
+        // 2. Creamos el diálogo
+        val dialog = builder.create()
+
+        // 3. ¡IMPORTANTE! Debemos mostrar el diálogo ANTES de intentar cambiar el color de sus botones
+        dialog.show()
+
+        // 4. Cambiamos explícitamente el color de los textos "Aceptar" y "Cancelar"
+        val colorBoton = androidx.core.content.ContextCompat.getColor(this, R.color.btn_registrarse)
+        dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).setTextColor(colorBoton)
+        dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(colorBoton)
     }
 
     private fun boton() {
         binding.etCatagoriaProducto.setOnClickListener {
             WindowInsetsControllerCompat(window, binding.etCatagoriaProducto)
                 .hide(WindowInsetsCompat.Type.ime())
+
+            categoria()
         }
 
         binding.btnGuardarProducto.setOnClickListener {
@@ -100,7 +144,6 @@ class Agregar_Producto : AppCompatActivity() {
             val pCompra = binding.etPrecioProductoCompra.text.toString().trim()
             val pVenta = binding.etPrecioProducto.text.toString().trim()
             val cantidad = binding.etCantidadProducto.text.toString().trim()
-
 
             if (nombre.isEmpty() || categoriaTxt.isEmpty() || presentacion.isEmpty() ||
                 pCompra.isEmpty() || pVenta.isEmpty() || cantidad.isEmpty()) {
@@ -199,26 +242,6 @@ class Agregar_Producto : AppCompatActivity() {
         }
     }
 
-    private fun categoriaLista() {
-        val nombresCategorias = categorias.values.toList()
-        val adapter = ArrayAdapter(
-            this,
-            android.R.layout.simple_dropdown_item_1line,
-            nombresCategorias
-        )
-
-        val autoComplete = binding.etCatagoriaProducto
-        autoComplete.setAdapter(adapter)
-        autoComplete.setOnItemClickListener { parent, _, position, _ ->
-            // Obtenemos el nombre que el usuario tocó
-            val nombreSeleccionado = parent.getItemAtPosition(position).toString()
-
-            // Buscamos la Key (ID) que corresponde a ese nombre
-            idCategoriaSeleccionada = categorias.entries.find { it.value == nombreSeleccionado }?.key ?: -1
-            Log.d("CategoriaSeleccionada: $nombreSeleccionado", "ID de la categoría seleccionada: $idCategoriaSeleccionada")
-        }
-        autoComplete.setOnClickListener { autoComplete.showDropDown() }
-    }
 
     private fun validaciones() {
         binding.etNombreProducto.addTextChangedListener { s ->

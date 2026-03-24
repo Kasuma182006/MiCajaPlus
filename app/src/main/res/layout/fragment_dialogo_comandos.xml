@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -41,7 +40,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="EJEMPLOS"
+                    android:text="@string/ejemplos"
                     android:textColor="@color/colorOnSecondary"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -50,7 +49,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="Toca un ejemplo para ver sus variantes"
+                    android:text="@string/variantes"
                     android:textColor="@color/gris"
                     android:textSize="18sp" />
 

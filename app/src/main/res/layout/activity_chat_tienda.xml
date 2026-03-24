@@ -24,33 +24,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!--        <TextView-->
-        <!--            android:id="@+id/tvEstadoTienda"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_marginTop="5dp"-->
-        <!--            android:text="Cerrado"-->
-        <!--            android:textColor="@color/rojo_cerrado"-->
-        <!--            android:textStyle="bold"-->
-        <!--            android:textSize="15sp"-->
-        <!--            app:layout_constraintTop_toTopOf="parent"-->
-        <!--            app:layout_constraintStart_toStartOf="parent" />-->
-
-        <!--        <ImageView-->
-        <!--            android:id="@+id/btnRetroceder"-->
-        <!--            android:layout_width="40dp"-->
-        <!--            android:layout_height="40dp"-->
-        <!--            android:contentDescription="Retroceder"-->
-        <!--            android:src="@drawable/flecha_retroceso"-->
-        <!--            app:layout_constraintStart_toStartOf="parent"-->
-        <!--            app:layout_constraintTop_toTopOf="parent" />-->
-
         <ImageView
             android:id="@+id/btn_menu"
             android:layout_width="35dp"
             android:layout_height="45dp"
             android:layout_marginEnd="8dp"
-            android:contentDescription="Menú"
+            android:contentDescription="@string/menu"
             android:src="@drawable/ic_menu_hamburges"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -73,7 +52,7 @@
             android:layout_marginTop="10dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="Buen día"
+            android:text="@string/buendia"
             android:textColor="@color/colorOnSecondary"
             android:textSize="26sp"
             android:textStyle="bold"
@@ -157,7 +136,7 @@
                 android:paddingEnd="16dp"
                 android:textColor="#000"
                 android:textSize="14sp"
-                android:hint="Escribe un mensaje..."
+                android:hint="@string/mensajillo"
                 android:textColorHint="@color/Flechas"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/sendBtn"
@@ -170,7 +149,7 @@
                 android:layout_width="52dp"
                 android:layout_height="52dp"
                 android:background="@drawable/bg_avion_microfono"
-                android:contentDescription="Enviar"
+                android:contentDescription="@string/enviar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -185,7 +164,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
             android:background="@drawable/bg_avion_microfono"
-            android:contentDescription="Micrófono"
+            android:contentDescription="@string/microfono"
             app:srcCompat="@drawable/ic_microphone" />
 
     </LinearLayout>

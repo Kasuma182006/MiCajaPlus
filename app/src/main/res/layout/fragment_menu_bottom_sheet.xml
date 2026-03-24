@@ -50,7 +50,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_chat_vz"
-                android:contentDescription="Comandos"
+                android:contentDescription="@string/comandos"
                 app:tint="@color/colorOnSecondary"
                 android:alpha="0.7" />
 
@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="16dp"
-                android:text="Como usar el chat"
+                android:text="@string/comousar"
                 android:textColor="@color/colorOnSecondary"
                 android:textSize="15sp" />
 
@@ -68,7 +68,7 @@
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:src="@drawable/retroceso"
-                android:contentDescription="Ver comandos"
+                android:contentDescription="@string/vercomandos"
                 android:rotation="180"
                 android:alpha="0.4"
                 app:tint="@color/colorOnSecondary" />
@@ -86,7 +86,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
-            android:text="Gestión"
+            android:text="@string/gestion"
             android:textColor="@color/gris"
             android:textSize="12sp"
             android:textStyle="bold"
@@ -128,7 +128,7 @@
                         android:layout_width="26dp"
                         android:layout_height="26dp"
                         android:layout_gravity="center"
-                        android:contentDescription="Balance"
+                        android:contentDescription="@string/txtBalance"
                         android:scaleType="centerInside"
                         android:src="@drawable/informe"
                         app:tint="@color/colorSecondary" />
@@ -153,7 +153,7 @@
                     android:id="@+id/menuChevronBalance"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:contentDescription="Ir a Balance"
+                    android:contentDescription="@string/txtBalance"
                     android:src="@drawable/retroceso"
                     android:rotation="180"
                     android:alpha="0.8"
@@ -200,7 +200,7 @@
                         android:layout_width="26dp"
                         android:layout_height="26dp"
                         android:layout_gravity="center"
-                        android:contentDescription="Editar Cliente"
+                        android:contentDescription="@string/editarCliente"
                         android:scaleType="centerInside"
                         android:src="@drawable/ic_edit_user"
                         app:tint="@color/colorSecondary" />
@@ -225,7 +225,7 @@
                     android:id="@+id/menuChevronEditarCliente"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:contentDescription="Ir a Editar Cliente"
+                    android:contentDescription="@string/editarCliente"
                     android:src="@drawable/retroceso"
                     android:rotation="180"
                     android:alpha="0.8"
@@ -272,7 +272,7 @@
                         android:layout_width="26dp"
                         android:layout_height="26dp"
                         android:layout_gravity="center"
-                        android:contentDescription="Editar Producto"
+                        android:contentDescription="@string/editarProducto"
                         android:scaleType="centerInside"
                         android:src="@drawable/ic_productos_ed"
                         app:tint="@color/colorSecondary" />
@@ -297,7 +297,7 @@
                     android:id="@+id/menuChevronEditarProducto"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:contentDescription="Ir a Editar Producto"
+                    android:contentDescription="@string/editarProducto"
                     android:src="@drawable/retroceso"
                     android:rotation="180"
                     android:alpha="0.8"
@@ -327,12 +327,9 @@
             android:clickable="true"
             android:focusable="true"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Cerrar sesión"
+            android:contentDescription="@string/cerrarsesion"
             android:src="@drawable/ic_close_session"
             app:tint="@color/utilidad_negative"/>
-
-
-
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

@@ -68,7 +68,7 @@ class ConsultarXFecha : AppCompatActivity() {
                 val puntuacionVentas = ventas.toString().replace(Regex("""(\d)(?=(\d{3})+(?!\d))"""), "$1.")
                 val puntuacionGastos = gastos.toString().replace(Regex("""(\d)(?=(\d{3})+(?!\d))"""), "$1.")
                 val puntuacionCostos = costos.toString().replace(Regex("""(\d)(?=(\d{3})+(?!\d))"""), "$1.")
-                val puntuacionNcredito = ncreditos.toString().replace(Regex("""(\d)(?=(\d{3})+(?!\d))"""), "$1.")
+                val puntuacionNcredito = valorCredito.toString().replace(Regex("""(\d)(?=(\d{3})+(?!\d))"""), "$1.")
                 val puntuacionUtilidad = utilidad.toString().replace(Regex("""(\d)(?=(\d{3})+(?!\d))"""), "$1.")
 
                 if (ventas == 0 && costos == 0 && gastos == 0) {

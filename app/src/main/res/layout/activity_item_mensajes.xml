@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -31,20 +30,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:lineSpacingExtra="2dp"
-            android:text="Mensaje del usuario"
+            android:text="@string/user"
             android:textColor="@color/colorSecondary"
             android:textSize="14sp" />
-
-<!--        &lt;!&ndash; Timestamp usuario &ndash;&gt;-->
-<!--        <TextView-->
-<!--            android:id="@+id/timestampMensaje"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="end"-->
-<!--            android:layout_marginTop="2dp"-->
-<!--            android:text="10:30"-->
-<!--            android:textColor="@color/Flechas"-->
-<!--            android:textSize="10sp" />-->
     </LinearLayout>
 
 
@@ -69,20 +57,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:lineSpacingExtra="2dp"
-            android:text="Respuesta del sistema"
+            android:text="@string/respuesta"
             android:textColor="@color/color_txt_app"
             android:textSize="14sp" />
-
-        <!-- Timestamp sistema -->
-<!--        <TextView-->
-<!--            android:id="@+id/timestampSistema"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="end"-->
-<!--            android:layout_marginTop="2dp"-->
-<!--            android:text="10:30"-->
-<!--            android:textColor="@color/Flechas"-->
-<!--            android:textSize="10sp" />-->
     </LinearLayout>
 
 </LinearLayout>
