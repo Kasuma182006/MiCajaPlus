@@ -126,7 +126,6 @@ class VariantesBottomSheet : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val comando   = arguments?.getString(ARG_COMANDO) ?: ""
         val variantes = arguments?.getStringArrayList(ARG_VARIANTES) ?: arrayListOf()
         view.findViewById<TextView>(R.id.tvTituloVariantes).text = comando
