@@ -56,14 +56,14 @@ val diccionario = mapOf(
     "cerrar" to listOf("cerrar", "cerrando", "cierre"),
     "venta" to listOf ("venta", "vendí", "vendieron", "vendió", "ventica"),
     "gasto" to listOf ("gasto", "gasté", "gastar", "gastico"),
-    "compra" to listOf ("compra", "compré", "costo", "pagué"),
+    "compra" to listOf ("compra", "compré", "costo"),
     "credito" to listOf ("credito", "crédito", "fiado", "fiar", "fié"),
     "abono" to listOf ("abono", "abonar", "cuota", "deuda", "saldo"),
     "agregar" to listOf ("agregar", "añadir", "producto"),
-    "consultar" to listOf("busca", "buscar", "consulta", "filtrar", "pregunta"), // Por si lo va a usar ñiñin
     "cliente" to listOf("cliente", "nombre", "nuevo", "deudor"),
+    "consultar" to listOf("busca", "buscar", "consulta", "filtrar", "pregunta"),
+    "cancelar" to listOf("cancelar", "cancelalo", "abortar"),
     "si" to listOf("si", "sí"),
-    "efectivo" to listOf("efectivo", "plata", "paga", "contado", "dinero"),
 )
 
 class chat_Tienda : AppCompatActivity() {
@@ -77,7 +77,6 @@ class chat_Tienda : AppCompatActivity() {
 
             model.addMensajeSistema(modelo(mensajeConfirmacion))
             binding.recyclerMensajes.post { binding.recyclerMensajes.smoothScrollToPosition(Adapter.itemCount - 1) }
-
         } else {
             val mensajeCierre = result.data?.getStringExtra("mensaje_cierre") ?: "Registro de producto cancelado"
             model.addMensajeSistema(modelo(mensajeCierre))
@@ -236,8 +235,8 @@ class chat_Tienda : AppCompatActivity() {
     fun evento() {
         binding.sendBtn.setOnClickListener {
             mensaje = binding.messageInput.text.toString().trim()
-            if (mensaje.isEmpty()) { return@setOnClickListener }
 
+            if (mensaje.isEmpty()) { return@setOnClickListener }
             val tienda = estadoTienda.getBoolean("abierta", false)
             val base = estadoBase.getBoolean("base", false)
             binding.messageInput.setText("")
@@ -247,12 +246,21 @@ class chat_Tienda : AppCompatActivity() {
 
             val textoLimpio = mensaje.replace(Regex("""(\d)[.,](\d{3})\b"""), "$1$2").lowercase()
             val palabras = textoLimpio.split(Regex("""[\s,.:]+"""))
+            val quiereCancelar = diccionario["cancelar"]?.any { palabras.contains(it) } == true
+
+            if (quiereCancelar) {
+                cancelarTodo()
+                return@setOnClickListener // Detiene la ejecución aquí
+            }
+
             val esCliente = diccionario["cliente"]?.any { palabras.contains(it) } == true
             val consultarCliente = diccionario["consultar"]?.any { palabras.contains(it) } == true
             val esCredito = diccionario["credito"]?.any { palabras.contains(it) } == true
 
             if (consultarCliente) { procesoActivo = "consultar" }
+
             else if (esCliente) { procesoActivo = "nuevo_cliente" }
+
             if (esCredito) { procesoActivo = "credito" }
 
             if (!SesionManager.esSesionValida(this@chat_Tienda)) {
@@ -261,6 +269,7 @@ class chat_Tienda : AppCompatActivity() {
             }
 
             val intentoAbrir = diccionario["abrir"]?.any { palabras.contains(it) } == true
+
             if (intentoAbrir) {
                 val seAbrioAhora = tiendaTendero(mensaje)
                 if (seAbrioAhora) {
@@ -270,7 +279,7 @@ class chat_Tienda : AppCompatActivity() {
             }
             val CerrarTienda = diccionario["cerrar"]?.any { palabras.contains(it) } == true
 
-            if (CerrarTienda && mensaje.contains("tienda")) {
+            if (CerrarTienda || mensaje.contains("cerar tienda")) {
                 val editor = estadoTienda.edit()
                 editor.putBoolean("abierta", false)
                 editor.apply()
@@ -299,6 +308,7 @@ class chat_Tienda : AppCompatActivity() {
                             procesarCredito(mensaje)
                             return@launch
                         }
+
                         if (textoLimpio.contains("fin") || textoLimpio.contains("finalizar")) {
                             procesoActivo = "ninguno"
                             estado = "ninguno"
@@ -379,8 +389,7 @@ class chat_Tienda : AppCompatActivity() {
                             model.addMensajeSistema(modelo("No se pudo detectar la operación, por favor vuelve a intentarlo"))
                         }
                     }
-                } else {
-                    CoroutineScope(Dispatchers.IO).launch { baseInicial(mensaje) }
+                } else { CoroutineScope(Dispatchers.IO).launch { baseInicial(mensaje) }
                     return@setOnClickListener
                 }
             } else {
@@ -406,13 +415,11 @@ class chat_Tienda : AppCompatActivity() {
                 cedula_tendero!!,
                 nombre!!,
                 telefono!!
-            )
-        )
+            ))
         Log.i("respuesta", respuesta.body().toString())
         if (respuesta.body() == true) {
             return true
-        } else {
-            model.addMensajeSistema(modelo("Lo siento, ocurrió un error,intentelo de nuevo."))
+        } else { model.addMensajeSistema(modelo("Lo siento, ocurrió un error,intentelo de nuevo."))
             return false
         }
     }
@@ -586,7 +593,6 @@ class chat_Tienda : AppCompatActivity() {
 
         //---------------CREDITO---------------------------------------------------------------------------------
         if (estado == "cedula") {
-
             val textoSinEspacios = textoMinuscula.replace(" ", "")
             val cedulaRegex = Regex("\\d{6,}")
             val cedula = cedulaRegex.find(textoSinEspacios)?.value
@@ -718,10 +724,13 @@ class chat_Tienda : AppCompatActivity() {
         val cedula = prefs.getString("cedula", null)
         val palabras = mensaje.lowercase().split(Regex("""[\s:]+"""))
 
+        var montoEncontrado = false
+
         for (palabra in palabras) {
             val montoDetectado = calcularMonto(palabra)
 
             if (montoDetectado != null) {
+                montoEncontrado = true // un alert ahí
                 try {
                     val service = ConexionServiceTienda.create()
                     val envioBase = ModeloBase(cedula ?: "", montoDetectado)
@@ -735,15 +744,21 @@ class chat_Tienda : AppCompatActivity() {
                         }
                     } else {
                         withContext(Dispatchers.Main) {
-                            model.addMensajeSistema(modelo("Parece que ha ocurrido un error, por favor vuelve a intentarlo"))
+                            model.addMensajeSistema(modelo("Mmm, no logré entender de cuánto es la base. ¿Con cuánto empezamos la caja hoy?"))
                         }
                     }
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
-                        model.addMensajeSistema(modelo("No se pudo conectar al servidor. Verifica tu red."))
+                        model.addMensajeSistema(modelo("No alcancé a captar el monto. Repíteme el valor de la base inicial"))
                     }
                 }
                 break
+            }
+        }
+
+        if (!montoEncontrado) {
+            withContext(Dispatchers.Main) {
+                model.addMensajeSistema(modelo("No pude detectar el monto de la base. Por favor, dicta la base para empezar a registrar tus operaciones."))
             }
         }
     }
@@ -762,5 +777,16 @@ class chat_Tienda : AppCompatActivity() {
             palabra.matches(Regex("""\$?\d+""")) -> { palabra.removePrefix("$").toIntOrNull() }
             else -> null
         }
+    }
+
+    private fun cancelarTodo() {
+        operacionVenta.inicio = false
+        operacionGasto.cancelarGasto()
+        operacionCosto.cancelarFlujo()
+        abono.cancelarFlujo()
+        procesoActivo = "ninguno"
+        estado = "ninguno"
+        cedulaCliente = null
+        model.addMensajeSistema(modelo("Operación cancelada. Dicta nuevamente qué deseas hacer"))
     }
 }

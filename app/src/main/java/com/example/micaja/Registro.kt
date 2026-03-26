@@ -27,10 +27,6 @@ class Registro : AppCompatActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         binding = RegistroBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        // Aplica el comportamiento del teclado
-        // binding.main → el NestedScrollView raíz
-        // binding.logoApp → el logo que se oculta para dar espacio
         setupKeyboardBehavior(
             rootView = binding.main,
             viewToScroll = binding.main,

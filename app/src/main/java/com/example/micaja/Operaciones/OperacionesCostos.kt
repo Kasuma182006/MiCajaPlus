@@ -18,11 +18,15 @@ class OperacionCosto {
 
     companion object {
         val unidades = listOf(
-            "arroba", "bolsa", "bolsita", "bulto", "bultos", "caja", "cajetilla", "canasta", "chuspa", "barra",
-            "capsula", "cubeta", "tableta", "docena", "gramo", "lb", "libra", "kilo", "kg", "kilogramos", "litro", "lt",
-            "litron", "mililitro", "mililitros", "ml", "envase", "frasco", "onza", "plastico", "paquete", "vidrio",
-            "media", "mediana", "mediano", "grande", "pequeña", "pequeño", "pet", "personal", "canasta", "retornable", "retornables",
-            "garrafa", "lata", "laton", "paca", "sixpack", "six-pack", "panal", "sobre", "rollo", "tubo", "unidad", "vasito", "vaso"
+            "arroba", "atomizador", "barra", "bidon", "bidón", "bolsa", "bolsita", "botella", "botellas", "botellita", "botellitas",
+            "bulto", "bultos", "caja", "cajas", "cajetilla", "cajetillas", "canasta", "caneca", "capsula", "carton", "cartón",
+            "chuspa", "chuspas", "cubeta", "docena", "envase", "etapa", "etapas", "frasco", "galon", "galón", "garrafa", "gr",
+            "gramo", "gramos", "grande", "grandes", "granel", "hoja", "hojas", "k", "kg", "kilo", "kilogramo", "kilos", "l",
+            "lata", "laton", "latón", "lb", "libra", "libras", "lt", "lts", "litro", "litron", "litros", "manojo", "ml", "media",
+            "mediana", "medianas", "mediano", "medianos", "mililitro", "mililitros", "mini", "oz", "onza", "paca", "panal",
+            "pequeña", "pequeñas", "pequeño", "pequeños", "personal", "pet", "plastico", "plástico", "plasticos", "plásticos",
+            "paquete", "paquetes", "pokeron", "pokerón", "polvo", "racimo", "retornable", "rollo", "rollos", "sixpack", "six-pack",
+            "sobre", "spray", "tableta", "tarrito", "tarro", "tubo", "unidad", "unidades", "vasito", "vasitos", "vaso", "vasos", "vidrio"
         )
 
         val numerosMap = mapOf(
@@ -56,7 +60,6 @@ class OperacionCosto {
                 limpiarN.forEach { ruido ->
                     nombreLimpio = nombreLimpio.replace(Regex("\\b$ruido\\b"), "").trim()
                 }
-                // Corregido: Se quitó el ?: "" innecesario
                 nombreProducto = nombreLimpio.replace(Regex("""\s+"""), " ").replaceFirstChar { it.uppercase() }
 
                 if (nombreProducto.isBlank() || nombreProducto.length < 2) {
@@ -77,7 +80,7 @@ class OperacionCosto {
                 presentacionProducto = "Unidad"
                 for (u in unidades) {
                     if (procesado.contains(u)) {
-                        presentacionProducto = u.replaceFirstChar { it.uppercase() } // Capitalizado desde aquí
+                        presentacionProducto = u.replaceFirstChar { it.lowercase() }
                         break
                     }
                 }
@@ -92,8 +95,26 @@ class OperacionCosto {
                     return true
                 }
 
-                estadoActual = EstadoCosto.ESPERANDO_PROVEEDOR
-                enviarMensajeSistema(modelo("¿A qué proveedor le compraste la mercancía?"))
+                try {
+                    val peticion = compra_Mercancia(
+                        idTendero = idTendero,
+                        nombre = nombreProducto,
+                        presentacion = presentacionProducto
+                    )
+                    val respuestaVerificacion = withContext(Dispatchers.IO) { ConexionServiceTienda.create().verificarProductoExistente(peticion) }
+                    val productoExiste = respuestaVerificacion.body()?.get("existe") == true
+                    if (respuestaVerificacion.isSuccessful && productoExiste) {
+                        // Si el producto existe, pasamos a pedir el proveedor
+                        estadoActual = EstadoCosto.ESPERANDO_PROVEEDOR
+                        enviarMensajeSistema(modelo("¡Perfecto! ¿A qué proveedor le compraste $nombreProducto $presentacionProducto?"))
+                    } else {
+                        enviarMensajeSistema(modelo("El producto '$nombreProducto' '$presentacionProducto' no existe en tu inventario. Debes primero registrar el producto con el comando 'Agregar producto' "))
+                        cancelarFlujo()
+                    }
+                } catch (e: Exception) {
+                    enviarMensajeSistema(modelo("Hubo un problema de conexión mientras consultaba el producto. Por favor, inténtalo de nuevo."))
+                    cancelarFlujo()
+                }
             }
 
             EstadoCosto.ESPERANDO_PROVEEDOR -> {

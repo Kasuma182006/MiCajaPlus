@@ -42,10 +42,13 @@ class OperacionVenta() {
     }
 
     private fun normalizarTexto(texto: String): String {
-        val temp = Normalizer.normalize(texto.lowercase(), Normalizer.Form.NFD)
-        val sinTildes = Regex("\\p{InCombiningDiacriticalMarks}+").replace(temp, "")
-        var resultado = sinTildes
+        val lowercase = texto.lowercase()
+        val sinTildes = lowercase
+            .replace('á', 'a').replace('é', 'e')
+            .replace('í', 'i').replace('ó', 'o')
+            .replace('ú', 'u')
 
+        var resultado = sinTildes
         numerosMap.forEach { (palabra, numero) ->
             resultado = resultado.replace(Regex("\\b$palabra\\b"), numero)
         }
@@ -57,8 +60,8 @@ class OperacionVenta() {
         if (textoLimpio.contains("fin") || fin_credito) {
             this.inicio = false
             return if (idCliente.isNotEmpty() ) {
-                "¡Listo! El crédito ha finalizado correctamente."
-            } else { "Venta de contado finalizada correctamente." }
+                "¡Listo! El crédito ha finalizado correctamente"
+            } else { "Venta finalizada correctamente" }
         }
 
         val datos = extraerDatosProducto(textoLimpio)

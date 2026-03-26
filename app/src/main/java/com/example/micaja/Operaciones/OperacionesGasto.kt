@@ -125,8 +125,10 @@ class OperacionGasto {
 
         return if (justificacion.isNotEmpty()) {
             Pair(justificacion, precio)
-        } else {
-            null
-        }
+        } else { null }
     }
-}//
+
+    fun cancelarGasto() {
+        this.inicio = false
+    }
+}

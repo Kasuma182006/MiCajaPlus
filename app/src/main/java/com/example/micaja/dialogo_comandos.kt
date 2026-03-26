@@ -17,47 +17,38 @@ class dialogo_comandos : BottomSheetDialogFragment() {
     private val binding get() = _binding!!
     private val comandosConVariantes = mapOf(
         "Abrir tienda" to listOf(
-            "abierto", "iniciar", "inicio", "abrir", "abriendo",
-            "comenzar", "comienzo", "arrancar", "empezar", "empezemos",
-            "dia", "día", "Ej: 'Abrir' tienda"
-        ),
-        "Registrar base inicial" to listOf(
-            "base", "base inicial", "registrar base",
-            "Ej: 'Base' \$ 25.000"
-        ),
-        "Registrar venta" to listOf(
-            "venta", "ventas", "vendí", "vendiendo", "vender", "vendido",
-            "vendieron", "vendo", "vendió", "vendimos", "vende", "vendes",
-            "vendidos", "ingreso", "ingresos", "Ej: 'Venta' \$ 50000"
-        ),
-        "Registrar gasto" to listOf(
-            "gasto", "gasté", "gastando", "gastos", "gasta", "gastaron",
-            "gastamos", "gastan", "gasten", "gastemos", "gastó",
-            "egresos", "Ej: 'gaste' \$ 30.000"
-        ),
-        "Registrar costo" to listOf(
-            "costo", "costos", "pago", "pagos", "pagué", "pagando", "pagamos",
-            "paguen", "pague", "compra", "compré", "proveedor", "proveedores",
-            "paguemos", "Ej: 'pague' \$ 70.000 a alpina"
+            "abrir", "arrancar", "comenzar", "empezar"
         ),
         "Cerrar tienda" to listOf(
-            "cerrar", "cerrando", "final", "terminar", "finalizar", "fin",
-            "end", "cierre", "acabar", "Ej: 'Cerrar' tienda"
+            "cerrar", "cerrando", "cierre"
         ),
-        "Registrar crédito o abono" to listOf(
-            "credito", "crédito", "créditos", "creditos", "fiado", "fiados",
-            "fiar", "adelanto", "abono", "abonando", "cuota", "abonos",
-            "abonó", "adelantó", "pagó", "saldó", "saldar",
-            "Ej: 'Credito'", "Ej: 'Abono'"
+        "Registrar venta" to listOf(
+            "venta", "vendí", "vendieron", "vendió", "Ej: 3 arroz diana libra"
+        ),
+        "Registrar gasto" to listOf(
+            "gasto", "gasté", "gastar", "Ej: Gasté en un domicilio $15.000"
+        ),
+        "Registrar costo" to listOf(
+            "compra", "compré", "costo"
+        ),
+        "Registrar crédito" to listOf(
+            "crédito", "fiado", "fiar", "fié"
+        ),
+        "Abonos" to listOf(
+            "abono", "abonar", "cuota", "deuda"
         ),
         "Agregar producto" to listOf(
-            "agregar producto", "añadir producto", "nuevo producto", "producto nuevo",
-            "Ej: nuevo Producto"
+            "agregar", "añadir", "producto"
         ),
         "Agregar cliente" to listOf(
-            "agregar nombre", "añadir cliente", "cliente nuevo", "nuevo cliente",
-            "Ej: nuevo Cliente"
+            "cliente", "nombre", "nuevo", "clientes"
         ),
+        "Consultar cliente" to listOf(
+            "busca", "buscar", "consulta", "filtrar"
+        ),
+        "Cancelar operación" to listOf(
+            "cancelar", "cancela", "abortar"
+        )
     )
 
     override fun onCreateView(

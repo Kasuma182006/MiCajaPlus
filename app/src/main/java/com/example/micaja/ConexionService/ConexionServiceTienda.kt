@@ -6,7 +6,6 @@ import com.example.micaja.models.BuscarProductos
 import com.example.micaja.models.ClienteCompleto
 import com.example.micaja.models.ConsultaCedulaTendero
 import com.example.micaja.models.ConsultarOperaXFecha
-import com.example.micaja.models.Credito
 import com.example.micaja.models.DatosAbono
 import com.example.micaja.models.EditarProducto
 import com.example.micaja.models.Identificacion
@@ -20,6 +19,7 @@ import com.example.micaja.models.cliente1
 import com.example.micaja.models.clienteAbono
 import com.example.micaja.models.clienteNuevo
 import com.example.micaja.models.compra_Mercancia
+import com.example.micaja.models.consultarTenderoFecha
 import com.example.micaja.models.gastoDetectado
 import com.example.micaja.models.ventaDetectada
 import retrofit2.Response
@@ -50,6 +50,8 @@ interface ConexionServiceTienda {
     suspend fun gastoDetectadoss(@Body body: gastoDetectado): Response<gastoDetectado>
     @POST("/crearcosto")
     suspend fun compra_Mercancia(@Body request: compra_Mercancia): Response<compra_Mercancia>
+    @POST("/verificarproducto")
+    suspend fun verificarProductoExistente(@Body peticion: compra_Mercancia): Response<Map<String, Boolean>>
 
     /////CREDITOS Y ABONOS
     @POST("/abonos")
@@ -61,29 +63,24 @@ interface ConexionServiceTienda {
     suspend fun busca_cliente(@Body identificacion: Identificacion): Response<cliente1>
     @POST("/insertar_cliente")
     suspend fun insertar_cliente(@Body cliente: clienteNuevo): Response<Boolean>
-    @POST("/insertar_credito")
-    suspend fun insertar_credito(@Body credito: Credito): Response<Void>
     @POST("/registrar_credito")
     suspend fun registrarCredito(@Body venta: ventaDetectada): Response<String>
+
+    //ESTADISTICAS
     @POST("/consultarEstadisticas")
     suspend fun consultarXFecha(@Body request: ConsultarOperaXFecha): Response<TipoOperacionXFecha>
-
+    @POST("/consultarTenderoFecha")
+    suspend fun consultarTenderoFecha(@Body body: consultarTenderoFecha): Response<consultarTenderoFecha>
 
     //INVENTARIO
     @POST("/agregarProducto")
     suspend fun addProducto(@Body body: AgregarProducto): Response<AgregarProducto>
-
     @POST("/editarProducto")
     suspend fun editarProducto(@Body producto: EditarProducto): Response<Map<String, String>>
-
     @POST("/sugerirProductos")
     suspend fun buscarProductos(@Body nombre: BuscarProductos): Response<List<EditarProducto>>
-
     @POST("/operacionesInventario")
     suspend fun operacionesInventario(@Body body: OperacionesInventario): Response<OperacionesInventario>
-
-    @POST("/cantidadProducto")
-    suspend fun cantidadProducto(@Body body: cantidadIn): Response<cantidadIn>
 
 
     //EDITAR CLIENTE
@@ -94,8 +91,8 @@ interface ConexionServiceTienda {
 
 
     companion object messi {
-        //private const val BASE_URL = "http://192.168.1.27:4000" local
-        private const val BASE_URL = "http://10.6.126.90:4000"
+        //private const val BASE_URL = "http://192.168.1.27:4000"
+        private const val BASE_URL = "http://54.156.114.70:61005"
         fun create(): ConexionServiceTienda {
             val retrofit = Retrofit.Builder()
                 .baseUrl(BASE_URL)

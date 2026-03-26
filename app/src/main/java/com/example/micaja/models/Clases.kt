@@ -9,17 +9,8 @@ data class Tendero(
     @SerializedName("fechaCreacion") val fechaCreacion: String
 )
 
-
 data class ConsultaCedulaTendero(
     val cedula: String
-)
-
-data class cliente(
-    val cedula: String?=null,
-    val nombre: String?=null,
-    val celular: String? =null,
-    val creditos: Int?=null,
-    val total: Int?=null
 )
 
 ////ABONOS
@@ -51,7 +42,6 @@ data class clienteNuevo(
     val cedulaTendero:String,
     val nombre: String,
     val celular: String,
-
 )
 
 data class Identificacion(
@@ -78,14 +68,10 @@ data class TipoOperacionXFecha(
     val gastos: String
 )
 
-
-
 data class ModeloBase(
     val idTendero: String,
     val baseInicial: Int
 )
-
-
 
 data class cantidadIn (
     val idTendero: String,
@@ -124,8 +110,8 @@ data class compra_Mercancia(
     val idTendero: String = "",
     val nombre: String,
     val presentacion: String,
-    val cantidadStock: Int,
-    val proveedor: String
+    val cantidadStock: Int? = null,
+    val proveedor: String? = null
 )
 
 //Esta data class es para las operaciones de ventas de unidades o agregar unidades existentes en el inventario (ventas o gastos en operciones)
@@ -138,7 +124,6 @@ data class OperacionesInventario(
 )
 
 // No toquen esto, estas data class son para el modulo de editar Productos
-
 data class BuscarProductos(
     val idTendero: String,
     val nombre: String
@@ -170,9 +155,7 @@ data class ActualizarCliente(
     val saldo: Int
 )
 
-data class Producto(
+data class consultarTenderoFecha(
     val idTendero: String,
-    val categoria: String,
-    val nombre: String,
-    val presentacion: String
+    val fecha: String? = null
 )

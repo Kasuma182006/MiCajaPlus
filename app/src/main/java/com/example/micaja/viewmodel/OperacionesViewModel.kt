@@ -7,11 +7,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.micaja.ConexionService.ConexionServiceTienda
 import com.example.micaja.models.ConsultarOperaXFecha
 import com.example.micaja.models.TipoOperacionXFecha
+import com.example.micaja.models.consultarTenderoFecha
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class OperacionesViewModel : ViewModel() {
-
     private val _estadisticas = MutableLiveData<TipoOperacionXFecha?>()
     val estadisticas: LiveData<TipoOperacionXFecha?> get() = _estadisticas
     val mensajeError = MutableLiveData<String>()
@@ -37,6 +37,25 @@ class OperacionesViewModel : ViewModel() {
 
             } catch (e: Exception) {
                 mensajeError.postValue("Error de conexion intenta mas tarde")
+            }
+        }
+    }
+    private val _fechaRegistro = MutableLiveData<String?>()
+    val fechaRegistro: LiveData<String?> get() = _fechaRegistro
+
+    fun obtenerFechaRegistro(idTendero: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val api = ConexionServiceTienda.create()
+                val request = consultarTenderoFecha(idTendero)
+                val respuesta = api.consultarTenderoFecha(request)
+
+                if (respuesta.isSuccessful && respuesta.body() != null) {
+                    // Aquí tomamos la fecha
+                    _fechaRegistro.postValue(respuesta.body()?.fecha)
+                }
+            } catch (e: Exception) {
+                _fechaRegistro.postValue(null)
             }
         }
     }
