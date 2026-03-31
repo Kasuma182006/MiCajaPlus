@@ -508,17 +508,34 @@ class chat_Tienda : AppCompatActivity() {
         }
 
         if (estado == "registro_cliente") {
-            val regexTelefono = Regex("3[\\d\\s]{9,}")
-            val telefono = regexTelefono.find(textoMinuscula)
+            val regexNumero = Regex("\\d[\\d\\s]{9,}")
+            val coincidencia = regexNumero.find(textoMinuscula)
 
-            if (telefono != null) {
-                val nombreFinal = textoMinuscula.substring(0, telefono.range.first).trim()
-                val telefonoLimpio = telefono.value.replace(" ", "").trim()
+            if (coincidencia != null) {
+                val numeroCrudo = coincidencia.value.trim()
+                val telefonoLimpio = numeroCrudo.replace(" ", "")
+
+                Log.i("numero", telefonoLimpio)
+
+                if (!telefonoLimpio.startsWith("3") || telefonoLimpio.length != 10) {
+                    model.addMensajeSistema(modelo("El número que dictó está mal. Recuerde que debe empezar por 3."))
+                    return
+                }
+                val nombreFinal = textoMinuscula.substring(0, coincidencia.range.first).trim()
+
+                val tieneCaracteresEspeciales = nombreFinal.contains(Regex("[^a-záéíóúñ\\s]"))
+
+                if (tieneCaracteresEspeciales) {
+                    model.addMensajeSistema(modelo("El nombre no puede tener números, símbolos como @ o #. Por favor, dicte de nuevo solo con letras."))
+                    return
+                }
+
 
                 if (nombreFinal.length >= 3 && nombreFinal.length <= 40) {
                     val nombreFormateado = nombreFinal.split(" ")
                         .filter { it.isNotBlank() }
                         .joinToString(" ") { it.replaceFirstChar { char -> char.uppercase() } }
+
 
                     if (nuevo_cliente(
                             cedulaCliente,
@@ -527,17 +544,22 @@ class chat_Tienda : AppCompatActivity() {
                             telefonoLimpio
                         )
                     ) {
-                        model.addMensajeSistema(modelo("El cliente $nombreFormateado con la cédula $cedulaCliente y número $telefonoLimpio registrado con éxito."))
-                        procesoActivo = "ninguno"
+                        model.addMensajeSistema(modelo("El cliente $nombreFormateado con la cédula $cedulaCliente y número $telefonoLimpio ha sido registrado con éxito."))
                         estado = "ninguno"
+                        procesoActivo = "ninguno"
                         return
                     }
                 } else {
-                    model.addMensajeSistema(modelo("Lo siento, no pude entenderte, por favor dicta de nuevo"))
+                    model.addMensajeSistema(modelo("Lo siento no pude reconocer el nombre. Por favor dicte de nuevo.(Debe tener mínimo 3 letras)"))
+                    return
                 }
-            } else {
-                model.addMensajeSistema(modelo("Lo siento, no pude entenderte, por favor dicta de nuevo"))
+            }else{
+                model.addMensajeSistema(modelo("Número no reconocido. Por favor, dícte de nuevo. Debe empezar por 3 y tener 10 dígitos."))
+                return
             }
+        } else {
+            model.addMensajeSistema(modelo("Error de conexion."))
+            return
         }
     }
 
@@ -652,17 +674,34 @@ class chat_Tienda : AppCompatActivity() {
         }
 
         if (estado == "cliente_nuevo") {
-            val regexTelefono = Regex("3[\\d\\s]{9,}")
-            val telefono = regexTelefono.find(textoMinuscula)
+            val regexNumero = Regex("\\d[\\d\\s]{9,}")
+            val coincidencia = regexNumero.find(textoMinuscula)
 
-            if (telefono != null) {
-                val nombreFinal = textoMinuscula.substring(0, telefono.range.first).trim()
-                val telefonoLimpio = telefono.value.replace(" ", "").trim()
+            if (coincidencia != null) {
+                val numeroCrudo = coincidencia.value.trim()
+                val telefonoLimpio = numeroCrudo.replace(" ", "")
+
+                Log.i("numero", telefonoLimpio)
+
+                if (!telefonoLimpio.startsWith("3") || telefonoLimpio.length != 10) {
+                    model.addMensajeSistema(modelo("El número que dictó está mal. Recuerde que debe empezar por 3."))
+                    return
+                }
+                val nombreFinal = textoMinuscula.substring(0, coincidencia.range.first).trim()
+
+                val tieneCaracteresEspeciales = nombreFinal.contains(Regex("[^a-záéíóúñ\\s]"))
+
+                if (tieneCaracteresEspeciales) {
+                    model.addMensajeSistema(modelo("El nombre no puede tener números, símbolos como @ o #. Por favor, dicte de nuevo solo con letras."))
+                    return
+                }
+
 
                 if (nombreFinal.length >= 3 && nombreFinal.length <= 40) {
                     val nombreFormateado = nombreFinal.split(" ")
                         .filter { it.isNotBlank() }
                         .joinToString(" ") { it.replaceFirstChar { char -> char.uppercase() } }
+
 
                     if (nuevo_cliente(
                             cedulaCliente,
@@ -676,14 +715,18 @@ class chat_Tienda : AppCompatActivity() {
                         return
                     }
                 } else {
-                    model.addMensajeSistema(modelo("Lo siento, no pude entenderte, por favor dicta de nuevo"))
+                    model.addMensajeSistema(modelo("Lo siento no pude reconocer el nombre. Por favor dicte de nuevo.(Debe tener mínimo 3 letras)"))
                     return
                 }
+                }else{
+                    model.addMensajeSistema(modelo("Número no reconocido. Por favor, dícte de nuevo. Debe empezar por 3 y tener 10 dígitos."))
+                    return
+            }
             } else {
-                model.addMensajeSistema(modelo("Lo siento, no pude entenderte, por favor dicta de nuevo"))
+                model.addMensajeSistema(modelo("Error de conexion."))
                 return
             }
-        }
+
 
         if (estado == "pedir_productos") {
             var operacionVenta = OperacionVenta()
