@@ -381,7 +381,7 @@ class chat_Tienda : AppCompatActivity() {
                             } else if (esVenta) {
                                 operacionVenta.inicio = true
                                 model.addMensajeSistema(modelo("¡Venta iniciada! Dicta los productos uno a uno o di 'fin'."))
-                            } else if (esAgregar && mensaje.contains("producto")) {
+                            } else if (esAgregar || mensaje.contains("agregar producto")) {
                                 val intent = Intent(this@chat_Tienda, Agregar_Producto::class.java)
                                 agregarProductoLauncher.launch(intent)
                             }

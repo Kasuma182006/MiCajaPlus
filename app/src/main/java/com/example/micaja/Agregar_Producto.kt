@@ -120,6 +120,9 @@ class Agregar_Producto : AppCompatActivity() {
         // 2. Creamos el diálogo
         val dialog = builder.create()
 
+        // -> AÑADE ESTA LÍNEA PARA APLICAR EL FONDO Y LOS BORDES <-
+        dialog.window?.setBackgroundDrawableResource(R.drawable.bg_dialogo_redondeado)
+
         // 3. ¡IMPORTANTE! Debemos mostrar el diálogo ANTES de intentar cambiar el color de sus botones
         dialog.show()
 
